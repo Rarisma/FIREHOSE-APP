@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "FirehoseNews.Windows (Unpackaged)": {
+      "commandName": "Project",
+      "nativeDebugging": true,
+      "sqlDebugging": true
+    },
+    "FirehoseNews.Windows (Package)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

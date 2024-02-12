@@ -1,0 +1,191 @@
+﻿<Page
+		x:Class="FirehoseNews.UI.ArticleList"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+		xmlns:hydrant="using:HYDRANT.Definitions"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    xmlns:controls="using:FirehoseNews.UI.Controls"
+    utu:StatusBar.Foreground="{x:Bind Themer.StatusBar}"
+    utu:StatusBar.Background="{x:Bind Themer.TertiaryBrush}"
+    Loaded="ArticleList_OnLoaded">
+
+  <Page.Resources>
+    <Style x:Key="BorderTemplate" TargetType="Border">
+        <Setter Property="BorderBrush" Value="#555555"/>
+        <Setter Property="Opacity" Value="0.2"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="10"/>
+    </Style>
+
+
+    <!-- Article Layout Views -->
+
+    <!-- No Image - When the Article lacks an image, this will show the RSS Summary in its place.-->
+    <DataTemplate x:Key="NoImageTemplate" x:DataType="hydrant:Article">
+        <StackPanel HorizontalAlignment="Stretch">
+          <!-- Spacing border -->
+          <Border Style="{StaticResource BorderTemplate}"/>
+          <SwipeControl Tag="{x:Bind Url}">
+            <SwipeControl.RightItems>
+              <SwipeItems Mode="Execute">
+              <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe"  Background="Transparent">
+                  <SwipeItem.IconSource>
+                    <FontIconSource />
+                  </SwipeItem.IconSource>
+                </SwipeItem>
+              </SwipeItems>
+            </SwipeControl.RightItems>
+            <StackPanel>
+              <!-- Publication info, Title and Summary -->
+              <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <TextBlock Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap"
+                         MaxWidth="500" HorizontalAlignment="Left"/>
+              <TextBlock Text="{x:Bind RSSSummary}" MaxLines="3" FontSize="11"
+                         TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left"/>
+            </StackPanel>
+          </SwipeControl>
+      </StackPanel>
+		</DataTemplate>
+
+    <!-- Headline Template - These are the hard hitting stories, so they have large images. -->
+		<DataTemplate x:Key="HeadlineTemplate" x:DataType="hydrant:Article">
+        <StackPanel>
+          <!-- Spacing boarder -->
+          <Border Style="{StaticResource BorderTemplate}"/>
+          <SwipeControl Tag="{x:Bind Url}">
+            <SwipeControl.RightItems>
+              <SwipeItems Mode="Execute">
+              <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe"  Background="Transparent">
+                  <SwipeItem.IconSource>
+                    <FontIconSource />
+                  </SwipeItem.IconSource>
+                </SwipeItem>
+              </SwipeItems>
+            </SwipeControl.RightItems>
+
+          <StackPanel>
+            <!-- Show publication Info -->
+            <controls:PublisherInformation ItemSource="{x:Bind}"/>
+
+            <!-- Image + Text -->
+            <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="200"
+                    BorderThickness="0" VerticalAlignment="Stretch">
+              <Image Source="{x:Bind ImageURL}" />
+            </Border>
+
+            <TextBlock Text="{x:Bind Title}" Margin="0,10" FontSize="16" TextWrapping="Wrap"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" />
+          </StackPanel>
+        </SwipeControl>
+      </StackPanel>
+		</DataTemplate>
+
+    <!-- Minimal - When the Article isn't a major story, so it should take up less space. -->
+		<DataTemplate x:Key="MinimalTemplate" x:DataType="hydrant:Article">
+        <StackPanel>
+          <!-- Separating boarder -->
+          <Border Style="{StaticResource BorderTemplate}"/>
+
+          <SwipeControl Tag="{x:Bind Url}">
+            <SwipeControl.RightItems>
+              <SwipeItems Mode="Execute">
+                <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe" Background="Transparent">
+                  <SwipeItem.IconSource>
+                    <FontIconSource />
+                  </SwipeItem.IconSource>
+                </SwipeItem>
+              </SwipeItems>
+            </SwipeControl.RightItems>
+          <StackPanel>
+            <controls:PublisherInformation ItemSource="{x:Bind}"/>
+
+            <!-- Title - [Image] -->
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+              </Grid.ColumnDefinitions>
+
+              <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind Title}" FontSize="16"
+                         TextWrapping="Wrap" VerticalAlignment="Center" Padding="0,0,10,10"/>
+
+              <Border CornerRadius="4" HorizontalAlignment="Right" MaxHeight="100" MinWidth="100"
+                      BorderThickness="0" VerticalAlignment="Stretch" Grid.Column="1">
+                <Image Source="{x:Bind ImageURL}" MinWidth="100"/>
+              </Border>
+            </Grid>
+          </StackPanel>
+        </SwipeControl>
+      </StackPanel>
+		</DataTemplate>
+
+    <!-- Article Selector Decides which article type should be used -->
+		<controls:ArticleSelector x:Key="ArticleSelector"
+																 NoImageTemplate="{StaticResource NoImageTemplate}"
+																 MinimalTemplate="{StaticResource MinimalTemplate}"
+																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
+  </Page.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch"
+                  Name="ArticleScroller" Margin="10,0" MaxWidth="600">
+
+      <StackPanel Orientation="Vertical">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+          <StackPanel Orientation="Horizontal">
+            <AppBarButton Icon="Setting" Click="OpenSettings" VerticalAlignment="Center" LabelPosition="Collapsed"/>
+            <AppBarButton Content="Bookmarked" Height="50"  Click="ShowBookmarks"
+                          Name="BookmarksButton" Width="90"/>
+            <AppBarButton Content="Filter Publisher" Height="50"  Click="FilterSource"  Name="SourcesButton"
+                          MaxHeight="200" HorizontalAlignment="Center" Width="120"/>
+            <Border Width="2" Height="20" BorderThickness="5" HorizontalAlignment="Center"
+                    BorderBrush="Gray" CornerRadius="1" Margin="10,0,10,10"/>
+
+            <!-- Filter button -->
+            <StackPanel Orientation="Horizontal" Name="Filters">
+              <AppBarButton Content="Latest" Height="50" Click="ChangeFilter" x:Name="LatestButton"/>
+              <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
+              <AppBarButton Content="Today" Height="50"  Click="ChangeFilter" />
+              <AppBarButton Content="Business" Height="50"  Click="ChangeFilter" />
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+
+        <utu:LoadingView>
+          <utu:LoadingView.LoadingContent>
+            <StackPanel Height="200">
+              <ProgressRing IsActive="True"/>
+              <TextBlock Text="Loading more articles..."/>
+            </StackPanel>
+          </utu:LoadingView.LoadingContent>
+
+          <utu:LoadingView.Source>
+            <utu:CompositeLoadableSource>
+                <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand}" />
+                <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
+            </utu:CompositeLoadableSource>
+          </utu:LoadingView.Source>
+
+          <StackPanel>
+            <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}" Tapped="ArticleTapped"
+                          ItemTemplateSelector="{StaticResource ArticleSelector}"
+                          RightTapped="OpenQuickViewHold"/>
+
+            <HyperlinkButton Content="Click to load more Articles"
+                             Command="{x:Bind ShellVM.LoadArticleDataCommand}"
+                             HorizontalAlignment="Center" Margin="10" x:Name="LoadMoreButton"/>
+          </StackPanel>
+        </utu:LoadingView>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

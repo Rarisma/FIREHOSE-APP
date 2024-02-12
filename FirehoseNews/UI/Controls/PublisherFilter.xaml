@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="FirehoseNews.UI.Controls.PublisherFilter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:hydrant="using:HYDRANT.Definitions"
+    mc:Ignorable="d">
+
+  <!-- List Articles -->
+  <ListView ItemsSource="{x:Bind publications}">
+    <ListView.ItemTemplate>
+      <DataTemplate x:DataType="hydrant:Publication">
+
+        <!--Show [Favicon] - Publisher name for each publication-->
+        <ListViewItem Margin="0,10">
+          <StackPanel Orientation="Horizontal">
+            <Image Height="32" Width="32" Source="{x:Bind Favicon}"/>
+            <TextBlock Text="{x:Bind  Name}" Margin="10"/>
+          </StackPanel>
+        </ListViewItem>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+  </ListView>
+</Page>

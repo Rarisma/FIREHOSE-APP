@@ -1,0 +1,409 @@
+[
+	{
+		"ID": 0,
+		"Paywall": false,
+		"Name": "Example News Network",
+		"Favicon": "http://www.rarisma.net/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": true,
+		"Feeds": [ "https://rarisma.net/" ]
+	},
+
+	{
+		"ID": 1,
+		"Paywall": false,
+		"Name": "CNN",
+		"Favicon": "https://edition.cnn.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "http://rss.cnn.com/rss/cnn_latest.rss" ]
+	},
+
+	{
+		"ID": 2,
+		"Paywall": false,
+		"Name": "BBC",
+		"Favicon": "https://static.files.bbci.co.uk/core/website/assets/static/icons/favicon/news/favicon-16.8a240ceacc28296a851d.png",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://feeds.bbci.co.uk/news/business/rss.xml",
+			"https://feeds.bbci.co.uk/news/education/rss.xml",
+			"https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+			"https://feeds.bbci.co.uk/news/health/rss.xml",
+			"https://feeds.bbci.co.uk/news/politics/rss.xml",
+			"https://feeds.bbci.co.uk/news/rss.xml",
+			"https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+			"https://feeds.bbci.co.uk/news/technology/rss.xml"
+		]
+	},
+
+  {
+    "ID": 3,
+    "Paywall": true,
+    "Name": "New York Times",
+    "Favicon": "https://www.nytimes.com/vi-assets/static-assets/favicon-d2483f10ef688e6f89e23806b9700298.ico",
+    "Weighting": 50,
+    "AlwaysJakeFlag": true,
+    "Feeds": [
+      "https://rss.nytimes.com/services/xml/rss/nyt/Africa.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/ArtandDesign.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Arts.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/AsiaPacific.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Automobiles.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Books/Review.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Climate.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/CollegeBasketball.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/CollegeFootball.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Dance.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Dealbook.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/DiningandWine.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Education.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/EnergyEnvironment.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Golf.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Health.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Hockey.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Jobs.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Lens.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/MediaandAdvertising.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/MiddleEast.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/MostEmailed.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/MostShared.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/MostViewed.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Movies.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Music.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Obituaries.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/PersonalTech.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/ProBasketball.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/ProFootball.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/RealEstate.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/SmallBusiness.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Space.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Television.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Tennis.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Theater.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/tmagazine.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Travel.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Upshot.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/US.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Weddings.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/Well.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+      "https://rss.nytimes.com/services/xml/rss/nyt/YourMoney.xml",
+      "https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/subject/mobile-applications/rss.xml",
+      "https://content.api.nytimes.com/svc/news/v3/all/recent.rss"
+    ]
+  },
+
+	{
+		"ID": 4,
+		"Paywall": true,
+		"Name": "Sky News",
+		"Favicon": "https://news.sky.com/resources/favicon.png",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://feeds.skynews.com/feeds/rss/business.xml",
+			"https://feeds.skynews.com/feeds/rss/entertainment.xml",
+			"https://feeds.skynews.com/feeds/rss/home.xml",
+			"https://feeds.skynews.com/feeds/rss/politics.xml",
+			"https://feeds.skynews.com/feeds/rss/technology.xml",
+			"https://feeds.skynews.com/feeds/rss/uk.xml",
+			"https://feeds.skynews.com/feeds/rss/us.xml",
+			"https://feeds.skynews.com/feeds/rss/world.xml"
+		]
+	},
+
+	{
+		"ID": 5,
+		"Paywall": false,
+		"Name": "Economist",
+		"Favicon": "https://www.economist.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://www.economist.com/asia/rss.xml",
+			"https://www.economist.com/briefing/rss.xml",
+			"https://www.economist.com/britain/rss.xml",
+			"https://www.economist.com/business/rss.xml",
+			"https://www.economist.com/china/rss.xml",
+			"https://www.economist.com/europe/rss.xml",
+			"https://www.economist.com/finance-and-economics/rss.xml",
+			"https://www.economist.com/leaders/rss.xml",
+			"https://www.economist.com/middle-east-and-africa/rss.xml",
+			"https://www.economist.com/science-and-technology/rss.xml",
+			"https://www.economist.com/special-report/rss.xml",
+			"https://www.economist.com/the-americas/rss.xml",
+			"https://www.economist.com/the-world-this-week/rss.xml",
+			"https://www.economist.com/united-states/rss.xml"
+		]
+	},
+
+	{
+		"ID": 6,
+		"Paywall": false,
+		"Name": "Wired",
+		"Favicon": "https://www.wired.com/verso/static/wired/assets/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://www.wired.com/feed/category/backchannel/latest/rss",
+			"https://www.wired.com/feed/category/business/latest/rss",
+			"https://www.wired.com/feed/category/culture/latest/rss",
+			"https://www.wired.com/feed/category/gear/latest/rss",
+			"https://www.wired.com/feed/category/ideas/latest/rss",
+			"https://www.wired.com/feed/category/science/latest/rss",
+			"https://www.wired.com/feed/category/security/latest/rss",
+			"https://www.wired.com/feed/rss",
+			"https://www.wired.com/feed/tag/ai/latest/rss",
+			"https://www.wired.com/feed/tag/wired-guide/latest/rss"
+		]
+	},
+
+	{
+		"ID": 7,
+		"Paywall": false,
+		"Name": "Reuters",
+		"Favicon": "https://www.reuters.com/pf/resources/images/reuters/favicon/tr_fvcn_kinesis_32x32.ico?d=190",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://www.reutersagency.com/feed/?best-sectors=commodities-energy&post_type=best",
+			"https://www.reutersagency.com/feed/?best-sectors=economy&post_type=best",
+			"https://www.reutersagency.com/feed/?best-sectors=foreign-exchange-fixed-income&post_type=best",
+			"https://www.reutersagency.com/feed/?taxonomy=best-sectors&post_type=best"
+		]
+	},
+
+	{
+		"ID": 8,
+		"Paywall": false,
+		"Name": "insider",
+		"Favicon": "https://s2-prod.insider.co.uk/@trinitymirrordigital/chameleon-branding/publications/businessInsider/img/favicon.74572be5fe93a8de.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [
+			"https://www.insider.co.uk/all-about/economy/?service=rss",
+			"https://www.insider.co.uk/all-about/markets/?service=rss",
+			"https://www.insider.co.uk/appointments/?service=rss",
+			"https://www.insider.co.uk/news/?service=rss",
+			"https://www.insider.co.uk/?service=rss"
+		]
+	},
+
+	{
+		"ID": 9,
+		"Paywall": false,
+		"Name": "9to5 Mac",
+		"Favicon": "https://9to5mac.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://9to5mac.com/feed/" ]
+	},
+
+
+	{
+		"ID": 10,
+		"Paywall": false,
+		"Name": "9to5 Google",
+		"Favicon": "https://9to5google.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://9to5google.com/feed/" ]
+	},
+
+	{
+		"ID": 11,
+		"Paywall": false,
+		"Name": "Yahoo News",
+		"Favicon": "https://www.yahoo.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://www.yahoo.com/news/rss" ]
+	},
+
+	{
+		"ID": 12,
+		"Paywall": false,
+		"Name": "The Verge",
+		"Favicon": "https://cdn.vox-cdn.com/verge/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": true,
+		"Feeds": [ "https://www.theverge.com/rss/index.xml" ]
+	},
+
+	{
+		"ID": 13,
+		"Paywall": true,
+		"Name": "Financial Times",
+		"Favicon": "https://play-lh.googleusercontent.com/K9G2Yd-uT_ThzxXkUsR4jEGIw_P1enRMwgpO_KetgeY1ONcqspkRyw1DlNI6VVOm-zs=w240-h480",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://www.ft.com/news-feed?format=rss" ]
+	},
+
+	{
+		"ID": 14,
+		"Paywall": true,
+		"Name": "France24",
+		"Favicon": "https://www.france24.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://www.france24.com/en/rss" ]
+	},
+
+	{
+		"ID": 15,
+		"Paywall": false,
+		"Name": "CNBC",
+		"Favicon": "https://www.cnbc.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://www.cnbc.com/id/100727362/device/rss/rss.html" ]
+	},
+
+	{
+		"ID": 16,
+		"Paywall": false,
+		"Name": "Engadget",
+		"Favicon": "https://www.engadget.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://www.engadget.com/rss.xml" ]
+	},
+
+	{
+		"ID": 17,
+		"Paywall": false,
+		"Name": "Aljazeera",
+		"Favicon": "https://www.aljazeera.com/favicon_aje.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://aljazeera.com/xml/rss/all.xml" ]
+	},
+
+	{
+		"ID": 18,
+		"Paywall": false,
+		"Name": "Tech Crunch",
+		"Favicon": "https://techcrunch.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": true,
+		"Feeds": [ "https://techcrunch.com/feed/" ]
+	},
+
+	{
+		"ID": 19,
+		"Paywall": false,
+		"Name": "Time Magazine",
+		"Favicon": "https://time.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://time.com/feed/" ]
+	},
+
+
+	{
+		"ID": 20,
+		"Paywall": false,
+		"Name": "Mashable",
+		"Favicon": "https://mashable.com/favicons/favicon.svg",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://mashable.com/feeds/rss/all" ]
+	},
+
+	{
+		"ID": 21,
+		"Paywall": false,
+		"Name": "NPR",
+		"Favicon": "https://media.npr.org/chrome/favicon/favicon-180x180.png",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://feeds.npr.org/1004/rss.xml" ]
+	},
+
+
+	{
+		"ID": 22,
+		"Paywall": false,
+		"Name": "Mac Rumors",
+		"Favicon": "https://images.macrumors.com/images-new/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://feeds.macrumors.com/MacRumors-Front" ]
+	},
+
+	{
+		"ID": 23,
+		"Paywall": false,
+		"Name": "Washington Post",
+		"Favicon": "https://www.washingtonpost.com/favicon.svg",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://feeds.washingtonpost.com/rss/world" ]
+	},
+
+	{
+		"ID": 24,
+		"Paywall": false,
+		"Name": "JP Morgan Chase",
+		"Favicon": "https://www.jpmorganchase.com/etc.clientlibs/settings/wcm/designs/sites/jpmorganchase/jpmorganchase-base/v0/resources/images/global/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://jpmorganchaseco.gcs-web.com/rss/news-releases.xml" ]
+	},
+
+	{
+		"ID": 25,
+		"Paywall": false,
+		"Name": "Pitchfork",
+		"Favicon": "https://pitchfork.com/verso/static/pitchfork/assets/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://pitchfork.com/rss/news/" ]
+	},
+
+	{
+		"ID": 26,
+		"Paywall": false,
+		"Name": "9to5 Google",
+		"Favicon": "https://9to5google.com/favicon.ico",
+		"Weighting": 50,
+		"AlwaysJakeFlag": false,
+		"Feeds": [ "https://9to5google.com/feed/" ]
+	},
+
+  {
+    "ID": 27,
+    "Paywall": true,
+    "Name": "Bloomberg",
+    "Favicon": "https://assets.bwbx.io/s3/bbgmkts/images/favicon-black.png",
+    "Weighting": 50,
+    "AlwaysJakeFlag": false,
+    "Feeds": [
+      "https://feeds.bloomberg.com/markets/news.rss",
+      "https://feeds.bloomberg.com/politics/news.rss",
+      "https://feeds.bloomberg.com/technology/news.rss",
+      "https://feeds.bloomberg.com/wealth/news.rss",
+      "https://feeds.bloomberg.com/economics/news.rss",
+      "https://feeds.bloomberg.com/industries/news.rss",
+      "https://feeds.bloomberg.com/green/news.rss"
+    ]
+  }
+  
+]
