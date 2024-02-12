@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:typing="using:REMNANT.Typing"
+             x:Class="REMNANT.MainPage">
+    <ScrollView>
+        <VerticalStackLayout Spacing="30" BindableLayout.ItemsSource="{x:Binding Articles}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="typing:Article">
+                    <Grid HeightRequest="250" >
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OpenArticle"/>
+                        </Grid.GestureRecognizers>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="godsighting.jpg" Grid.Row="0" MinimumWidthRequest="200" MinimumHeightRequest="200"/>
+                        <Label Text="{x:Binding Title}" FontSize="12" Grid.Row="1"/>
+                        <Label Text="{x:Binding RssSummary}" FontSize="10" Grid.Row="2"/>
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
