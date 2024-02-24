@@ -74,6 +74,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\HYDRANT\HYDRANT\HYDRANT.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="ArticleView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
