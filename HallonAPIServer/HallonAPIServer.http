@@ -1,0 +1,6 @@
+@HallonAPIServer_HostAddress = http://localhost:5257
+
+GET {{HallonAPIServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

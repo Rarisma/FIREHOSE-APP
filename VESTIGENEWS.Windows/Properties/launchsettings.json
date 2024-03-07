@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "VESTIGENEWS.Windows (Unpackaged)": {
+      "commandName": "Project",
+      "nativeDebugging": true,
+      "sqlDebugging": true
+    },
+    "VESTIGENEWS.Windows (Package)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

@@ -9,13 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Betalgo.OpenAI" Version="7.4.6" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.59" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HYDRANT\HYDRANT\HYDRANT.csproj" />
+    <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "VESTIGENEWS",
+  "display": "standalone",
+  "name": "VESTIGENEWS",
+  "short_name": "VESTIGENEWS",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

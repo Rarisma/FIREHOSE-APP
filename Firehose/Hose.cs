@@ -34,6 +34,7 @@ public static class Hose
     {
         Stopwatch sw = Stopwatch.StartNew();
         totalFeeds = RSSFeeds.Count; // Assuming RSSFeeds is a List or similar collection
+        ConcurrentDictionary <string, SyndicationItem> Unfiltered = new();
         Parallel.ForEach(RSSFeeds, new(){MaxDegreeOfParallelism = 8}, URL =>
         {
             using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
@@ -49,7 +50,7 @@ public static class Hose
                             {
                                 try
                                 {
-                                    Stories.TryAdd(item.Id, item); // Thread-safe add
+                                    Unfiltered.TryAdd(item.Id, item); // Thread-safe add
                                 }
                                 catch (ArgumentException)
                                 {
@@ -83,10 +84,10 @@ public static class Hose
 
         sw.Restart();
         //Date filter
-        Console.WriteLine($"RSS Feeds Contain {Stories.Count} stories\nFiltering by date...");
+        Console.WriteLine($"RSS Feeds Contain {Unfiltered.Count} stories\nFiltering by date...");
         try
         {
-            Stories = Stories.Where(kvp => kvp.Value.PublishDate > DateTimeOffset.Now.AddDays(-2))
+            Stories = Unfiltered.Where(kvp => kvp.Value.PublishDate > DateTimeOffset.Now.AddDays(-2))
                 .ToDictionary(item => item.Key, item => item.Value);
 
         }
