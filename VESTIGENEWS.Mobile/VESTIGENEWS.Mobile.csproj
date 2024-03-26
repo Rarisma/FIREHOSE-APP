@@ -67,9 +67,16 @@
   <ItemGroup>
     <ProjectReference Include="..\VESTIGENEWS\VESTIGENEWS.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="drawable\" />
+  </ItemGroup>
   <Import Project="..\VESTIGENEWS.Shared\base.props" />
 
   <Target Name="ValidateOverrides" BeforeTargets="Restore;_CheckForUnsupportedTargetFramework" Condition="'$(OverrideTargetFramework)' != ''">
     <Error Text="OverrideTargetFramework set to '$(OverrideTargetFramework)' is missing valid target. Set OverrideTargetFramework to one of the TargetFrameworks for this project or skip building this project (eg unload the project in Visual Studio)" Condition="$(OverrideTargetFramework.Contains('windows10')) or !$(OverrideTargetFrameork.Contains('-'))" />
   </Target>
+
+  <ItemGroup>
+    <None Remove="C:\Users\RARI\Documents\Repos\Personal\REMNANT\VESTIGENEWS.Shared\Splash\splash_screen.svg" />
+  </ItemGroup>
 </Project>

@@ -1,24 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
 
 namespace VESTIGENEWS;
 
 public sealed partial class ArticleView : Page
 {
-    public ArticleView(Article Art)
+    private Article Article;
+    public ArticleView(Article Data)
     {
-        this.InitializeComponent();
+        InitializeComponent();
+        Article = Data;
+
+        //Title has a XAML Parsing error so set it manually.
+        //ArticleTitle.Text = Data.Title;
     }
+
+    /// <summary>
+    /// Opens article in the users browser
+    /// </summary>
+    private void OpenBrowser(object sender, RoutedEventArgs e) => Process.Start(new ProcessStartInfo { FileName = Article.Url, UseShellExecute = true });
+
+
+    /// <summary>
+    /// Opens the reader mode UI, which should show the users 
+    /// a no nonsense view of the articles text.
+    /// </summary>
+    private void OpenReader(object sender, RoutedEventArgs e)
+    {
+        Glob.NaviStack.Push(new ReaderMode(Article));
+        Glob.DoNavi();
+    }
+
+    //Leaves this view, sends user back to the article view.
+    private void GoBack(object sender, RoutedEventArgs e) { Glob.FuckGoBack(); }
 }

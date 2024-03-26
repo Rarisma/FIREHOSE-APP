@@ -19,7 +19,9 @@
     <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="ArticleList.xaml" />
     <None Remove="ArticleView.xaml" />
+    <None Remove="ReaderMode.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,11 +35,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\HYDRANT\HYDRANT.csproj" />
+    <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <UpToDateCheckInput Remove="ArticleView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="ArticleList.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="ReaderMode.xaml" />
   </ItemGroup>
 
 </Project>

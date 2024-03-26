@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     URL VARCHAR(255) NOT NULL PRIMARY KEY,  -- URL to article
     ARTICLE_TEXT LONGTEXT NOT NULL,         -- Full content of article
     PUBLISH_DATE DATETIME NOT NULL,         -- Date of publication
-    RSS_SUMMARY VARCHAR(255) NOT NULL,      -- Summary provided by RSS Feed.
+    RSS_SUMMARY longtext NOT NULL,     		-- Summary provided by RSS Feed.
     SUMMARY LONGTEXT,                       -- AI generated summary of the article content
     WEIGHTING INT,                          -- UNIMPLEMENTED (Trustworthiness Score)
     LOW_QUALITY BOOLEAN NOT NULL,           -- Is the article low quality (i.e gossip)
@@ -15,7 +15,10 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     COMPANIES_MENTIONED LONGTEXT,           -- List of companies mentioned in the article
     EXECUTIVES_MENTIONED LONGTEXT,          -- List of executives
     JAKE_FLAG BOOLEAN NOT NULL,             -- Should Jake be informed immediately?
-	ImageURL VARCHAR(255) NOT NULL			-- A URL to the image that represents the article.
+	ImageURL VARCHAR(255) NOT NULL,			-- A URL to the image that represents the article.
+    PUBLISHER VARCHAR(128) NOT NULL,		-- Who published the article
+    ICON VARCHAR(255),				-- Publisher Icon
+    AUTHOR VARCHAR(255) NOT NULL			-- Who wrote the article
 );
 
 DROP USER IF EXISTS 'remnant'@'%';

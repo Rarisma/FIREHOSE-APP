@@ -1,4 +1,4 @@
-﻿using System.Text;
+ using System.Text;
 using System.Text.Json;
 //Till the streets paved in gold.
 namespace Firehose;

@@ -1,7 +1,11 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
+using System.Net.Http;
+using System.Security.Policy;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using HtmlAgilityPack;
 using HYDRANT;
 //Fortune and glory, kid.
 namespace Firehose;
@@ -35,7 +39,7 @@ public static class Hose
         Stopwatch sw = Stopwatch.StartNew();
         totalFeeds = RSSFeeds.Count; // Assuming RSSFeeds is a List or similar collection
         ConcurrentDictionary <string, SyndicationItem> Unfiltered = new();
-        Parallel.ForEach(RSSFeeds, new(){MaxDegreeOfParallelism = 8}, URL =>
+        Parallel.ForEach(RSSFeeds, new(){ MaxDegreeOfParallelism = 8 }, URL =>
         {
             using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
             {
@@ -131,12 +135,15 @@ public static class Hose
                 {
                     Url = Article.Links.FirstOrDefault()?.Uri?.ToString(),
                     Title = Article.Title.Text,
-                    RssSummary = Article.Summary?.Text,
+                    RssSummary = CleanUpHTMLString(Article.Summary?.Text),
                     Content = await SubjugationService.GetURLText(Article.Links.FirstOrDefault()?.Uri?.ToString()),
                     PublishDate = Article.PublishDate.DateTime,
                     LowQuality = false,
                     Paywall = false,
-                    Summary = ""
+                    Summary = "",
+                    Publisher = Article.Links.FirstOrDefault()?.Uri?.Host.ToLower().Replace("www.", "").Split(".")[0].ToUpper(),
+                    Author = Article.Authors.Count == 0 ? "Unknown Author" : Article.Authors.First().Name,
+                    ImageURL = await HYDRANT.Article.GetImageForURL(Article.Links.FirstOrDefault()?.Uri?.ToString())
                 };
                 tempart.Add(newArticle);
                 UpdateProgressBar(tempart.Count, Stories.Count, $" {error} errors");
@@ -152,7 +159,7 @@ public static class Hose
         sw.Stop();
         Console.WriteLine($"Filtering completed in {sw.Elapsed.Seconds} Seconds.");
 
-        Console.WriteLine($"Summarising stories, this will take fucking ages.\n");
+        Console.WriteLine($"Summarising stories, this will take even longer\n");
         sw.Restart();
         foreach (var article in Articles)
         {
@@ -176,8 +183,8 @@ public static class Hose
             });
             article.Upload();
             UpdateProgressBar(Articles.ToList().IndexOf(article), Articles.Count, "");
-        } 
-        
+        }
+
         Console.WriteLine($"Story analysis complete in {sw.Elapsed.Minutes} minutes.");
     }
 
@@ -221,5 +228,21 @@ public static class Hose
             RSSFeeds.Add(Line);
         }
         Console.WriteLine($"Loaded {RSSFeeds.Count} feeds");
+    }
+
+    /// <summary>
+    /// Takes a block of HTML Text, like a rich RSS Summary
+    /// and turns it into pretty plain ol' plaintext.
+    /// </summary>
+    /// <param name="Text"></param>
+    /// <returns></returns>
+    static string CleanUpHTMLString(string Text)
+    {
+        // Load the HTML content
+        var doc = new HtmlDocument();
+        doc.LoadHtml(Text);
+
+        // Extract plain text and return it
+        return doc.DocumentNode.InnerText;
     }
 }

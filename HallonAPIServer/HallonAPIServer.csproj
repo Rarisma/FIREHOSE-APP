@@ -9,9 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\..\HYDRANT\HYDRANT.csproj" />
+    <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
 
 </Project>

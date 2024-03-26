@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,13 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageReference Include="HtmlAgilityPack"/>
+    <PackageReference Include="System.ServiceModel.Syndication"/>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <None Update="Blacklist.txt">
