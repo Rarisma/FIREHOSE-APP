@@ -181,6 +181,7 @@ public static class Hose
                 },
                 new() { content = $"Summarise the following {article.Content}", role = "user" },
             });
+            article.LowQuality = await LowQuality(article.Summary);
             article.Upload();
             UpdateProgressBar(Articles.ToList().IndexOf(article), Articles.Count, "");
         }
@@ -244,5 +245,29 @@ public static class Hose
 
         // Extract plain text and return it
         return doc.DocumentNode.InnerText;
+    }
+
+    static async Task<bool> LowQuality(string Text)
+    {
+        string Response = await LLM.OneShot(new List<Message>()
+        {
+            new()
+            {
+                role = "system",
+                content =
+                    """
+                    Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
+                    Text for analysis:Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
+                    """
+            },
+            new()
+            {
+                role = "user",
+                content = $"Text for analysis:{Text}"
+            }
+        }, 0.2, 1);
+
+        if (Response.ToLower() == "yes") { return true; }
+        return false;
     }
 }

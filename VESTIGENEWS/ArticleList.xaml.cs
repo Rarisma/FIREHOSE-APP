@@ -36,7 +36,7 @@ public sealed partial class ArticleList : Page
 
     private void InvokeArticle(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        Article Data = (Article)((Grid)sender).DataContext;
+        Article Data = (Article)(sender as Panel).DataContext;
         ArticleView V = new ArticleView(Data);
         Glob.NaviStack.Push(V);
         Glob.DoNavi();

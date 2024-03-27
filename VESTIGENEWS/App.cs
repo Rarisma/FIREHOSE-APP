@@ -15,7 +15,7 @@ public class App : Application
 #if DEBUG
         MainWindow.EnableHotReload();
 #endif
-
+        App.Current.UnhandledException += Current_UnhandledException;
 
         // Do not repeat app initialization when the Window already has content,
         // just ensure that the window is active
@@ -40,6 +40,11 @@ public class App : Application
 
         // Ensure the current window is active
         MainWindow.Activate();
+    }
+
+    private void Current_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        Console.WriteLine(e.Message);
     }
 
     /// <summary>
