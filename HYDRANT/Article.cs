@@ -1,6 +1,8 @@
 using System.Globalization;
+using System.Text.Json;
 using HtmlAgilityPack;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 
 namespace HYDRANT;
 public class Article
@@ -21,7 +23,7 @@ public class Article
     {
         get
         {
-            string Favi = "http://" + new Uri(Url).Host + "/favicon.ico";
+            string Favi = "https://" + new Uri(Url).Host + "/favicon.ico";
             return Favi;
         }
     }
@@ -30,7 +32,11 @@ public class Article
     {
         get
         {
-            return Math.Round((DateTime.Now - PublishDate).TotalHours) + "hrs ago";
+            if ((DateTime.Now - PublishDate).TotalHours <= 48)
+            {
+                return Math.Round((DateTime.Now - PublishDate).TotalHours) + " hours ago";
+            }
+            return Math.Round((DateTime.Now - PublishDate).TotalDays) + " days ago";
         }
     }
     #endregion
@@ -40,9 +46,57 @@ public class Article
     private const string IP = "localhost";
     private const string User = "root";
     private const string Pass = "Mavik";
-    public static List<Article> GetArticles(int Limit = 0, string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}")
+    private const string HallonEndpoint = "https://31.205.123.48:7255";
+    private const bool ForceHallon = false;
+
+    public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0)
     {
-        string query = $"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, LOW_QUALITY, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR FROM ARTICLES LIMIT {Limit} OFFSET 200";
+        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset); }
+#if WINDOWS10_0_18362_0_OR_GREATER || HAS_UNO_SKIA || __MACOS__ //Use raw DB Calls on supported platforms
+        return GetArticlesFromDB(Limit, Offset);
+#else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
+        return await GetArticlesFromHallon(Limit, Offset);
+#endif
+    }
+
+    /// <summary>
+    /// This runs GetArticlesFromDB through HallonAPIServer, a middleware solution.
+    /// </summary>
+    /// <returns></returns>
+    private static async Task<List<Article>?> GetArticlesFromHallon(int Limit = 0, int Offset = 0)
+    {
+        var endpoint = $"/Articles/GetArticles?limit={Limit}";
+
+
+        //TODO: ACTUALLY IMPLEMENT SECURITY HERE
+        //MITMs can occur here but since its read only DB call, nothing can really happen.
+        //Nonetheless, this should be fixed when Hallon uses a proper certificate
+        using (var client = new HttpClient(new CertificateIgnorer()))
+        {
+            try
+            {
+                var response = await client.GetAsync(HallonEndpoint + endpoint);
+                response.EnsureSuccessStatusCode(); // Throw an exception if not successful
+
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Article>>(content);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine($"Request exception: {e.Message}");
+                return new();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"General exception: {e.Message}");
+                return new();
+            }
+        }
+    }
+
+    public static List<Article> GetArticlesFromDB(int Limit = 0, int Offset = 0, string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}")
+    {
+        string query = $"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, LOW_QUALITY, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR FROM ARTICLES LIMIT {Limit} OFFSET {Offset}";
 
         //Connection to the DB
         MySqlConnection DB = new();

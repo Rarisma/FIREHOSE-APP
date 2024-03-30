@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Windows.UI.Core;
 
 namespace VESTIGENEWS;
 
@@ -10,8 +11,15 @@ public sealed partial class ArticleView : Page
         InitializeComponent();
         Article = Data;
 
-        //Title has a XAML Parsing error so set it manually.
-        //ArticleTitle.Text = Data.Title;
+#if __ANDROID__
+        var manager = SystemNavigationManager.GetForCurrentView();
+        manager.BackRequested += OnBackRequested;
+#endif
+    }
+
+    private void OnBackRequested(object? sender, BackRequestedEventArgs e)
+    {
+        if (Glob.NaviStack.Count > 1) { Glob.FuckGoBack(); }
     }
 
     /// <summary>

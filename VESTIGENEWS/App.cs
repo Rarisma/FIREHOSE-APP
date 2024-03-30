@@ -1,3 +1,5 @@
+using Windows.UI.Core;
+
 namespace VESTIGENEWS;
 
 public class App : Application
@@ -27,8 +29,7 @@ public class App : Application
             // Place the frame in the current Window
             MainWindow.Content = rootFrame;
             
-            rootFrame.NavigationFailed += OnNavigationFailed;
-        }
+            rootFrame.NavigationFailed += OnNavigationFailed; }
 
         if (rootFrame.Content == null)
         {
@@ -37,6 +38,7 @@ public class App : Application
             // parameter
             rootFrame.Navigate(typeof(MainPage), args.Arguments);
         }
+
 
         // Ensure the current window is active
         MainWindow.Activate();

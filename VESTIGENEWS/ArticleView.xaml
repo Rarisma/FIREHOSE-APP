@@ -11,8 +11,8 @@
 
   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="*"/>
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="12*"/>
     </Grid.RowDefinitions>
 
     <Grid Grid.Row="0" HorizontalAlignment="Stretch">
@@ -23,8 +23,11 @@
         <ColumnDefinition Width="Auto"/>
       </Grid.ColumnDefinitions>
 
-      <Button Content="←" Click="GoBack" HorizontalAlignment="Left" Grid.Column="0" Background="Transparent" BorderBrush="Transparent" Margin="10,0"/>
-      <Button Content="✨" HorizontalAlignment="Right" Grid.Column="2"  Background="Transparent" BorderBrush="Transparent" Margin="10,0">
+      <Button Content="&lt;" VerticalAlignment="Center" Click="GoBack" HorizontalAlignment="Left" Margin="10,0"
+              Grid.Column="0" Background="Transparent" BorderBrush="Transparent" Padding="20"/>
+
+      <Button Content="✨" HorizontalAlignment="Right" Grid.Column="2"  Background="Transparent"
+              BorderBrush="Transparent" Padding="20">
         <Button.Flyout>
           <Flyout>
             <StackPanel>
@@ -35,7 +38,7 @@
           </Flyout>
         </Button.Flyout>
       </Button>
-      <Button Content="· · ·" Grid.Column="3"  Background="Transparent" BorderBrush="Transparent" Margin="10,0">
+      <Button Content="· · ·" Grid.Column="3"  Background="Transparent" BorderBrush="Transparent" Padding="20" Margin="10,0">
         <Button.Flyout>
           <MenuFlyout>
             <MenuFlyoutItem Text="Open in Browser" Click="OpenBrowser"/>

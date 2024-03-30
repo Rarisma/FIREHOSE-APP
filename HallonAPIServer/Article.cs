@@ -14,7 +14,7 @@ public class ArticlesController : ControllerBase
     {
         try
         {
-            return Ok(JsonSerializer.Serialize<List<Article>>(Article.FetchArticlesFromDB(limit)));
+            return Ok(JsonSerializer.Serialize<List<Article>>(Article.GetArticlesFromDB(limit,0)));
         }
         catch (Exception ex)
         {
@@ -29,21 +29,6 @@ public class ArticlesController : ControllerBase
         {
             var urls = Article.GetURLs();
             return Ok(urls);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    // Assuming Article has properties for Upload method to work and it's part of Article class
-    [HttpPost("Upload")]
-    public IActionResult Upload([FromBody] Article article)
-    {
-        try
-        {
-            article.Upload();
-            return Ok();
         }
         catch (Exception ex)
         {

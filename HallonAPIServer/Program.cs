@@ -1,10 +1,7 @@
-using HYDRANT;
-using Microsoft.Extensions.Hosting;
 namespace HallonAPIServer;
-//Fed posts worst bait, asked to leave the fbi
+
 public class Program
 {
-
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +9,17 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+
+        //Kindly ask CORS to go away
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -29,6 +37,8 @@ public class Program
 
         app.UseAuthorization();
 
+        // Use CORS with the default policy
+        app.UseCors();
 
         app.MapControllers();
 
