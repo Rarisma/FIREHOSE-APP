@@ -9,15 +9,15 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     RSS_SUMMARY longtext NOT NULL,     		-- Summary provided by RSS Feed.
     SUMMARY LONGTEXT,                       -- AI generated summary of the article content
     WEIGHTING INT,                          -- UNIMPLEMENTED (Trustworthiness Score)
-    LOW_QUALITY BOOLEAN NOT NULL,           -- Is the article low quality (i.e gossip)
+    HEADLINE BOOLEAN NOT NULL,              -- Is the article a major story
     BUSINESS_RELATED BOOLEAN NOT NULL,      -- Does the article talk about/relate to business
-    PAYWALL BOOLEAN NOT NULL,               -- Is the article paywalled?
+    PAYWALL BOOLEAN NOT NULL,               -- Is the article paywalled?x
     COMPANIES_MENTIONED LONGTEXT,           -- List of companies mentioned in the article
     EXECUTIVES_MENTIONED LONGTEXT,          -- List of executives
     JAKE_FLAG BOOLEAN NOT NULL,             -- Should Jake be informed immediately?
 	ImageURL VARCHAR(255) NOT NULL,			-- A URL to the image that represents the article.
     PUBLISHER VARCHAR(128) NOT NULL,		-- Who published the article
-    ICON VARCHAR(255),				-- Publisher Icon
+    ICON VARCHAR(255),						-- Publisher Icon
     AUTHOR VARCHAR(255) NOT NULL			-- Who wrote the article
 );
 

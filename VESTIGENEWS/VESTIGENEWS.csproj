@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Remove="ArticleList.xaml" />
     <None Remove="ArticleView.xaml" />
+    <None Remove="Controls\PublisherInformation.xaml" />
     <None Remove="ReaderMode.xaml" />
   </ItemGroup>
 
@@ -48,6 +49,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="ReaderMode.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\PublisherInformation.xaml" />
   </ItemGroup>
 
 </Project>

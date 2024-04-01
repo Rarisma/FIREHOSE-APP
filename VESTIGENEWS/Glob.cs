@@ -1,4 +1,6 @@
 //I'VE GOT A RECKLESS TONGUE
+using Windows.UI.Core;
+
 namespace VESTIGENEWS;
 public static class Glob
 {
@@ -21,5 +23,9 @@ public static class Glob
     {
         NaviStack.Pop();
         DoNavi();
+    }
+    public static void OnBackRequested(object? sender, BackRequestedEventArgs e)
+    {
+        if (NaviStack.Count > 1) { FuckGoBack(); }
     }
 }

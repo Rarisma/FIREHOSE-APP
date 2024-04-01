@@ -14,9 +14,9 @@ public class ArticleSelector : DataTemplateSelector
     {
         if (item is Article multiTypeItem)
         {
-            if (multiTypeItem.LowQuality) { return HeadlineTemplate; }
-            if (multiTypeItem.ImageURL == "?" & multiTypeItem.LowQuality == false) { return NoImageTemplate; }
-            if ( multiTypeItem.LowQuality == false) { return MinimalTemplate; }
+            if (multiTypeItem.Headline) { return HeadlineTemplate; }
+            if (multiTypeItem.ImageURL == "?" & !multiTypeItem.Headline) { return NoImageTemplate; }
+            if ( multiTypeItem.Headline == false) { return MinimalTemplate; }
 
         }
         return base.SelectTemplateCore(item, container);

@@ -6,6 +6,7 @@ namespace VESTIGENEWS;
 
 public sealed partial class ArticleList : Page
 {
+    private int Offset = 0;
     public ObservableCollection<Article> Articles { get; set; }
     public ArticleList()
     {
@@ -14,14 +15,8 @@ public sealed partial class ArticleList : Page
         InitializeComponent();
 
 #if __ANDROID__
-        var manager = SystemNavigationManager.GetForCurrentView();
-        manager.BackRequested += OnBackRequested;
+        SystemNavigationManager.GetForCurrentView().BackRequested += Glob.OnBackRequested;
 #endif
-    }
-
-    private void OnBackRequested(object? sender, BackRequestedEventArgs e)
-    {
-        if (Glob.NaviStack.Count > 1) { Glob.FuckGoBack(); }
     }
 
     private async void LoadDataAsync()
@@ -29,7 +24,7 @@ public sealed partial class ArticleList : Page
         try
         {
             Articles.Clear();
-            var arts = await Article.GetArticles(100);
+            var arts = await Article.GetArticles(100, Offset);
             foreach (Article article in arts.OrderBy(item => new Random().Next()))
             {
                 if (article.ImageURL == null)
@@ -42,21 +37,38 @@ public sealed partial class ArticleList : Page
         }
         catch (Exception ex)
         {
-
             Console.WriteLine(ex.ToString());
         }
     }
-
-    private void InvokeArticle(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-
-    }
-
     private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Article Data = (e.OriginalSource as FrameworkElement).DataContext as Article;
         ArticleView V = new ArticleView(Data);
         Glob.NaviStack.Push(V);
         Glob.DoNavi();
+    }
+
+    /// <summary>
+    /// Check if we have hit the bottom.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ScrollToEnd(object? sender, ScrollViewerViewChangedEventArgs e)
+    {
+        //TODO: Reimplement to add infinite scroll.
+        return;
+        ScrollViewer scrollViewer = (ScrollViewer)sender;
+        if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+        {
+            Offset += Articles.Count;
+            LoadDataAsync();
+        }
+    }
+
+    private void LoadMorePressed(object sender, RoutedEventArgs e)
+    {
+        Offset += Articles.Count;
+        LoadDataAsync();
+        ArticleScroller.ChangeView(0, 0, ArticleScroller.ZoomFactor);
     }
 }

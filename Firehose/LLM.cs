@@ -25,9 +25,9 @@ namespace Firehose;
                     }
                 }
 
-                return $"Error: {response.StatusCode}";
+                return $"(LLM OneShot) Error: {response.StatusCode}";
             }
-            catch (Exception ex) { return $"Error: {ex.Message}";  }
+            catch (Exception ex) { return $"(LLM OneShot) Error: {ex.Message}";  }
         }
     }
 

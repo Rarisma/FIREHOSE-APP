@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HallonAPIServer", "HallonAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HYDRANT", "HYDRANT\HYDRANT.csproj", "{5CD1A253-0975-4190-915D-83FA893E2FDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firehose 2.0", "Firehose 2.0\Firehose 2.0.csproj", "{5C47A924-658C-4476-B1D6-1DA7004F7488}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +204,22 @@ Global
 		{5CD1A253-0975-4190-915D-83FA893E2FDD}.Release|x64.Build.0 = Release|Any CPU
 		{5CD1A253-0975-4190-915D-83FA893E2FDD}.Release|x86.ActiveCfg = Release|Any CPU
 		{5CD1A253-0975-4190-915D-83FA893E2FDD}.Release|x86.Build.0 = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|arm64.Build.0 = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|arm64.ActiveCfg = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|arm64.Build.0 = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x64.Build.0 = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

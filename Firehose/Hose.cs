@@ -54,7 +54,7 @@ public static class Hose
                             {
                                 try
                                 {
-                                    Unfiltered.TryAdd(item.Id, item); // Thread-safe add
+                                    Unfiltered.TryAdd(item.Links.FirstOrDefault()?.Uri?.ToString(), item); // Thread-safe add
                                 }
                                 catch (ArgumentException)
                                 {
@@ -213,23 +213,6 @@ public static class Hose
         if (completed == total) Console.WriteLine();
     }
     
-    /// <summary>
-    /// Reloads all sources from RSSFeed.txt
-    /// </summary>
-    static void ReloadSources()
-    {
-        Console.WriteLine("Reloading Feeds.");
-        RSSFeeds.Clear(); //Clear feeds
-        foreach (var Line in File.ReadAllLines("RSSFeeds.txt"))
-        {
-            //Skip Commented lines
-            if (Line[0] == '#') {continue;}
-
-            //Add feed
-            RSSFeeds.Add(Line);
-        }
-        Console.WriteLine($"Loaded {RSSFeeds.Count} feeds");
-    }
 
     /// <summary>
     /// Takes a block of HTML Text, like a rich RSS Summary

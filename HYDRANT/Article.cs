@@ -12,7 +12,7 @@ public class Article
     public string Title { get; set; }
     public string RssSummary { get; set; }
     public DateTime PublishDate { get; set; }
-    public bool LowQuality { get; set; }
+    public bool Headline { get; set; }
     public bool Paywall { get; set; }
     public string Summary { get; set; }
     public string ImageURL { get; set; }
@@ -28,17 +28,6 @@ public class Article
         }
     }
 
-    public string TimeFromPublication
-    {
-        get
-        {
-            if ((DateTime.Now - PublishDate).TotalHours <= 48)
-            {
-                return Math.Round((DateTime.Now - PublishDate).TotalHours) + " hours ago";
-            }
-            return Math.Round((DateTime.Now - PublishDate).TotalDays) + " days ago";
-        }
-    }
     #endregion
     public string Content { get; set; }
     public bool JakeFilter { get; set; }
@@ -96,7 +85,12 @@ public class Article
 
     public static List<Article> GetArticlesFromDB(int Limit = 0, int Offset = 0, string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}")
     {
-        string query = $"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, LOW_QUALITY, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR FROM ARTICLES LIMIT {Limit} OFFSET {Offset}";
+        string query = $@"
+SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR 
+FROM ARTICLES 
+ORDER BY PUBLISH_DATE DESC
+LIMIT {Limit} OFFSET {Offset};
+";
 
         //Connection to the DB
         MySqlConnection DB = new();
@@ -114,7 +108,7 @@ public class Article
                 Title = reader["TITLE"].ToString(),
                 RssSummary = reader["RSS_SUMMARY"].ToString(),
                 PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                LowQuality = Convert.ToBoolean(reader["LOW_QUALITY"]),
+                Headline = Convert.ToBoolean(reader["HEADLINE"]),
                 Paywall = Convert.ToBoolean(reader["PAYWALL"]),
                 Summary = reader["SUMMARY"].ToString(),
                 ImageURL = reader["ImageURL"].ToString(),
@@ -164,9 +158,9 @@ public class Article
                     command.Connection = connection;
                     command.CommandText = @"
                 INSERT INTO ARTICLES 
-                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, RSS_SUMMARY, SUMMARY, WEIGHTING, LOW_QUALITY, BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, EXECUTIVES_MENTIONED, JAKE_FLAG, ImageURL, PUBLISHER, AUTHOR) 
+                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, RSS_SUMMARY, SUMMARY, WEIGHTING, HEADLINE, BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, EXECUTIVES_MENTIONED, JAKE_FLAG, ImageURL, PUBLISHER, AUTHOR) 
                 VALUES 
-                (@Title, @Url, @Content, @PublishDate, @RssSummary, @Summary, @Weighting, @LowQuality, @BusinessRelated, @Paywall, @CompaniesMentioned, @ExecutivesMentioned, @JakeFlag, @ImageURL, @PUBLISHER, @AUTHOR)";
+                (@Title, @Url, @Content, @PublishDate, @RssSummary, @Summary, @Weighting, @Headline, @BusinessRelated, @Paywall, @CompaniesMentioned, @ExecutivesMentioned, @JakeFlag, @ImageURL, @PUBLISHER, @AUTHOR)";
                     command.Parameters.AddWithValue("@Title", Title);
                     command.Parameters.AddWithValue("@Url", Url);
                     command.Parameters.AddWithValue("@Content", Content);
@@ -174,7 +168,7 @@ public class Article
                     command.Parameters.AddWithValue("@RssSummary", RssSummary);
                     command.Parameters.AddWithValue("@Summary", Summary);
                     command.Parameters.AddWithValue("@Weighting", 0);
-                    command.Parameters.AddWithValue("@LowQuality", LowQuality);
+                    command.Parameters.AddWithValue("@Headline", Headline);
                     command.Parameters.AddWithValue("@BusinessRelated", false);
                     command.Parameters.AddWithValue("@Paywall", false);
                     command.Parameters.AddWithValue("@CompaniesMentioned", "");
@@ -192,27 +186,4 @@ public class Article
             Console.WriteLine(e.Message);
         }
     }
-
-
-    /// <summary>
-    /// Gets the image for a URL from the OpenGraph Metadata
-    /// </summary>
-    /// <param name="URL">URL to scrape</param>
-    /// <returns>OpenGraph Image URL</returns>
-    public static async Task<string> GetImageForURL(string URL)
-    {
-        using (var httpClient = new HttpClient())
-        {
-            HtmlDocument htmlDoc = new();
-            htmlDoc.LoadHtml(await httpClient.GetStringAsync(URL));
-
-            var ogImageNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
-            if (ogImageNode != null)
-            {
-                return ogImageNode.GetAttributeValue("content", string.Empty);
-            }
-            return "?";
-        }
-    }
-
 }
