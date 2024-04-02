@@ -9,6 +9,16 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
   <ScrollViewer>
-    <TextBlock Text="{x:Bind Article.Content}" TextWrapping="WrapWholeWords"/>
+    <StackPanel>
+      <StackPanel Orientation="Horizontal">
+
+        <Button Content="&lt;" VerticalAlignment="Center" Click="GoBack" HorizontalAlignment="Left"
+                Margin="10,0" Background="Transparent" BorderBrush="Transparent"
+                Padding="20"/>
+
+      </StackPanel>
+      <TextBlock Text="{x:Bind Article.Content}" TextWrapping="WrapWholeWords"/>
+    </StackPanel>
+
   </ScrollViewer>
 </Page>

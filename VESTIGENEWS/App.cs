@@ -23,20 +23,18 @@ public class App : Application
         // just ensure that the window is active
         if (MainWindow.Content is not Frame rootFrame)
         {
-            // Create a Frame to act as the navigation context and navigate to the first page
-            rootFrame = new Frame();
-
             // Place the frame in the current Window
-            MainWindow.Content = rootFrame;
-            
-            rootFrame.NavigationFailed += OnNavigationFailed; }
+            MainWindow.Content = Glob.Frame;
 
-        if (rootFrame.Content == null)
+            Glob.Frame.NavigationFailed += OnNavigationFailed; }
+
+        if (Glob.Frame.Content == null)
         {
             // When the navigation stack isn't restored navigate to the first page,
             // configuring the new page by passing required information as a navigation
             // parameter
-            rootFrame.Navigate(typeof(MainPage), args.Arguments);
+            Glob.NaviStack.Push(new ArticleList());
+            Glob.DoNavi();
         }
 
 

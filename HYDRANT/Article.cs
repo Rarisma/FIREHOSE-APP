@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using HtmlAgilityPack;
 using MySql.Data.MySqlClient;
@@ -40,8 +41,9 @@ public class Article
 
     public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return GetArticlesFromDB(Limit, Offset); }
         if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset); }
-#if WINDOWS10_0_18362_0_OR_GREATER || HAS_UNO_SKIA || __MACOS__ //Use raw DB Calls on supported platforms
+#if HAS_UNO_SKIA || __MACOS__  || WINDOWS //Use raw DB Calls on supported platforms
         return GetArticlesFromDB(Limit, Offset);
 #else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
         return await GetArticlesFromHallon(Limit, Offset);

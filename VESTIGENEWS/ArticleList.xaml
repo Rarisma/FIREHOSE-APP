@@ -8,7 +8,7 @@
 		xmlns:hydrant="using:HYDRANT"
 		xmlns:vestigeNews="using:VESTIGENEWS"
 		xmlns:controls="using:VESTIGENEWS.Controls"
-		Background="#080808" >
+		Background="#080808">
 
 	<Page.Resources>
     <Style x:Key="BorderTemplate" TargetType="Border">
@@ -27,7 +27,7 @@
 
     <!-- No Image - When the Article lacks an image, this will show the RSS Summary in its place.-->
     <DataTemplate x:Key="NoImageTemplate" x:DataType="hydrant:Article">
-      <Grid HorizontalAlignment="Stretch" Width="600">
+      <Grid HorizontalAlignment="Stretch" >
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
@@ -40,14 +40,14 @@
 
         <!-- Publication info, Title and Summary -->
         <controls:PublisherInformation Grid.Row="1" ItemSource="{x:Bind}"/>
-        <TextBlock Grid.Row="3" Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap"/>
-				<TextBlock Grid.Row="4" Text="{x:Bind RssSummary}" MaxLines="3" FontSize="11" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="3" Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap" MaxWidth="500"/>
+				<TextBlock Grid.Row="4" Text="{x:Bind RssSummary}" MaxLines="3" FontSize="11" TextWrapping="Wrap" MaxWidth="500"/>
 			</Grid>
 		</DataTemplate>
 
     <!-- Headline Template - These are the hard hitting stories, so they have large images. -->
 		<DataTemplate x:Key="HeadlineTemplate" x:DataType="hydrant:Article">
-      <Grid Width="600">
+      <Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
@@ -57,31 +57,32 @@
 				</Grid.RowDefinitions>
 
         <!-- Spacing boarder -->
-        <Border Width="600" Margin="0,10" BorderBrush="#555555"
+        <Border Width="500" Margin="0,10" BorderBrush="#555555"
                  Opacity="0.2" BorderThickness="1" CornerRadius="4"/>
 
         <!-- Show publication Info -->
         <controls:PublisherInformation Grid.Row="1" ItemSource="{x:Bind}"/>
 
         <!-- Image + Text -->
-        <Border CornerRadius="4" Grid.Row="2" BorderThickness="1" Width="500">
-          <Image Source="{x:Bind ImageURL}" />
+        <Border CornerRadius="4" Grid.Row="2" BorderThickness="1" HorizontalAlignment="Center" MaxHeight="200" Width="500">
+          <Image Source="{x:Bind ImageURL}" MaxHeight="200"/>
 				</Border>
-				<TextBlock Grid.Row="3" Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap" HorizontalAlignment="Center" Width="550"/>
+
+				<TextBlock Grid.Row="3" Text="{x:Bind Title}" FontSize="16" TextWrapping="Wrap" HorizontalAlignment="Left" Width="500"/>
 			</Grid>
 		</DataTemplate>
 
     <!-- Minimal - When the Article isn't a major story, so it should take up less space. -->
 		<DataTemplate x:Key="MinimalTemplate" x:DataType="hydrant:Article">
-			<Grid Width="600">
+			<Grid Width="500">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="400"/>
-          <ColumnDefinition Width="200"/>
+          <ColumnDefinition Width="*" MaxWidth="300"/>
+          <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
 				<!-- Separating boarder -->
@@ -92,9 +93,9 @@
         <!-- Title - [Image] -->
         <TextBlock Grid.Column="0" HorizontalAlignment="Left" Grid.Row="2"
                    Text="{x:Bind Title}" FontSize="16" TextWrapping="WrapWholeWords"
-                   VerticalAlignment="Center" Padding="0,0,10,0" Width="400"/>
+                   VerticalAlignment="Center" Padding="0,0,10,0"/>
 
-        <Border Grid.Row="1" Grid.Column="1" CornerRadius="4" HorizontalAlignment="Left" Grid.RowSpan="2"
+        <Border Grid.Row="1" Grid.Column="1" CornerRadius="4" HorizontalAlignment="Left" Grid.RowSpan="2" MaxHeight="100"
                 BorderThickness="0" VerticalAlignment="Stretch" Margin="0,0,15,0" >
           <Image Source="{x:Bind ImageURL}"/>
         </Border>
@@ -102,45 +103,60 @@
       </Grid>
 		</DataTemplate>
 
+    <!-- Article Selector Decides which article type should be used -->
 		<vestigeNews:ArticleSelector x:Key="ArticleSelector"
 																 NoImageTemplate="{StaticResource NoImageTemplate}"
 																 MinimalTemplate="{StaticResource MinimalTemplate}"
 																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
-	</Page.Resources>
+  </Page.Resources>
 
 
 	<Page.TopAppBar>
 		<CommandBar OverflowButtonVisibility="Collapsed">
-			<CommandBar.PrimaryCommands>
-				<AppBarButton Content="VESTIGE NEWS APP TEST" FontSize="20"/>
-			</CommandBar.PrimaryCommands>
-		</CommandBar>
+      <AppBarElementContainer>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+          <TextBlock Text="VESTIGE NEWS APP TEST - RARISMA 2024" HorizontalAlignment="Center" Margin="10"/>
+        </StackPanel>
+      </AppBarElementContainer>
+    </CommandBar>
 	</Page.TopAppBar>
-	<Page.BottomAppBar>
-		<CommandBar OverflowButtonVisibility="Collapsed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
-			<CommandBar.PrimaryCommands>
-				<AppBarButton Icon="Setting" Label="Settings" IsCompact="False" HorizontalAlignment="Center"/>
-				<AppBarButton Label="News" IsCompact="False"  HorizontalAlignment="Center">
-					<AppBarButton.Icon> 
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE789;"/>
-					</AppBarButton.Icon>
-				</AppBarButton>
-				<AppBarButton Label="Bookmarks" IsCompact="False"  HorizontalAlignment="Center">
-					<AppBarButton.Icon>
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE734;"/>
-					</AppBarButton.Icon>
-				</AppBarButton>
-			</CommandBar.PrimaryCommands>
-		</CommandBar>
-	</Page.BottomAppBar>
 
-  <ScrollViewer MaxWidth="600" ViewChanged="ScrollToEnd" Name="ArticleScroller">
-		<StackPanel Orientation="Vertical" >
-			<ItemsControl ItemsSource="{x:Bind Articles}" Tapped="UIElement_OnTapped"
-                    ItemTemplateSelector="{StaticResource ArticleSelector}"/>
 
-      <HyperlinkButton Content="Click to load more Articles" Click="LoadMorePressed"
-                       HorizontalAlignment="Center" Margin="10"/>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="auto"/>
+    </Grid.RowDefinitions>
+
+    <ScrollViewer Grid.Row="0" MaxWidth="600" Width="500" ViewChanged="ScrollToEnd"
+                  Name="ArticleScroller" Margin="10,0">
+      <StackPanel Orientation="Vertical" >
+        <ItemsControl ItemsSource="{x:Bind Articles}" Tapped="UIElement_OnTapped"
+                      Name="ArticleItemControl"
+                      ItemTemplateSelector="{StaticResource ArticleSelector}"/>
+
+        <HyperlinkButton Content="Click to load more Articles" Click="LoadMorePressed"
+                         HorizontalAlignment="Center" Margin="10"/>
+      </StackPanel>
+    </ScrollViewer>
+
+    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+      <!-- Settings Button -->
+      <AppBarButton Icon="Setting" Label="Settings" IsCompact="False" HorizontalAlignment="Center" Padding="20,0"/>
+
+      <!-- NewsFeed Button -->
+      <AppBarButton Label="News" IsCompact="False"  HorizontalAlignment="Center" Padding="20,0" Margin="100,0">
+        <AppBarButton.Icon>
+          <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE789;"/>
+        </AppBarButton.Icon>
+      </AppBarButton>
+
+      <!-- Bookmarks Button -->
+      <AppBarButton Label="Bookmarks" IsCompact="False" HorizontalAlignment="Center" Padding="20,0">
+        <AppBarButton.Icon>
+          <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE734;"/>
+        </AppBarButton.Icon>
+      </AppBarButton>
     </StackPanel>
-	</ScrollViewer>
+  </Grid>
 </Page>

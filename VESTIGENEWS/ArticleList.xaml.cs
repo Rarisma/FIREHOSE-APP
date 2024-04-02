@@ -43,8 +43,7 @@ public sealed partial class ArticleList : Page
     private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Article Data = (e.OriginalSource as FrameworkElement).DataContext as Article;
-        ArticleView V = new ArticleView(Data);
-        Glob.NaviStack.Push(V);
+        Glob.NaviStack.Push(new ArticleView(Data));
         Glob.DoNavi();
     }
 
