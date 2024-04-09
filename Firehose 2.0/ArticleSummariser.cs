@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HYDRANT;
 
 namespace Firehose2;
-internal class ArticleAnalyser
+public class ArticleAnalyser
 {
+    public static int TotalScraped = 0;
     public static async void StartAnalysis()
     {
         while (true)
@@ -29,6 +25,7 @@ internal class ArticleAnalyser
                 
                 //Post to database.
                 Article.Upload();
+                TotalScraped++;
             }
         }
     }
@@ -60,9 +57,7 @@ internal class ArticleAnalyser
                         """
                         Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
                         Text for analysis:Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
-                        """,
-                        $"Text for analysis:{Text}"
-            );
+                        """, $"Text for analysis:{Text}");
 
 
         return Response.ToLower() == "yes";

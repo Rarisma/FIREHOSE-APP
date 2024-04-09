@@ -39,14 +39,14 @@ public class Article
     private const string HallonEndpoint = "https://31.205.123.48:7255";
     private const bool ForceHallon = false;
 
-    public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0)
+    public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return GetArticlesFromDB(Limit, Offset); }
-        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset); }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return GetArticlesFromDB(Limit, Offset, Filter:Filter); }
+        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset,Filter); }
 #if HAS_UNO_SKIA || __MACOS__  || WINDOWS //Use raw DB Calls on supported platforms
-        return GetArticlesFromDB(Limit, Offset);
+        return GetArticlesFromDB(Limit, Offset, Filter:Filter);
 #else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
-        return await GetArticlesFromHallon(Limit, Offset);
+        return await GetArticlesFromHallon(Limit, Offset, Filter);
 #endif
     }
 
@@ -54,7 +54,8 @@ public class Article
     /// This runs GetArticlesFromDB through HallonAPIServer, a middleware solution.
     /// </summary>
     /// <returns></returns>
-    private static async Task<List<Article>?> GetArticlesFromHallon(int Limit = 0, int Offset = 0)
+    private static async Task<List<Article>?> GetArticlesFromHallon(int Limit = 0,
+        int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
         var endpoint = $"/Articles/GetArticles?limit={Limit}";
 
@@ -75,23 +76,43 @@ public class Article
             catch (HttpRequestException e)
             {
                 Console.WriteLine($"Request exception: {e.Message}");
-                return new();
+                return new()
+                {
+                    new()
+                    {
+                        Title = "Failed to load articles!",
+                        RssSummary = e.Message,
+                        Publisher = "N/A",
+                        ImageURL = "?",
+                        PublishDate = new DateTime(1911, 11,19),
+                    }
+                };
             }
             catch (Exception e)
             {
                 Console.WriteLine($"General exception: {e.Message}");
-                return new();
+                return new()
+                {
+                    new()
+                    {
+                        Title = "Failed to load articles!",
+                        RssSummary = e.Message,
+                        Publisher = "N/A",
+                        ImageURL = "?",
+                        PublishDate = new DateTime(1911, 11,19),
+                    }
+                };
             }
         }
     }
 
-    public static List<Article> GetArticlesFromDB(int Limit = 0, int Offset = 0, string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}")
+    public static List<Article> GetArticlesFromDB(int Limit = 0, int Offset = 0,
+        string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}",
+        string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
         string query = $@"
 SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR 
-FROM ARTICLES 
-ORDER BY PUBLISH_DATE DESC
-LIMIT {Limit} OFFSET {Offset};
+FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
 ";
 
         //Connection to the DB

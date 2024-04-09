@@ -79,7 +79,7 @@ public static class LLM
                         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Send the POST request
-                    var response = await httpClient.PostAsync(Endpoint, content);
+                     var response = await httpClient.PostAsync(Endpoint, content);
 
                     // Ensure we got a successful response
                     response.EnsureSuccessStatusCode();

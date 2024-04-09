@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Firehose;
 using HtmlAgilityPack;
 using HYDRANT;
+using OpenGraphNet;
 
 namespace Firehose2;
 internal static class ArticleScraper
@@ -42,20 +43,30 @@ internal static class ArticleScraper
 
     private static async void CreateArticle(SyndicationItem Article)
     {
+        string URL = Article.Links.FirstOrDefault()?.Uri?.ToString();
+
+        string Img;
+        try { Img = (await OpenGraph.ParseUrlAsync(URL)).Image.ToString(); }
+        catch {Img = "?";}
+
+        string ArticleText;
+        try { ArticleText = await StringTools.GetURLText(URL); }
+        catch { return; }
+
         try
         {
             ProcessedArticles.Add(new Article
             {
-                Url = Article.Links.FirstOrDefault()?.Uri?.ToString(),
+                Url = URL,
+                Content = ArticleText,
                 Title = Article.Title.Text,
                 RssSummary = StringTools.CleanUpHTMLString(Article.Summary?.Text),
-                Content = await StringTools.GetURLText(Article.Links.FirstOrDefault()?.Uri?.ToString()),
                 PublishDate = Article.PublishDate.DateTime,
-                Paywall = StringTools.IsPaywalled(Article.Links.FirstOrDefault()?.Uri?.ToString()),
+                Paywall = StringTools.IsPaywalled(URL),
                 Summary = "",
-                Publisher = Article.Links.FirstOrDefault()?.Uri?.Host.ToLower().Replace("www.", "").Split(".")[0].ToUpper(),
+                Publisher = URL.Replace("www.", "").Split(".")[0].ToUpper(),
                 Author = Article.Authors.Count == 0 ? "Unknown Author" : Article.Authors.First().Name,
-                ImageURL = await GetImageForURL(Article.Links.FirstOrDefault()?.Uri?.ToString())
+                ImageURL = Img
             });
         }
         catch { }
@@ -68,10 +79,17 @@ internal static class ArticleScraper
     /// <returns>OpenGraph Image URL</returns>
     public static async Task<string> GetImageForURL(string URL)
     {
+        //NY Times doesn't do OpenGraph Stuf.
+        if (URL.Contains("www.nytimes.com")) { return "?";}
+
+
         try
         {
             using (var httpClient = new HttpClient())
             {
+                httpClient.DefaultRequestHeaders.Add("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.3");
+
                 HtmlDocument htmlDoc = new();
                 htmlDoc.LoadHtml(await httpClient.GetStringAsync(URL));
 

@@ -8,8 +8,8 @@ public static class Glob
     public static Frame Frame = new();
 
     /// <summary>
-    /// Either im stupid or I can't do regular frame navigation
-    /// So this does the navigation for us.
+    /// The built-in navigation within Frames doesn't work
+    /// like I want it to work, so we persist the page items properly.
     /// </summary>
     public static void DoNavi()
     {
@@ -19,13 +19,16 @@ public static class Glob
     /// <summary>
     /// Get rid of the top item, then go back.
     /// </summary>
-    public static void FuckGoBack()
+    public static void GoBack()
     {
         NaviStack.Pop();
         DoNavi();
     }
+
     public static void OnBackRequested(object? sender, BackRequestedEventArgs e)
     {
-        if (NaviStack.Count > 1) { FuckGoBack(); }
+        if (NaviStack.Count > 1) { GoBack(); }
     }
+
+    public static PreferencesModel Model = new();
 }

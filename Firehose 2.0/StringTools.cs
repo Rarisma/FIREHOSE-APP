@@ -62,11 +62,15 @@ static class StringTools
     /// <returns></returns>
     public static string CleanUpHTMLString(string Text)
     {
-        // Load the HTML content
-        HtmlDocument doc = new();
-        doc.LoadHtml(Text);
+        try
+        {
+            // Load the HTML content
+            HtmlDocument doc = new();
+            doc.LoadHtml(Text);
 
-        // Extract plain text and return it
-        return doc.DocumentNode.InnerText;
+            // Extract plain text and return it
+            return doc.DocumentNode.InnerText;
+        }
+        catch { return " "; }
     }
 }

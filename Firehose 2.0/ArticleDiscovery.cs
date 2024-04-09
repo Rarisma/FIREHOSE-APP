@@ -22,7 +22,6 @@ internal class ArticleDiscovery
 
         while (true)
         {
-            Console.WriteLine("Article Discovery Iteration starting");
             RefreshBlacklist();
             foreach (var URL in Feeds)
             {
@@ -103,7 +102,7 @@ internal class ArticleDiscovery
     {
         Console.WriteLine("Refreshing URL Blacklist");
         URLBlacklist = Article.GetURLs();
-        Console.WriteLine($"URL Blacklist has {URLBlacklist.Count}");
+        Console.WriteLine($"URL Blacklist has {URLBlacklist.Count}\n");
     }
 
     /// <summary>

@@ -37,10 +37,7 @@ internal class Program
         //Configure LLM Server
         Console.WriteLine("Checking for or loading LLM Server");
         LLM.LaunchServer();
-
-        int IterationCount = 0;
-        Console.WriteLine($"Starting Iteration {IterationCount}");
-        Thread.Sleep(3256);
+        Thread.Sleep(3000);
         LLM.SendPostRequest("you are a helpful assistant.", "hello, whats 2+2");
 
         Thread ArticleDiscoveryThread = new(ArticleDiscovery.StartFilter);
@@ -56,11 +53,13 @@ internal class Program
         {
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, Console.CursorTop);
-            Console.WriteLine($"Discovery Pending Priority:{ArticleDiscovery.Pending.Count}" +
-                              $" non:{ArticleDiscovery.PendingLowPriority.Count} |" +
-                              $" Processed: {ArticleScraper.ProcessedArticles.Count}");
+
+            Console.WriteLine($"| Discovered:{ArticleDiscovery.Pending.Count + ArticleDiscovery.PendingLowPriority.Count} " +
+                              $"| Scraped: {ArticleScraper.ProcessedArticles.Count} " +
+                              $"| Total Analysed: {ArticleAnalyser.TotalScraped} |");
             Console.CursorTop--;
             Console.CursorLeft = 0;
+            Thread.Sleep(200);
         }
     }
 }

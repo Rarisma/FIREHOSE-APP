@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="OpenGraph-Net" />
     <PackageReference Include="System.ServiceModel.Syndication" />
   </ItemGroup>
 

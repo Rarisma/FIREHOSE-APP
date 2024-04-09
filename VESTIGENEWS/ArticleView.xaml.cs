@@ -5,11 +5,13 @@ namespace VESTIGENEWS;
 
 public sealed partial class ArticleView : Page
 {
+
     private Article Article;
     public ArticleView(Article Data)
     {
         InitializeComponent();
         Article = Data;
+        SetBookmarkIcon();
 
 #if __ANDROID__
         var manager = SystemNavigationManager.GetForCurrentView();
@@ -17,9 +19,32 @@ public sealed partial class ArticleView : Page
 #endif
     }
 
+    public void SetBookmarkIcon()
+    {
+        //Handle bookmarked status
+        if (Glob.Model.bookmarkedArticles.Contains(Article))
+        {
+            BookmarkButton.Content = new FontIcon 
+            {
+                Glyph = "\xE735",
+                FontFamily = new FontFamily("Segoe MDL2 Assets")
+
+            };
+        }
+        else
+        {
+
+            BookmarkButton.Content = new FontIcon
+            {
+                Glyph = "\xE734",
+                FontFamily = new FontFamily("Segoe MDL2 Assets")
+            };
+        }
+    }
+
     private void OnBackRequested(object? sender, BackRequestedEventArgs e)
     {
-        if (Glob.NaviStack.Count > 1) { Glob.FuckGoBack(); }
+        if (Glob.NaviStack.Count > 1) { Glob.GoBack(); }
     }
 
     /// <summary>
@@ -39,5 +64,21 @@ public sealed partial class ArticleView : Page
     }
 
     //Leaves this view, sends user back to the article view.
-    private void GoBack(object sender, RoutedEventArgs e) { Glob.FuckGoBack(); }
+    private void GoBack(object sender, RoutedEventArgs e) { Glob.GoBack(); }
+
+    private void BookmarkClick(object sender, RoutedEventArgs e)
+    {
+        // Add or Remove article from bookmarked articles.
+        if (Glob.Model.bookmarkedArticles.Contains(Article))
+        {
+            Glob.Model.bookmarkedArticles.Remove(Article);
+        }
+        else
+        {
+            Glob.Model.bookmarkedArticles.Add(Article);
+        }
+
+        // update icon state.
+        SetBookmarkIcon();
+    }
 }
