@@ -79,7 +79,7 @@ public static class LLM
                         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Send the POST request
-                     var response = await httpClient.PostAsync(Endpoint, content);
+                    var response = await httpClient.PostAsync(Endpoint, content);
 
                     // Ensure we got a successful response
                     response.EnsureSuccessStatusCode();
@@ -88,15 +88,16 @@ public static class LLM
                     using (JsonDocument doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                     {
                         //Wade through JSON bs and get choices value.
-                        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+                        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content")
+                            .GetString();
                     }
                 }
             }
         }
-        catch (HttpRequestException e)
+        catch (Exception e)
         {
-            // Handle the exception as needed
-            return $"Exception Caught! Message: {e.Message}";
+            Console.WriteLine(e.Message);
+            return "Summary Unavailable.";
         }
     }
 }

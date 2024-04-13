@@ -14,7 +14,7 @@ internal class ArticleDiscovery
     {
         "/kals-cartoon", "www.economist.com", "https://www.nytimes.com/video/", "/images/"
     };
-    private static List<string> URLBlacklist;
+    private static List<string> URLBlacklist = new();
 
     public static void StartFilter()
     {
@@ -42,26 +42,15 @@ internal class ArticleDiscovery
                                     try
                                     {
                                         //Check we haven't already scanned this article
-                                        if (URLBlacklist.Contains(item.Links.FirstOrDefault()?.Uri?.ToString()) |
-                                            BlockedURLS.Any(item.Id.Contains))
+                                        if (URLBlacklist.Contains(item.Links.FirstOrDefault()?.Uri?.ToString()) 
+                                            | BlockedURLS.Any(item.Id.Contains))
                                         {
                                             continue;
                                         }
 
-                                        //Check it's not a low priority article
-                                        if ((DateTime.Now - item.PublishDate).TotalDays <= 2)
+                                        if ((DateTime.Now - item.PublishDate).TotalDays <= 5)
                                         {
-                                            //don't process articles older than 30 days.
-                                            if ((DateTime.Now - item.PublishDate).TotalDays <= 30)
-                                            {
-                                                PendingLowPriority.Add(item.Links.FirstOrDefault()?.Uri?.ToString(),
-                                                    item);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Pending.Add(item.Links.FirstOrDefault()?.Uri?.ToString(),
-                                                item);
+                                            Pending.Add(item.Links.FirstOrDefault()?.Uri?.ToString(), item);
                                         }
 
                                         URLBlacklist.Add(item.Links.FirstOrDefault()?.Uri?.ToString());
@@ -101,7 +90,8 @@ internal class ArticleDiscovery
     static void RefreshBlacklist()
     {
         Console.WriteLine("Refreshing URL Blacklist");
-        URLBlacklist = Article.GetURLs();
+        URLBlacklist.AddRange(Article.GetURLs());
+        URLBlacklist = URLBlacklist.Distinct().ToList();
         Console.WriteLine($"URL Blacklist has {URLBlacklist.Count}\n");
     }
 
