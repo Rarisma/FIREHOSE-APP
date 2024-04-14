@@ -12,6 +12,5 @@ public sealed partial class ReaderMode : Page
         InitializeComponent();
     }
 
-    private void GoBack(object sender, RoutedEventArgs e) => Glob.Frame.GoBack(new SlideNavigationTransitionInfo
-        { Effect = SlideNavigationTransitionEffect.FromLeft });
+    private void GoBack(object sender, RoutedEventArgs e) => Glob.GoBack();
 }

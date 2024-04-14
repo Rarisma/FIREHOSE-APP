@@ -1,3 +1,6 @@
+using System.Text;
+using System.Xml.Serialization;
+
 namespace VESTIGENEWS;
 public class PreferencesModel
 {
@@ -26,5 +29,58 @@ public class PreferencesModel
     /// </summary>
     public bool AlwaysShuffle;
 
+    /// <summary>
+    /// Article Objects that the user has bookmarked
+    /// </summary>
     public List<Article> bookmarkedArticles = new();
+
+    private static XmlSerializer Seri = new(typeof(PreferencesModel));
+
+    /// <summary>
+    /// write prefs model
+    /// </summary>
+    public static void Save()
+    {
+        //Serialise PreferenceModel 
+        string result;
+        using (MemoryStream memoryStream = new())
+        {
+            using (StreamWriter streamWriter = new(memoryStream))
+            {
+                Seri.Serialize(memoryStream, Glob.Model);
+                streamWriter.Flush();  // Ensure all data is written to the MemoryStream
+                memoryStream.Position = 0;  // Reset the position to read from the beginning
+
+                // Read the stream into a string
+                using (StreamReader reader = new(memoryStream))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+        }
+
+        //Write model to settings value.
+        ApplicationData.Current.LocalSettings.Values["Pref"] = result;
+    }
+
+    /// <summary>
+    /// Load prefs model.
+    /// </summary>
+    public static void Load() 
+    {
+        // Assuming the XML string is saved in the application's local settings.
+        string xmlData = (string)ApplicationData.Current.LocalSettings.Values["Pref"];
+        if (xmlData == null)
+        {
+            Glob.Model = new();
+            return;
+        }
+
+        //Write model back into memory
+        using (MemoryStream memoryStream = new(Encoding.UTF8.GetBytes(xmlData)))
+        {
+            Glob.Model = (PreferencesModel)Seri.Deserialize(memoryStream);
+        }
+
+    }
 }

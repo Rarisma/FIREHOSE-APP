@@ -1,5 +1,5 @@
 namespace VESTIGENEWS.Controls;
-//
+//NO MORE FREESTYLE
 public sealed partial class PublisherInformation : UserControl
 {
 
@@ -67,6 +67,9 @@ public sealed partial class PublisherInformation : UserControl
             }
             catch (Exception e)
             {
+                Glob.Log(Glob.LogLevel.Wrn,
+                    $"Failed to get publisher icon for {ItemSource.Url} " +
+                    $"Exception {e.Message}\n\n{e.StackTrace}\n\n{e.Source}");
                 return "Assets/QuestionMark.png";
             }
         }

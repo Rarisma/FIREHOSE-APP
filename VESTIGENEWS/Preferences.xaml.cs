@@ -4,15 +4,18 @@ namespace VESTIGENEWS;
 /// </summary>
 public sealed partial class Preferences : Page
 {
-    private PreferencesModel Model = new();
+    private PreferencesModel Model;
 
     public Preferences()
     {
         InitializeComponent();
+        Model = Glob.Model;
     }
 
     private void Back(object sender, RoutedEventArgs e)
     {
+        Glob.Model = Model;
+        PreferencesModel.Save();
         Glob.GoBack();
     }
 }

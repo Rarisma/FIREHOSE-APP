@@ -31,4 +31,17 @@ public static class Glob
     }
 
     public static PreferencesModel Model = new();
+
+    public static void Log(LogLevel Level, String Message)
+    {
+        Console.WriteLine(Level.ToString(),Message);
+    }
+
+    public enum LogLevel
+    {
+        Inf,
+        Wrn,
+        Err,
+        Sev
+    }
 }

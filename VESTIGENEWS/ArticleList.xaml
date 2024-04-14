@@ -7,8 +7,7 @@
 		mc:Ignorable="d"
 		xmlns:hydrant="using:HYDRANT"
 		xmlns:vestigeNews="using:VESTIGENEWS"
-		xmlns:controls="using:VESTIGENEWS.Controls"
-		Background="#000000">
+		xmlns:controls="using:VESTIGENEWS.Controls">
 
 	<Page.Resources>
     <Style x:Key="BorderTemplate" TargetType="Border">

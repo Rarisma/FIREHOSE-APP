@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.UI;
 using Windows.UI.Core;
 
 namespace VESTIGENEWS;
@@ -9,9 +10,16 @@ public sealed partial class ArticleView : Page
     private Article Article;
     public ArticleView(Article Data)
     {
+        Data.Url = Glob.Model.Proxy + Data.Url;
         InitializeComponent();
         Article = Data;
         SetBookmarkIcon();
+
+        if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+        {
+            Background = new SolidColorBrush(Colors.Black);
+        }
+        else { Background = new SolidColorBrush(Colors.LightGray); }
 
 #if __ANDROID__
         var manager = SystemNavigationManager.GetForCurrentView();
@@ -27,7 +35,7 @@ public sealed partial class ArticleView : Page
             BookmarkButton.Content = new FontIcon 
             {
                 Glyph = "\xE735",
-                FontFamily = new FontFamily("Segoe MDL2 Assets")
+                FontFamily = new FontFamily("Segoe UI")
 
             };
         }
@@ -37,7 +45,7 @@ public sealed partial class ArticleView : Page
             BookmarkButton.Content = new FontIcon
             {
                 Glyph = "\xE734",
-                FontFamily = new FontFamily("Segoe MDL2 Assets")
+                FontFamily = new FontFamily("Segoe UI")
             };
         }
     }

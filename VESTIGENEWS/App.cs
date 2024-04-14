@@ -1,3 +1,4 @@
+using Microsoft.UI.Dispatching;
 using Windows.UI.Core;
 
 namespace VESTIGENEWS;
@@ -35,9 +36,11 @@ public class App : Application
             // parameter
             Glob.NaviStack.Push(new ArticleList());
             Glob.DoNavi();
+
         }
 
-
+        PreferencesModel.Load();
+        
         // Ensure the current window is active
         MainWindow.Activate();
     }

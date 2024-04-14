@@ -37,12 +37,12 @@ public class Article
     private const string User = "root";
     private const string Pass = "Mavik";
     private const string HallonEndpoint = "https://31.205.123.48:7255";
-    private const bool ForceHallon = false;
+    private const bool ForceHallon = true;
 
     public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
+        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset, Filter); }
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return GetArticlesFromDB(Limit, Offset, Filter:Filter); }
-        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset,Filter); }
 #if HAS_UNO_SKIA || __MACOS__  || WINDOWS //Use raw DB Calls on supported platforms
         return GetArticlesFromDB(Limit, Offset, Filter:Filter);
 #else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it

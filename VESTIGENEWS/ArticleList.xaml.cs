@@ -21,6 +21,8 @@ public sealed partial class ArticleList : Page
 
     private async void LoadDataAsync(bool Shuffle = true, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
+        if (Glob.Model.AlwaysShuffle) { Shuffle = true; }
+
         try
         {
             Articles.Clear();
@@ -47,9 +49,24 @@ public sealed partial class ArticleList : Page
     }
     private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Article Data = (e.OriginalSource as FrameworkElement).DataContext as Article;
-        Glob.NaviStack.Push(new ArticleView(Data));
-        Glob.DoNavi();
+        try
+        {
+            Article Data = (Article)((FrameworkElement)e.OriginalSource).DataContext;
+            if (Glob.Model.AlwaysOpenReader)
+            {
+                Glob.NaviStack.Push(new ReaderMode(Data));
+            }
+            else
+            {
+                Glob.NaviStack.Push(new ArticleView(Data));
+            }
+            Glob.DoNavi();
+        }
+        catch (Exception ex)
+        {
+            Glob.Log(Glob.LogLevel.Sev, $"Failed to navigate to tapped article.\n\n" +
+                $"Exception {ex.Message}\n\n{ex.Source}\n\n{ex.Data}");
+        }
     }
 
     /// <summary>
@@ -61,12 +78,12 @@ public sealed partial class ArticleList : Page
     {
         //TODO: Reimplement to add infinite scroll.
         return;
-        ScrollViewer scrollViewer = (ScrollViewer)sender;
-        if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
-        {
-            Offset += Articles.Count;
-            LoadDataAsync();
-        }
+        //ScrollViewer scrollViewer = (ScrollViewer)sender;
+        //if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+        //{
+        //    Offset += Articles.Count;
+        //    LoadDataAsync();
+        //}
     }
 
     private void LoadMorePressed(object sender, RoutedEventArgs e)
@@ -86,7 +103,8 @@ public sealed partial class ArticleList : Page
     {
         string Filter;
         bool Shuffle = true;
-        switch ((sender as AppBarButton).Content)
+
+        switch (((AppBarButton)sender).Content)
         {
             case "Latest":
                 Filter = "ORDER BY PUBLISH_DATE DESC";
