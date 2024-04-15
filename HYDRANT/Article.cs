@@ -173,10 +173,10 @@ FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
     {
         try
         {
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+            using (MySqlConnection connection = new(ConnectionString))
             {
                 connection.Open();
-                using (MySqlCommand command = new MySqlCommand())
+                using (MySqlCommand command = new())
                 {
                     command.Connection = connection;
                     command.CommandText = @"

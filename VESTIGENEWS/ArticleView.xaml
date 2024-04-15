@@ -8,7 +8,7 @@
 		Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
   <Page.Resources>
     <Style x:Key="AppButton" TargetType="Button">
-      <Setter Property="Padding" Value="20"/>
+      <Setter Property="Padding" Value="20,10"/>
       <Setter Property="Margin" Value="10,0"/>
       <Setter Property="BorderBrush" Value="Transparent"/>
       <Setter Property="Background" Value="Transparent"/>
@@ -32,7 +32,7 @@
       </Grid.ColumnDefinitions>
 
       <Button Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Center"
-              Click="GoBack" HorizontalAlignment="Left" Grid.Column="0"/>
+              Click="GoBack" HorizontalAlignment="Left" Grid.Column="0" Margin="10"/>
 
       <Button Content="✨" HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource AppButton}">
         <Button.Flyout>
@@ -48,7 +48,9 @@
         </Button.Flyout>
       </Button>
 
-      <Button Grid.Column="3" Click="BookmarkClick" Name="BookmarkButton"  Style="{StaticResource AppButton}"/>
+      <Button Grid.Column="3" Click="BookmarkClick" Style="{StaticResource AppButton}" MinHeight="45">
+        <FontIcon Name="Glyphy" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+      </Button>
 
       <Button Content="· · ·" Grid.Column="4" Style="{StaticResource AppButton}">
         <Button.Flyout>

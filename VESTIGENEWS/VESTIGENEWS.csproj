@@ -21,7 +21,6 @@
   <ItemGroup>
     <None Remove="ArticleList.xaml" />
     <None Remove="ArticleView.xaml" />
-    <None Remove="Bookmarks.xaml" />
     <None Remove="Controls\PublisherInformation.xaml" />
     <None Remove="Preferences.xaml" />
     <None Remove="ReaderMode.xaml" />
@@ -64,10 +63,6 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Preferences.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Bookmarks.xaml" />
   </ItemGroup>
 
 

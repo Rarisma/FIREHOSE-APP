@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Microsoft.UI.Xaml.Input;
 using Windows.UI.Core;
 
@@ -122,6 +123,13 @@ public sealed partial class ArticleList : Page
                 Filter = "WHERE PUBLISH_DATE > NOW() - INTERVAL 1 DAY";
                 Shuffle = true;
                 break;
+            case "Bookmarked":
+                Articles.Clear();
+                foreach (Article Art in Glob.Model.bookmarkedArticles)
+                {
+                    Articles.Add(Art);
+                }
+                return;
             //Standard shuffle if something goes wrong.
             default:
                 LoadDataAsync();

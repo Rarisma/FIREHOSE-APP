@@ -25,7 +25,7 @@
     <DataTemplate x:Key="NoImageTemplate" x:DataType="hydrant:Article">
       <StackPanel HorizontalAlignment="Stretch">
         <!-- Spacing border -->
-        <Border Style="{StaticResource BorderTemplate}" HorizontalAlignment="Center"/>
+        <Border Style="{StaticResource BorderTemplate}"/>
 
         <!-- Publication info, Title and Summary -->
         <controls:PublisherInformation ItemSource="{x:Bind}"/>
@@ -95,7 +95,9 @@
 		<CommandBar OverflowButtonVisibility="Collapsed">
       <AppBarElementContainer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <TextBlock Text="VESTIGE NEWS APP TEST - RARISMA 2024" HorizontalAlignment="Center" Margin="10"/>
+          <TextBlock Text="Vestige News Test" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          <AppBarButton Icon="Setting" HorizontalAlignment="Center" Click="OpenSettings"
+                        VerticalAlignment="Center" LabelPosition="Collapsed"/>
         </StackPanel>
       </AppBarElementContainer>
     </CommandBar>
@@ -115,10 +117,11 @@
       <StackPanel Orientation="Vertical">
         <ScrollViewer HorizontalScrollBarVisibility="Visible">
           <StackPanel Orientation="Horizontal">
-              <AppBarButton Content="Latest" Height="50" Click="ChangeFilter"/>
-              <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
-              <AppBarButton Content="Hot" Height="50"  Click="ChangeFilter" Visibility="Collapsed"/>
-              <AppBarButton Content="Today" Height="50"  Click="ChangeFilter"/>
+            <AppBarButton Content="Bookmarked" Height="50"  Click="ChangeFilter"/>
+            <AppBarButton Content="Latest" Height="50" Click="ChangeFilter"/>
+            <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
+            <AppBarButton Content="Hot" Height="50"  Click="ChangeFilter" Visibility="Collapsed"/>
+            <AppBarButton Content="Today" Height="50"  Click="ChangeFilter"/>
           </StackPanel>
         </ScrollViewer>
 
@@ -129,36 +132,5 @@
                          HorizontalAlignment="Center" Margin="10"/>
       </StackPanel>
     </ScrollViewer>
-
-    <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Width="500"
-                        Padding="60,0" CornerRadius="4"/>
-
-    <Grid Grid.Row="2" HorizontalAlignment="Center">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="*"/>
-      </Grid.ColumnDefinitions>
-
-      <!-- Settings Button -->
-      <AppBarButton Icon="Setting" Label="Settings" IsCompact="False" Click="OpenSettings"
-                    HorizontalAlignment="Center"  MinWidth="100" Width="200" Margin="5,0"/>
-
-      <!-- NewsFeed Button -->
-      <AppBarButton Label="News" IsCompact="False"  Grid.Column="1" Margin="5,0"
-                    HorizontalAlignment="Center" MinWidth="100"  Width="200">
-        <AppBarButton.Icon>
-          <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE789;"/>
-        </AppBarButton.Icon>
-      </AppBarButton>
-
-      <!-- Bookmarks Button -->
-      <AppBarButton Label="Bookmarks" IsCompact="False" Grid.Column="2" Margin="5,0"
-                    HorizontalAlignment="Center" MinWidth="100" Width="200">
-        <AppBarButton.Icon>
-          <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE734;"/>
-        </AppBarButton.Icon>
-      </AppBarButton>
-    </Grid>
   </Grid>
 </Page>

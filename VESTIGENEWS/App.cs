@@ -43,6 +43,13 @@ public class App : Application
         
         // Ensure the current window is active
         MainWindow.Activate();
+        MainWindow.Closed += MainWindow_Closed;
+    }
+
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        //Ensure preferences and bookmarks are saved on closing.
+        PreferencesModel.Save();
     }
 
     private void Current_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

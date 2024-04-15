@@ -59,7 +59,7 @@ internal static class ArticleScraper
                 PublishDate = Article.PublishDate.DateTime,
                 Paywall = StringTools.IsPaywalled(URL),
                 Summary = "",
-                Publisher = URL.Replace("www.", "").Split(".")[0].ToUpper(),
+                Publisher = URL.Replace("www.", "").Split(".")[0].ToUpper().ToString().Replace("HTTPS://", ""),
                 Author = Article.Authors.Count == 0 ? "Unknown Author" : Article.Authors.First().Name,
                 ImageURL = Img
             });

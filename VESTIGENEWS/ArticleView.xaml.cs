@@ -32,22 +32,9 @@ public sealed partial class ArticleView : Page
         //Handle bookmarked status
         if (Glob.Model.bookmarkedArticles.Contains(Article))
         {
-            BookmarkButton.Content = new FontIcon 
-            {
-                Glyph = "\xE735",
-                FontFamily = new FontFamily("Segoe UI")
-
-            };
+            Glyphy.Glyph = "\xE735";
         }
-        else
-        {
-
-            BookmarkButton.Content = new FontIcon
-            {
-                Glyph = "\xE734",
-                FontFamily = new FontFamily("Segoe UI")
-            };
-        }
+        else { Glyphy.Glyph = "\xE734"; }
     }
 
     private void OnBackRequested(object? sender, BackRequestedEventArgs e)

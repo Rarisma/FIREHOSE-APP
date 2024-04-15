@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using System.Xml.Serialization;
 
 namespace VESTIGENEWS;
@@ -34,7 +35,6 @@ public class PreferencesModel
     /// </summary>
     public List<Article> bookmarkedArticles = new();
 
-    private static XmlSerializer Seri = new(typeof(PreferencesModel));
 
     /// <summary>
     /// write prefs model
@@ -47,7 +47,7 @@ public class PreferencesModel
         {
             using (StreamWriter streamWriter = new(memoryStream))
             {
-                Seri.Serialize(memoryStream, Glob.Model);
+                JsonSerializer.Serialize(memoryStream, Glob.Model);
                 streamWriter.Flush();  // Ensure all data is written to the MemoryStream
                 memoryStream.Position = 0;  // Reset the position to read from the beginning
 
@@ -68,19 +68,27 @@ public class PreferencesModel
     /// </summary>
     public static void Load() 
     {
-        // Assuming the XML string is saved in the application's local settings.
-        string xmlData = (string)ApplicationData.Current.LocalSettings.Values["Pref"];
-        if (xmlData == null)
+        try
         {
+
+            // Assuming the XML string is saved in the application's local settings.
+            string xmlData = (string)ApplicationData.Current.LocalSettings.Values["Pref"];
+            if (xmlData == null)
+            {
+                Glob.Model = new();
+                return;
+            }
+
+            //Write model back into memory
+            using (MemoryStream memoryStream = new(Encoding.UTF8.GetBytes(xmlData)))
+            {
+                Glob.Model = (PreferencesModel)JsonSerializer.Deserialize(memoryStream, typeof(PreferencesModel));
+            }
+        }
+        catch (Exception ex)
+        {
+            Glob.Log(Glob.LogLevel.Wrn, ex.Message);
             Glob.Model = new();
-            return;
         }
-
-        //Write model back into memory
-        using (MemoryStream memoryStream = new(Encoding.UTF8.GetBytes(xmlData)))
-        {
-            Glob.Model = (PreferencesModel)Seri.Deserialize(memoryStream);
-        }
-
     }
 }
