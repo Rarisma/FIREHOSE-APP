@@ -138,4 +138,34 @@ public sealed partial class ArticleList : Page
 
         LoadDataAsync(Shuffle, Filter);
     }
+
+    private void ItemsControl_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        StackPanel UI = new();
+        UI.Children.Add((StackPanel)e.OriginalSource);
+        UI.Children.Add(new Border()
+        {
+                Margin = new(20),
+                CornerRadius = new(12),
+                Background = new SolidColorBrush(Microsoft.UI.Colors.DarkGray),
+                Child = new TextBlock()
+                {
+                    Text = ((e.OriginalSource as FrameworkElement).DataContext as Article).Summary,
+                    Margin = new(10)
+                }
+        });
+
+
+        ContentDialog CD = new()
+        {
+            Content = UI,
+            XamlRoot = this.XamlRoot,
+            Title = "Summary",
+            PrimaryButtonText = "Close"
+        };
+
+
+
+        CD.ShowAsync();
+    }
 }

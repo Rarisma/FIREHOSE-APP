@@ -126,7 +126,8 @@
         </ScrollViewer>
 
         <ItemsControl ItemsSource="{x:Bind Articles}" Tapped="UIElement_OnTapped"
-                      ItemTemplateSelector="{StaticResource ArticleSelector}"/>
+                      ItemTemplateSelector="{StaticResource ArticleSelector}"
+                      RightTapped="ItemsControl_RightTapped"/>
 
         <HyperlinkButton Content="Click to load more Articles" Click="LoadMorePressed"
                          HorizontalAlignment="Center" Margin="10"/>
