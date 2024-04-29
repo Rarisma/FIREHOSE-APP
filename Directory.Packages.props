@@ -20,10 +20,10 @@
     <PackageVersion Include="Uno.Wasm.Bootstrap" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.Server" Version="9.0.0-dev.35" />
-    <PackageVersion Include="Uno.WinUI" Version="5.1.104" />
+    <PackageVersion Include="Uno.WinUI" Version="5.2.95" />
     <PackageVersion Include="Uno.WinUI.Lottie" Version="5.1.104" />
     <PackageVersion Include="Uno.WinUI.DevServer" Version="5.1.104" />
-    <PackageVersion Include="Uno.WinUI.Skia.Gtk" Version="5.1.104" />
+    <PackageVersion Include="Uno.WinUI.Skia.Gtk" Version="5.2.95" />
     <PackageVersion Include="Uno.WinUI.WebAssembly" Version="5.1.104" />
     <PackageVersion Include="Xamarin.Google.Android.Material" Version="1.10.0.3" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
