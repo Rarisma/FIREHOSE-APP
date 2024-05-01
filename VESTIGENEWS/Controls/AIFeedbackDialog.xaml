@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="VESTIGENEWS.Controls.AIFeedbackDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VESTIGENEWS.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+  <StackPanel>
+    <InfoBar IsOpen="True" IsClosable="False" Severity="Informational">
+      <InfoBar.Content >
+        <TextBlock TextWrapping="WrapWholeWords" Padding="10">
+          Firehose News summaries are generated with Large Language Models.
+          While they are usually pretty good, they can occasionally be
+          inaccurate or complain about things such as safety and access.
+
+          Reporting feedback about the summary can help us to identify issues
+          with faulty summaries and prevent them from happening in the future.
+        </TextBlock>
+      </InfoBar.Content>
+    </InfoBar>
+
+    <TextBlock Text="What do you think about this summary?" Margin="10" HorizontalAlignment="Left"/>
+    <Border CornerRadius="4" HorizontalAlignment="Center" Margin="10,10,10,0" Background="#222222">
+      <TextBlock Text="{x:Bind ItemSource.Summary}" TextWrapping="WrapWholeWords" Margin="10"/>
+    </Border>
+
+    <ComboBox HorizontalAlignment="Center">
+        <ComboBoxItem Content="It's bad"/>
+        <ComboBoxItem Content="It's inaccurate"/>
+        <ComboBoxItem Content="It's not detailed enough"/>
+        <ComboBoxItem Content="The summary says it can't access the article"/>
+        <ComboBoxItem Content="The summary complains about safety"/>
+    </ComboBox>
+  </StackPanel>
+</Page>

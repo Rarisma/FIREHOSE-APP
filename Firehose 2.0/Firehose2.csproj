@@ -11,12 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LLamaSharp" />
+    <PackageReference Include="LLamaSharp.Backend.Cuda12" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="OpenGraph-Net" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="System.ServiceModel.Syndication" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="YahooFinanceApi" />
     <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
 
@@ -24,10 +26,16 @@
     <None Update="Data\Blacklist.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\model_config.cfg">
+    <None Update="Data\Feeds.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\RSSFeeds.txt">
+    <None Update="Data\model_configB.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\model_configA.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\OLDFEEDS.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

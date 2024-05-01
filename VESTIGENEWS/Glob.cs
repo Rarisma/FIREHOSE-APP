@@ -8,6 +8,12 @@ public static class Glob
     public static Frame Frame = new();
 
     /// <summary>
+    /// List of publications from firehose
+    /// </summary>
+    public static List<Publication> Publications = new();
+
+
+    /// <summary>
     /// The built-in navigation within Frames doesn't work
     /// like I want it to work, so we persist the page items properly.
     /// </summary>

@@ -21,11 +21,6 @@ public class PreferencesModel
     public int ArticleFetchLimit = 0;
 
     /// <summary>
-    /// Always use HallonAPIServer instead of MySQL Calls.
-    /// </summary>
-    public bool ForceHallon;
-
-    /// <summary>
     /// Force enable shuffling.
     /// </summary>
     public bool AlwaysShuffle;
@@ -41,6 +36,8 @@ public class PreferencesModel
     /// </summary>
     public static void Save()
     {
+        //WARNING: THE BELOW CODE DOES NOT WORK ON UNPACKAGED WINDOWS BUILDS.
+
         //Serialise PreferenceModel 
         string result;
         using (MemoryStream memoryStream = new())
@@ -68,9 +65,10 @@ public class PreferencesModel
     /// </summary>
     public static void Load() 
     {
+        //WARNING: THE BELOW CODE DOES NOT WORK ON UNPACKAGED WINDOWS BUILDS.
+
         try
         {
-
             // Assuming the XML string is saved in the application's local settings.
             string xmlData = (string)ApplicationData.Current.LocalSettings.Values["Pref"];
             if (xmlData == null)

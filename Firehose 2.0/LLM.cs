@@ -1,12 +1,11 @@
 using System.Diagnostics;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-//The pretty good seal
+//The alright seal
 namespace Firehose2;
 
 /// <summary>
@@ -16,13 +15,27 @@ namespace Firehose2;
 /// </summary>
 public static class LLM
 {
-    private const string Endpoint = "http://localhost:8080/v1/chat/completions";
+    public static string[] Endpoints =
+    [
+        "http://localhost:6666/v1/chat/completions",
+        "http://localhost:6666/v1/chat/completions"
+    ];
+
+    public static string[] ModelNames =
+    [
+        "lmstudio-community/gemma-1.1-2b-it-GGUF/gemma-1.1-2b-it-Q8_0.gguf",
+        "lmstudio-community/gemma-1.1-2b-it-GGUF/gemma-1.1-2b-it-Q8_0.gguf:2"
+    ];
+
+
 
     /// <summary>
     /// Launches an instance of LLM Server.
     /// </summary>
     public static void LaunchServer()
     {
+        Console.WriteLine("LLM Server launch is stubbed");
+        return;
         //Check there isn't an LLM Server already running
         if (IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners()
                 .Count(listener => listener.Port == 8080) > 0)
@@ -32,11 +45,18 @@ public static class LLM
         }
 
         //Spawn process.
-        Console.WriteLine("Couldn't find an instance of LLM Server, spawning one.");
+        Console.WriteLine("Couldn't find an instance of LLM Server, spawning two.");
         Process.Start(new ProcessStartInfo
         {
             FileName = "cmd.exe",
-            Arguments = "/k python3 -m llama_cpp.server --config_file Data/model_config.cfg",
+            Arguments = "/k python -m llama_cpp.server --config_file Data/model_configa.cfg",
+            UseShellExecute = true
+        });
+        
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/k python -m llama_cpp.server --config_file Data/model_configb.cfg",
             UseShellExecute = true
         });
     }
@@ -54,16 +74,17 @@ public static class LLM
     /// <param name="maxTokens"></param>
     /// <param name="stream"></param>
     /// <returns>The models thoughts, feelings and opinions.</returns>
-    public static async Task<string> SendPostRequest(string systemPrompt, string userMessage)
+    public static async Task<string> SendPostRequest(string systemPrompt, string userMessage, int ID)
     {
         var requestBody = new
         {
             messages = new[]
             {
-                new { content = systemPrompt, role = "system" },
-                new { content = userMessage, role = "user" }
+                new { role = "system", content = systemPrompt },
+                new { role = "user", content = userMessage }
             },
-            temperature = 0.2
+            temperature = 0.2,
+            model = ModelNames[ID]
         };
 
         try
@@ -79,12 +100,10 @@ public static class LLM
                         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Send the POST request
-                    var response = await httpClient.PostAsync(Endpoint, content);
-
+                    var response = await httpClient.PostAsync(Endpoints[ID], content);
                     // Ensure we got a successful response
                     response.EnsureSuccessStatusCode();
 
-                    // Read and return the response body
                     using (JsonDocument doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
                     {
                         //Wade through JSON bs and get choices value.
@@ -102,7 +121,7 @@ public static class LLM
     }
 }
 
-/// <summary>
+    /// <summary>
     /// This represents a JSON message object from an LLM Response.
     /// </summary>
     public class Message

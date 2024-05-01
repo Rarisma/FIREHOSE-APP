@@ -29,19 +29,6 @@
     <NumberBox Header="Articles to fetch" Minimum="20" ValidationMode="InvalidInputOverwritten"
                Maximum="200" Margin="10" Value="{x:Bind Model.ArticleFetchLimit}"/>
 
-
-    <!-- Dev Settings -->
-    <StackPanel>
-      <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
-      <TextBlock Text="Developer Settings" HorizontalAlignment="Center" FontSize="20"/>
-      <TextBlock Text="Don't mess with these unless you know what you are doing"
-                 Margin="10" Foreground="Red"/>
-
-      <ToggleSwitch Header="Always use Hallon API Server" Margin="10"
-                    IsOn="{x:Bind Model.ForceHallon, Mode=TwoWay}"/>
-
-    </StackPanel>
-
     <!-- Info bar -->
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock HorizontalAlignment="Center" Foreground="DarkGray" Opacity="0.3"

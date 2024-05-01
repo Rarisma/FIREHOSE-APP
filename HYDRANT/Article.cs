@@ -1,52 +1,80 @@
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using HtmlAgilityPack;
 using MySql.Data.MySqlClient;
-using Mysqlx.Crud;
 
 namespace HYDRANT;
 public class Article
 {
     #region DB
-    public string Url { get; set; }
+    /// <summary>
+    /// Title of article
+    /// </summary>
     public string Title { get; set; }
-    public string RssSummary { get; set; }
-    public DateTime PublishDate { get; set; }
-    public bool Headline { get; set; }
-    public bool Paywall { get; set; }
-    public string Summary { get; set; }
-    public string ImageURL { get; set; }
-    public string Publisher { get; set; }
-    public string Author { get; set; }
 
-    public string PublisherIcon
-    {
-        get
-        {
-            string Favi = "https://" + new Uri(Url).Host + "/favicon.ico";
-            return Favi;
-        }
-    }
+    /// <summary>
+    /// URL of article
+    /// </summary>
+    public string Url { get; set; }
+
+    /// <summary>
+    /// Article Text
+    /// </summary>
+    public string ArticleText { get; set; }
+
+    /// <summary>
+    /// The given RSS Summary via the publication
+    /// These aren't used currently and probably never will
+    /// but they could be useful for analysis in the future
+    /// </summary>
+    public string RSSSummary { get; set; }
+
+    /// <summary>
+    /// Date/Time the article was made public
+    /// </summary>
+    public DateTime PublishDate { get; set; }
+
+    /// <summary>
+    /// Is this a major story, i.e. something major is going on
+    /// or is the article not a major event
+    /// </summary>
+    public bool Headline { get; set; }
+
+    /// <summary>
+    /// is the article from a paywalled source
+    /// </summary>
+    public bool Paywall { get; set; }
+
+    /// <summary>
+    /// AI-Generated summary of the article
+    /// </summary>
+    public string Summary { get; set; }
+
+    /// <summary>
+    /// Graph-QL image
+    /// </summary>
+    public string ImageURL { get; set; }
+    /// <summary>
+    /// Firehose Publication ID
+    /// </summary>
+    public int PublisherID { get; set; }
 
     #endregion
-    public string Content { get; set; }
+    /// <summary>
+    /// Internally used
+    /// </summary>
     public bool JakeFilter { get; set; }
 
     private const string IP = "localhost";
     private const string User = "root";
     private const string Pass = "Mavik";
-    private const string HallonEndpoint = "https://31.205.123.48:7255";
-    private const bool ForceHallon = true;
+    public const string HallonEndpoint = "https://www.hallon.rarisma.net";
 
     public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
-        if (ForceHallon) { return await GetArticlesFromHallon(Limit, Offset, Filter); }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return GetArticlesFromDB(Limit, Offset, Filter:Filter); }
-#if HAS_UNO_SKIA || __MACOS__  || WINDOWS //Use raw DB Calls on supported platforms
-        return GetArticlesFromDB(Limit, Offset, Filter:Filter);
-#else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
+#if HAS_UNO //Use raw DB Calls on supported platforms
         return await GetArticlesFromHallon(Limit, Offset, Filter);
+#else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
+        return GetArticlesFromDB(Limit, Offset, Filter: Filter);
 #endif
     }
 
@@ -59,11 +87,7 @@ public class Article
     {
         var endpoint = $"/Articles/GetArticles?limit={Limit}";
 
-
-        //TODO: ACTUALLY IMPLEMENT SECURITY HERE
-        //MITMs can occur here but since its read only DB call, nothing can really happen.
-        //Nonetheless, this should be fixed when Hallon uses a proper certificate
-        using (var client = new HttpClient(new CertificateIgnorer()))
+        using (var client = new HttpClient())
         {
             try
             {
@@ -81,8 +105,8 @@ public class Article
                     new()
                     {
                         Title = "Failed to load articles!",
-                        RssSummary = e.Message,
-                        Publisher = "N/A",
+                        RSSSummary = e.Message,
+                        PublisherID = 0,
                         ImageURL = "?",
                         PublishDate = new DateTime(1911, 11,19),
                     }
@@ -96,8 +120,8 @@ public class Article
                     new()
                     {
                         Title = "Failed to load articles!",
-                        RssSummary = e.Message,
-                        Publisher = "N/A",
+                        RSSSummary = e.Message,
+                        PublisherID = 0,
                         ImageURL = "?",
                         PublishDate = new DateTime(1911, 11,19),
                     }
@@ -110,14 +134,11 @@ public class Article
         string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}",
         string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
-        string query = $@"
-SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE, PAYWALL, SUMMARY, ImageURL, ARTICLE_TEXT, PUBLISHER, AUTHOR 
-FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
-";
+        string query = $@"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE, PAYWALL, SUMMARY, ImageURL,
+        ARTICLE_TEXT, PUBLISHER_ID FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};";
 
         //Connection to the DB
-        MySqlConnection DB = new();
-        DB.ConnectionString = ConnectionString;
+        MySqlConnection DB = new() {ConnectionString = ConnectionString};
         DB.Open();
 
         MySqlCommand cmd = new MySqlCommand(query, DB);
@@ -127,17 +148,16 @@ FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
         {
             var article = new Article
             {
-                Url = reader["URL"].ToString(),
                 Title = reader["TITLE"].ToString(),
-                RssSummary = reader["RSS_SUMMARY"].ToString(),
+                Url = reader["URL"].ToString(),
+                RSSSummary = reader["RSS_SUMMARY"].ToString(),
                 PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
                 Headline = Convert.ToBoolean(reader["HEADLINE"]),
                 Paywall = Convert.ToBoolean(reader["PAYWALL"]),
                 Summary = reader["SUMMARY"].ToString(),
                 ImageURL = reader["ImageURL"].ToString(),
-                Content = reader["ARTICLE_TEXT"].ToString(),
-                Publisher = reader["PUBLISHER"].ToString(),
-                Author = reader["AUTHOR"].ToString(),
+                ArticleText = reader["ARTICLE_TEXT"].ToString(),
+                PublisherID = (int)reader["PUBLISHER_ID"],
             };
             articles.Add(article);
         }
@@ -181,14 +201,16 @@ FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
                     command.Connection = connection;
                     command.CommandText = @"
                 INSERT INTO ARTICLES 
-                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, RSS_SUMMARY, SUMMARY, WEIGHTING, HEADLINE, BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, EXECUTIVES_MENTIONED, JAKE_FLAG, ImageURL, PUBLISHER, AUTHOR) 
+                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, RSS_SUMMARY, SUMMARY, WEIGHTING, HEADLINE, 
+                BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, EXECUTIVES_MENTIONED, JAKE_FLAG,
+                ImageURL, PUBLISHER_ID) 
                 VALUES 
-                (@Title, @Url, @Content, @PublishDate, @RssSummary, @Summary, @Weighting, @Headline, @BusinessRelated, @Paywall, @CompaniesMentioned, @ExecutivesMentioned, @JakeFlag, @ImageURL, @PUBLISHER, @AUTHOR)";
+                (@Title, @Url, @Content, @PublishDate, @RssSummary, @Summary, @Weighting, @Headline, @BusinessRelated, @Paywall, @CompaniesMentioned, @ExecutivesMentioned, @JakeFlag, @ImageURL, @PUBLISHER_ID)";
                     command.Parameters.AddWithValue("@Title", Title);
                     command.Parameters.AddWithValue("@Url", Url);
-                    command.Parameters.AddWithValue("@Content", Content);
+                    command.Parameters.AddWithValue("@Content", ArticleText);
                     command.Parameters.AddWithValue("@PublishDate", PublishDate);
-                    command.Parameters.AddWithValue("@RssSummary", RssSummary);
+                    command.Parameters.AddWithValue("@RssSummary", RSSSummary);
                     command.Parameters.AddWithValue("@Summary", Summary);
                     command.Parameters.AddWithValue("@Weighting", 0);
                     command.Parameters.AddWithValue("@Headline", Headline);
@@ -198,8 +220,7 @@ FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};
                     command.Parameters.AddWithValue("@ExecutivesMentioned", "");
                     command.Parameters.AddWithValue("@JakeFlag", false);
                     command.Parameters.AddWithValue("@ImageURL", ImageURL);
-                    command.Parameters.AddWithValue("@PUBLISHER", Publisher);
-                    command.Parameters.AddWithValue("@AUTHOR", Author);
+                    command.Parameters.AddWithValue("@PUBLISHER_ID", PublisherID);
                     command.ExecuteNonQuery();
                 }
             }

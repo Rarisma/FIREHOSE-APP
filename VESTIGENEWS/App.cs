@@ -7,7 +7,7 @@ public class App : Application
 {
     protected Window? MainWindow { get; private set; }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
 #if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
         MainWindow = new Window();
@@ -26,8 +26,13 @@ public class App : Application
         {
             // Place the frame in the current Window
             MainWindow.Content = Glob.Frame;
+            Glob.Frame.NavigationFailed += OnNavigationFailed;
 
-            Glob.Frame.NavigationFailed += OnNavigationFailed; }
+        }
+
+
+        Glob.Publications = await Publication.LoadFromAPI();
+        PreferencesModel.Load();
 
         if (Glob.Frame.Content == null)
         {
@@ -39,26 +44,18 @@ public class App : Application
 
         }
 
-        PreferencesModel.Load();
         
         // Ensure the current window is active
         MainWindow.Activate();
-        MainWindow.Closed += MainWindow_Closed;
-    }
 
-    private void MainWindow_Closed(object sender, WindowEventArgs args)
-    {
-        //Ensure preferences and bookmarks are saved on closing.
-        PreferencesModel.Save();
     }
-
     private void Current_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
         Console.WriteLine(e.Message);
     }
 
     /// <summary>
-    /// Invoked when Navigation to a certain page fails
+    /// Invoked when Navigation to a page fails
     /// </summary>
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>

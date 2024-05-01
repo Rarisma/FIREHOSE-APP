@@ -8,8 +8,7 @@ internal class ArticleDiscovery
     /// <summary>
     /// Feeds ready to be processed by the next stage.
     /// </summary>
-    public static Dictionary<string, SyndicationItem> Pending = new();
-    public static Dictionary<string, SyndicationItem> PendingLowPriority = new();
+    public static Dictionary<string, (SyndicationItem item, int PublicationID)> Pending = new();
     private static List<string> BlockedURLS = new()
     {
         "/kals-cartoon", "www.economist.com", "https://www.nytimes.com/video/", "/images/"
@@ -18,70 +17,80 @@ internal class ArticleDiscovery
 
     public static void StartFilter()
     {
-        List<string> Feeds = GetFeeds();
+        List<Publication> Feeds = Publication.LoadFromJSON();
 
         while (true)
         {
             RefreshBlacklist();
-            foreach (var URL in Feeds)
+            foreach (var Feed in Program.Publications)
             {
-                try
+                foreach (var URL in Feed.URLs)
                 {
-
-                    using (new CancellationTokenSource(TimeSpan.FromSeconds(10)))
-                    {
-                        try
-                        {
-                            using (XmlReader Reader =
-                                   XmlReader.Create(URL, new() { DtdProcessing = DtdProcessing.Parse }))
-                            {
-                                SyndicationFeed feed = SyndicationFeed.Load(Reader);
-                                foreach (SyndicationItem item in feed.Items)
-                                {
-
-                                    try
-                                    {
-                                        //Check we haven't already scanned this article
-                                        if (URLBlacklist.Contains(item.Links.FirstOrDefault()?.Uri?.ToString()) 
-                                            | BlockedURLS.Any(item.Id.Contains))
-                                        {
-                                            continue;
-                                        }
-
-                                        if ((DateTime.Now - item.PublishDate).TotalDays <= 5)
-                                        {
-                                            Pending.Add(item.Links.FirstOrDefault()?.Uri?.ToString(), item);
-                                        }
-
-                                        URLBlacklist.Add(item.Links.FirstOrDefault()?.Uri?.ToString());
-                                    }
-                                    catch
-                                    {
-                                        continue;
-                                    }
-
-                                }
-                            }
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            // The task took longer than 10 seconds to complete, skip the article.
-                            continue;
-                        }
-                    }
+                    ProcessFeed(URL, Feed.ID);
                 }
-                catch (Exception e)
-                {
-                    continue;
 
-                }
             }
 
             Console.WriteLine("Article Discovery Iteration Complete.");
-            while (Pending.Count >= 10 && PendingLowPriority.Count >= 10)
+            while (Pending.Count >= 10)
             {
                 Thread.Sleep(900000);
             }
+        }
+    }
+
+    private static void ProcessFeed(string URL, int PublicationID)
+    {
+        //Skip example publication
+        if (URL.Contains("rarisma.net")) { return;}
+
+        try
+        {
+            using (new CancellationTokenSource(TimeSpan.FromSeconds(10)))
+            {
+
+                try
+                {
+                    using (XmlReader Reader =
+                           XmlReader.Create(URL, new() { DtdProcessing = DtdProcessing.Parse }))
+                    {
+                        SyndicationFeed feed = SyndicationFeed.Load(Reader);
+                        foreach (SyndicationItem item in feed.Items)
+                        {
+
+                            try
+                            {
+                                //Check we haven't already scanned this article
+                                if (URLBlacklist.Contains(item.Links.FirstOrDefault()?.Uri?.ToString())
+                                    | BlockedURLS.Any(item.Id.Contains))
+                                {
+                                    continue;
+                                }
+
+                                if ((DateTime.Now - item.PublishDate).TotalDays <= 5)
+                                {
+                                    Pending.Add(item.Links.FirstOrDefault()?.Uri?.ToString(), (item, PublicationID));
+                                }
+
+                                URLBlacklist.Add(item.Links.FirstOrDefault()?.Uri?.ToString());
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The task took longer than 10 seconds to complete, skip the feed.
         }
     }
 
@@ -93,26 +102,5 @@ internal class ArticleDiscovery
         URLBlacklist.AddRange(Article.GetURLs());
         URLBlacklist = URLBlacklist.Distinct().ToList();
         Console.WriteLine($"URL Blacklist has {URLBlacklist.Count}\n");
-    }
-
-    /// <summary>
-    /// Loads feeds from within /Data/RSSFeeds
-    /// </summary>
-    /// <returns></returns>
-    private static List<string> GetFeeds()
-    {
-        Console.WriteLine("Loading Feeds.");
-        List<string> Feeds = new();
-        foreach (var Line in File.ReadAllLines("Data/RSSFeeds.txt"))
-        {
-            //Skip Commented lines
-            if (Line[0] == '#') { continue; }
-
-            //Add feed
-            Feeds.Add(Line);
-        }
-
-        Console.WriteLine($"Loaded {Feeds.Count} feeds");
-        return Feeds;
     }
 }

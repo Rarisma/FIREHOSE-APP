@@ -1,6 +1,6 @@
 using System.Diagnostics;
+using System.Security.Permissions;
 using Microsoft.UI;
-using Windows.UI.Core;
 
 namespace VESTIGENEWS;
 
@@ -20,11 +20,6 @@ public sealed partial class ArticleView : Page
             Background = new SolidColorBrush(Colors.Black);
         }
         else { Background = new SolidColorBrush(Colors.LightGray); }
-
-#if __ANDROID__
-        var manager = SystemNavigationManager.GetForCurrentView();
-        manager.BackRequested += OnBackRequested;
-#endif
     }
 
     public void SetBookmarkIcon()
@@ -37,15 +32,13 @@ public sealed partial class ArticleView : Page
         else { Glyphy.Glyph = "\xE734"; }
     }
 
-    private void OnBackRequested(object? sender, BackRequestedEventArgs e)
-    {
-        if (Glob.NaviStack.Count > 1) { Glob.GoBack(); }
-    }
-
     /// <summary>
     /// Opens article in the users browser
     /// </summary>
-    private void OpenBrowser(object sender, RoutedEventArgs e) => Process.Start(new ProcessStartInfo { FileName = Article.Url, UseShellExecute = true });
+    private async void OpenBrowser(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(Article.Url));
+    }
 
 
     /// <summary>
@@ -73,7 +66,22 @@ public sealed partial class ArticleView : Page
             Glob.Model.bookmarkedArticles.Add(Article);
         }
 
-        // update icon state.
+        // update icon state and save bookmarks
         SetBookmarkIcon();
+        PreferencesModel.Save();
+    }
+
+    private async void ReportSummary(object sender, RoutedEventArgs e)
+    {
+        ContentDialog CD = new()
+        {
+            Title = "Report issue with summary for " + Article.Title,
+            XamlRoot = this.XamlRoot,
+            Content = new Controls.AIFeedbackDialog(Article),
+            PrimaryButtonText = "Send Feedback",
+            SecondaryButtonText = "Close"
+        };
+
+        await CD.ShowAsync();
     }
 }

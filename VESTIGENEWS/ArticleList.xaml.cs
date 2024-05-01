@@ -1,7 +1,8 @@
 using System.Collections.ObjectModel;
-using System.Globalization;
+using Windows.UI;
 using Microsoft.UI.Xaml.Input;
-using Windows.UI.Core;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace VESTIGENEWS;
 
@@ -15,24 +16,15 @@ public sealed partial class ArticleList : Page
         LoadDataAsync();
         InitializeComponent();
 
-#if __ANDROID__
-        SystemNavigationManager.GetForCurrentView().BackRequested += Glob.OnBackRequested;
-#endif
     }
 
-    private async void LoadDataAsync(bool Shuffle = true, string Filter = "ORDER BY PUBLISH_DATE DESC")
+    private async void LoadDataAsync(string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
-        if (Glob.Model.AlwaysShuffle) { Shuffle = true; }
-
         try
         {
             Articles.Clear();
-            List<Article> arts = await Article.GetArticles(100, Offset);
+            List<Article> arts = await Article.GetArticles(100, Offset, Filter);
             
-            //Shuffle Articles if enabled
-            if (Shuffle) { arts = arts.OrderBy(item => new Random().Next()).ToList();}
-
-
             foreach (Article article in arts) { Articles.Add(article); }
         }
         catch (Exception ex)
@@ -40,28 +32,26 @@ public sealed partial class ArticleList : Page
             Articles.Add(new()
             {
                 Title = "Failed to load articles!",
-                RssSummary = ex.Message,
-                Publisher = "N/A",
+                RSSSummary = ex.Message,
+                PublisherID = -1,
                 ImageURL = "?",
                 PublishDate = new DateTime(1911, 11, 19),
             });
             Console.WriteLine(ex.ToString());
         }
     }
-    private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+
+    /// <summary>
+    /// Opens a tapped article object.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ArticleTapped(object sender, TappedRoutedEventArgs e)
     {
         try
         {
             Article Data = (Article)((FrameworkElement)e.OriginalSource).DataContext;
-            if (Glob.Model.AlwaysOpenReader)
-            {
-                Glob.NaviStack.Push(new ReaderMode(Data));
-            }
-            else
-            {
-                Glob.NaviStack.Push(new ArticleView(Data));
-            }
-            Glob.DoNavi();
+            OpenArticle(Data);
         }
         catch (Exception ex)
         {
@@ -71,27 +61,36 @@ public sealed partial class ArticleList : Page
     }
 
     /// <summary>
-    /// Check if we have hit the bottom.
+    /// Load more stories
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void ScrollToEnd(object? sender, ScrollViewerViewChangedEventArgs e)
-    {
-        //TODO: Reimplement to add infinite scroll.
-        return;
-        //ScrollViewer scrollViewer = (ScrollViewer)sender;
-        //if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
-        //{
-        //    Offset += Articles.Count;
-        //    LoadDataAsync();
-        //}
-    }
-
     private void LoadMorePressed(object sender, RoutedEventArgs e)
     {
         Offset += Articles.Count;
         LoadDataAsync();
         ArticleScroller.ChangeView(0, 0, ArticleScroller.ZoomFactor);
+    }
+
+    /// <summary>
+    /// Opens an article in the users preferred mode
+    /// </summary>
+    /// <param name="Data">Article Object to open</param>
+    private void OpenArticle(Article Data)
+    {
+        Glob.Log(Glob.LogLevel.Inf,
+            $"Navigating to {Data.Url} (Reader Mode: {Glob.Model.AlwaysOpenReader})");
+        if (Glob.Model.AlwaysOpenReader)
+        {
+            Glob.NaviStack.Push(new ReaderMode(Data));
+        }
+        else
+        {
+            Glob.NaviStack.Push(new ArticleView(Data));
+        }
+
+        //Navigate to view
+        Glob.DoNavi();
     }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
@@ -103,25 +102,35 @@ public sealed partial class ArticleList : Page
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
         string Filter;
-        bool Shuffle = true;
 
+        //Clear filter buttons
+        foreach (var FitlerButton in Filters.Children)
+        {
+            (FitlerButton as AppBarButton)!.Background = new SolidColorBrush(Colors.Transparent);
+            (FitlerButton as AppBarButton)!.Foreground = new SolidColorBrush(Colors.White);
+        }
+        //Bookmarks button isn't in the filters stack panel so clear them manually.
+        BookmarksButton.Background = new SolidColorBrush(Colors.Transparent);
+        BookmarksButton.Foreground = new SolidColorBrush(Colors.White);
+
+        //Set filter button background and foreground.
+        ((AppBarButton)sender).Background = new SolidColorBrush(Colors.White);
+        ((AppBarButton)sender).Foreground = new SolidColorBrush(Colors.Black);
+
+        //Set correct filter
         switch (((AppBarButton)sender).Content)
         {
             case "Latest":
                 Filter = "ORDER BY PUBLISH_DATE DESC";
-                Shuffle = false;
                 break;
             case "Headlines":
                 Filter = "WHERE HEADLINE = 1 ORDER BY PUBLISH_DATE DESC";
-                Shuffle = false;
                 break;
             case "Hot":
                 Filter = "WHERE HEADLINE = 1 ORDER BY PUBLISH_DATE DESC";
-                Shuffle = false;
                 break;
             case "Today":
                 Filter = "WHERE PUBLISH_DATE > NOW() - INTERVAL 1 DAY";
-                Shuffle = true;
                 break;
             case "Bookmarked":
                 Articles.Clear();
@@ -136,36 +145,72 @@ public sealed partial class ArticleList : Page
                 return;
         }
 
-        LoadDataAsync(Shuffle, Filter);
+        LoadDataAsync(Filter);
     }
 
-    private void ItemsControl_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    /// <summary>
+    /// Opens a quick view of an article showing the title,
+    /// image and the AI Summary of the article.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OpenQuickView(object sender, RightTappedRoutedEventArgs e)
     {
+
+        Article article = (e.OriginalSource as FrameworkElement)?.DataContext as Article;
+
         StackPanel UI = new();
-        UI.Children.Add((StackPanel)e.OriginalSource);
-        UI.Children.Add(new Border()
+
+        //Show image if we have access to one.
+        if (article.ImageURL != "?")
         {
-                Margin = new(20),
+            UI.Children.Add(new StackPanel
+            {
+                Children =
+                {
+                    new Image
+                    {
+                        Source = new BitmapImage(new Uri(article.ImageURL))
+                    },
+                },
+                CornerRadius = new(8)
+            });
+        }
+
+        
+        //Create summary box
+        UI.Children.Add(new Border
+        {
+                Margin = new(0,20,0,20),
                 CornerRadius = new(12),
-                Background = new SolidColorBrush(Microsoft.UI.Colors.DarkGray),
-                Child = new TextBlock()
+                Background = new SolidColorBrush(Color.FromArgb(128,22,22,22)),
+                Child = new TextBlock
                 {
                     Text = ((e.OriginalSource as FrameworkElement).DataContext as Article).Summary,
-                    Margin = new(10)
+                    Margin = new(10),
+                    TextWrapping = TextWrapping.Wrap
                 }
         });
 
-
+        //Create content dialog
         ContentDialog CD = new()
         {
-            Content = UI,
+            Content = new ScrollViewer()
+            {
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Content = UI
+            },
             XamlRoot = this.XamlRoot,
-            Title = "Summary",
-            PrimaryButtonText = "Close"
+            Title = $"Summary for {article.Title}",
+            PrimaryButtonText = "Open Article",
+            SecondaryButtonText = "Close"
         };
 
-
-
-        CD.ShowAsync();
+        //Show dialog.
+        if (await CD.ShowAsync() == ContentDialogResult.Primary)
+        {
+            OpenArticle(article);
+        }
     }
 }

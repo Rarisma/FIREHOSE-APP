@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.ServiceModel.Syndication;
 using Firehose;
 using HtmlAgilityPack;
@@ -7,7 +8,7 @@ using OpenGraphNet;
 namespace Firehose2;
 internal static class ArticleScraper
 {
-    public static List<Article> ProcessedArticles = new ();
+    public static ConcurrentBag<Article> ProcessedArticles = new();
     public static void StartScraping()
     {
         while (true)
@@ -15,20 +16,10 @@ internal static class ArticleScraper
             var keys = ArticleDiscovery.Pending.Keys.ToList();
             foreach (var key in keys)
             {
-                if (ArticleDiscovery.Pending.TryGetValue(key, out SyndicationItem art))
+                if (ArticleDiscovery.Pending.TryGetValue(key, out (SyndicationItem, int) Item))
                 {
                     ArticleDiscovery.Pending.Remove(key);
-                    CreateArticle(art);
-                }
-            }
-
-            keys = ArticleDiscovery.PendingLowPriority.Keys.ToList();
-            foreach (var key in keys)
-            {
-                if (ArticleDiscovery.PendingLowPriority.TryGetValue(key, out SyndicationItem art))
-                {
-                    ArticleDiscovery.PendingLowPriority.Remove(key);
-                    CreateArticle(art);
+                    CreateArticle(Item);
                 }
             }
 
@@ -36,9 +27,9 @@ internal static class ArticleScraper
         }
     }
 
-    private static async void CreateArticle(SyndicationItem Article)
+    private static async void CreateArticle((SyndicationItem, int) Article)
     {
-        string URL = Article.Links.FirstOrDefault()?.Uri?.ToString();
+        string URL = Article.Item1.Links.FirstOrDefault()?.Uri?.ToString();
 
         string Img;
         try { Img = (await OpenGraph.ParseUrlAsync(URL)).Image.ToString(); }
@@ -53,14 +44,13 @@ internal static class ArticleScraper
             ProcessedArticles.Add(new Article
             {
                 Url = URL,
-                Content = ArticleText,
-                Title = Article.Title.Text,
-                RssSummary = StringTools.CleanUpHTMLString(Article.Summary?.Text),
-                PublishDate = Article.PublishDate.DateTime,
+                ArticleText = ArticleText,
+                Title = Article.Item1.Title.Text,
+                RSSSummary = StringTools.CleanUpHTMLString(Article.Item1.Summary?.Text),
+                PublishDate = Article.Item1.PublishDate.DateTime,
                 Paywall = StringTools.IsPaywalled(URL),
                 Summary = "",
-                Publisher = URL.Replace("www.", "").Split(".")[0].ToUpper().ToString().Replace("HTTPS://", ""),
-                Author = Article.Authors.Count == 0 ? "Unknown Author" : Article.Authors.First().Name,
+                PublisherID = Article.Item2,
                 ImageURL = Img
             });
         }

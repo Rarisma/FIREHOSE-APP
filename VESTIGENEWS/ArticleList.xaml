@@ -31,7 +31,7 @@
         <controls:PublisherInformation ItemSource="{x:Bind}"/>
         <TextBlock Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap"
                    MaxWidth="500" HorizontalAlignment="Left"/>
-				<TextBlock Text="{x:Bind RssSummary}" MaxLines="3" FontSize="11"
+				<TextBlock Text="{x:Bind RSSSummary}" MaxLines="3" FontSize="11"
                    TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left"/>
 			</StackPanel>
 		</DataTemplate>
@@ -90,44 +90,38 @@
 																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
   </Page.Resources>
 
-
-	<Page.TopAppBar>
-		<CommandBar OverflowButtonVisibility="Collapsed">
-      <AppBarElementContainer>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <TextBlock Text="Vestige News Test" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-          <AppBarButton Icon="Setting" HorizontalAlignment="Center" Click="OpenSettings"
-                        VerticalAlignment="Center" LabelPosition="Collapsed"/>
-        </StackPanel>
-      </AppBarElementContainer>
-    </CommandBar>
-	</Page.TopAppBar>
-
-
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="auto"/>
       <RowDefinition Height="*"/>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="auto"/>
     </Grid.RowDefinitions>
 
-    <ScrollViewer Grid.Row="0" HorizontalAlignment="Stretch" ViewChanged="ScrollToEnd"  
+    <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch"
                   Name="ArticleScroller" Margin="10,0" MaxWidth="600">
 
       <StackPanel Orientation="Vertical">
         <ScrollViewer HorizontalScrollBarVisibility="Visible">
           <StackPanel Orientation="Horizontal">
-            <AppBarButton Content="Bookmarked" Height="50"  Click="ChangeFilter"/>
-            <AppBarButton Content="Latest" Height="50" Click="ChangeFilter"/>
-            <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
-            <AppBarButton Content="Hot" Height="50"  Click="ChangeFilter" Visibility="Collapsed"/>
-            <AppBarButton Content="Today" Height="50"  Click="ChangeFilter"/>
+            <AppBarButton Icon="Setting" Click="OpenSettings" VerticalAlignment="Center" LabelPosition="Collapsed"/>
+            <AppBarButton Content="Bookmarked" Height="50"  Click="ChangeFilter"
+                          Name="BookmarksButton" Width="90"/>
+            <Border Width="2" Height="20" BorderThickness="5" HorizontalAlignment="Center"
+                    BorderBrush="Gray" CornerRadius="1" Margin="10,0"/>
+
+            <!-- Filter button -->
+            <StackPanel Orientation="Horizontal" Name="Filters">
+              <AppBarButton Content="Latest" Height="50" Click="ChangeFilter"
+                            Background="White" Foreground="Black"/>
+              <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
+              <AppBarButton Content="Hot" Height="50"  Click="ChangeFilter" Visibility="Collapsed"/>
+              <AppBarButton Content="Today" Height="50"  Click="ChangeFilter" />
+            </StackPanel>
           </StackPanel>
         </ScrollViewer>
 
-        <ItemsControl ItemsSource="{x:Bind Articles}" Tapped="UIElement_OnTapped"
+        <ItemsControl ItemsSource="{x:Bind Articles}" Tapped="ArticleTapped"
                       ItemTemplateSelector="{StaticResource ArticleSelector}"
-                      RightTapped="ItemsControl_RightTapped"/>
+                      RightTapped="OpenQuickView"/>
 
         <HyperlinkButton Content="Click to load more Articles" Click="LoadMorePressed"
                          HorizontalAlignment="Center" Margin="10"/>

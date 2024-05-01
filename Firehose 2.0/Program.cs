@@ -1,10 +1,47 @@
 //The "what's-it-called café"
-
-using HYDRANT;
+using Firehose2.API_Server;
+using Firehose2.Stocks;
+using Microsoft.Extensions.Hosting;
 
 namespace Firehose2;
+/* WARNING
+ * FIREHOSE IS PROVIDED COMPLETELY AS IS.
+ * No support on getting firehose running or working correctly
+ * will be provided as it is consistently in flux. Meaning any part
+ * of it bar the API server can change at any time; I aim for firehose
+ * to work on any sufficiently powerful machine but I do not
+ * gaurantee it as I will frequently make tweaks for it to run as
+ * optimally on my machine as possible
+ *
+ * So for firehose to work as intended you need system similar to mine
+ *
+ * Specs
+ * - Windows 11
+ * - MySQL with Firehose.db ran
+ * - LocalHost user set up
+ * - CPU: AMD 5800x
+ * - GPU1: NVIDIA RTX 3090
+ * - GPU2 (unused): GTX 1060
+ * - CUDA Toolkit
+ * - LM Studio running 2x
+ *   Gemma 1.1 IT LLM with GemmaOptimized Preset
+ *      - 300 Token Cutoff
+ *      - 0.2 temp
+ *      - 10 top-k
+ *      - Max GPU layers
+ *
+ * PENDING CHANGES:
+ *  Pending changes are changes I plan to make, these may or may not happen.
+ *  - Move MySQL to Raspberry Pi or other offsite database
+ *  - Move MySQL to use anonymous user
+ *  - Ditch LM Studio for LlamaSharp
+ *  - Test GTX 1060 for speeding up firehose
+ *  - Automated scraping of stock markets
+ *
+ */
+
 /* Firehose 2.0
- * Firehose is a News Data Aggregator, this is a complete rewrite.
+ * Firehose is a News Data Aggregator, this is a complete rewrite from python.
  * Firehose's mission is to try and get every news article in real time.
  *
  * History of Firehose
@@ -12,7 +49,7 @@ namespace Firehose2;
  * Under IAI, the concept of firehose was created.
  * Here it was written in python and the concept of firehose was proven.
  *
- * Jan/Fed 2024 Firehose 1.5
+ * Jan/Feb 2024 Firehose 1.5
  * After IAI disappeared due to *reasons* Firehose was tweaked to
  * better serve news analysis instead of its original purpose.
  * It was also rewritten in C# with a few tweaks to make it run better,
@@ -22,23 +59,42 @@ namespace Firehose2;
  * Firehose 2.0 is another rewrite of firehose to make the codebase more
  * professional and make further use of multi-threading to make sure we are
  * using 100% of the CPU at all times.
- *
+ *  
  * Future Ideas:
  *  - Publisher information scraping
  *  - Author information scraping
+ *
+ * May 2024 Firehose 3.0
+ * Firehose 3.0 is a massive overhaul on how Firehose works:
+ *  - Firehose now uses publication IDs to track publishers
+ *  - HallonAPIServer is now merged into Firehose as a server thread
+ *  - Add multiple endpoints for parsing stories at the same time
+ *  - Switch to Gemma 1.1 it
+ *  
  */
 internal class Program
 {
+    public static List<HYDRANT.Publication> Publications => HYDRANT.Publication.LoadFromJSON();
+
     static void Main(string[] args)
     {
-
         Console.WriteLine("Firehose Initialised");
+
+
+        Console.WriteLine("Initialising API Server");
+        Thread APIThread = new(APIServer.LaunchAPIServer);
+        APIThread.Start();
+
+        Console.WriteLine("API Server Started, press enter to start summarising stories");
+        Console.ReadLine();
+
+        CompanyData.LoadTickers();
+        //SyncFeeds();
 
         //Configure LLM Server
         Console.WriteLine("Checking for or loading LLM Server");
         LLM.LaunchServer();
-        Thread.Sleep(3000);
-        LLM.SendPostRequest("you are a helpful assistant.", "hello, whats 2+2");
+        Thread.Sleep(8000);
 
         Thread ArticleDiscoveryThread = new(ArticleDiscovery.StartFilter);
         ArticleDiscoveryThread.Start();
@@ -46,15 +102,20 @@ internal class Program
         Thread ArticleScrapingThread = new(ArticleScraper.StartScraping);
         ArticleScrapingThread.Start();
 
-        Thread ArticleAnalyserThread = new(ArticleAnalyser.StartAnalysis);
-        ArticleAnalyserThread.Start();
+
+        for (int id = 0; id < LLM.Endpoints.Length; id++)
+        {
+            Thread ArticleAnalyserThread = new(new ArticleAnalyser(id).StartAnalysis);
+            ArticleAnalyserThread.Start();
+        }
+
 
         while (true)
         {
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, Console.CursorTop);
 
-            Console.WriteLine($"| Discovered:{ArticleDiscovery.Pending.Count + ArticleDiscovery.PendingLowPriority.Count} " +
+            Console.WriteLine($"| Discovered:{ArticleDiscovery.Pending.Count} " +
                               $"| Scraped: {ArticleScraper.ProcessedArticles.Count} " +
                               $"| Total Analysed: {ArticleAnalyser.TotalScraped} |");
             Console.CursorTop--;
@@ -62,4 +123,5 @@ internal class Program
             Thread.Sleep(200);
         }
     }
+
 }

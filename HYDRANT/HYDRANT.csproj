@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="MySql.Data" />
+    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Uno.WinUI" />
   </ItemGroup>
   <Choose>

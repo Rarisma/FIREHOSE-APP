@@ -34,6 +34,7 @@
       <Button Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Center"
               Click="GoBack" HorizontalAlignment="Left" Grid.Column="0" Margin="10"/>
 
+      <!-- AI Generated Summary area -->
       <Button Content="✨" HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource AppButton}">
         <Button.Flyout>
           <Flyout>
@@ -41,7 +42,7 @@
               <TextBlock Text="{x:Bind Article.Summary}" Width="300"  TextWrapping="Wrap"/>
               <TextBlock Text="AI-generated summaries may be inaccurate." FontStyle="Italic"
                          FontSize="12" VerticalAlignment="Bottom" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-              <HyperlinkButton Content="Rate this summary" FontSize="12"
+              <HyperlinkButton Content="Report issue with this summary" FontSize="12" Click="ReportSummary"
                                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
             </StackPanel>
           </Flyout>

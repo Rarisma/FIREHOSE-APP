@@ -1,12 +1,14 @@
 <Project ToolsVersion="15.0">
   <ItemGroup>
     <PackageVersion Include="HtmlAgilityPack" Version="1.11.60" />
+    <PackageVersion Include="LLamaSharp" Version="0.11.2" />
+    <PackageVersion Include="LLamaSharp.Backend.Cuda12" Version="0.11.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Windows.Compatibility" Version="8.0.4" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.5.240404000" />
     <PackageVersion Include="MySql.Data" Version="8.3.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="OpenGraph-Net" Version="4.0.1" />
     <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
@@ -28,5 +30,6 @@
     <PackageVersion Include="Xamarin.Google.Android.Material" Version="1.10.0.3" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageVersion Include="YahooFinanceApi" Version="2.3.3" />
   </ItemGroup>
 </Project>
