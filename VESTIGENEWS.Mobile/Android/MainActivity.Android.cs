@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using Windows.UI.Core;
 
 namespace VESTIGENEWS.Droid;
 [Activity(
@@ -12,4 +13,9 @@ namespace VESTIGENEWS.Droid;
 )]
 public class MainActivity : Microsoft.UI.Xaml.ApplicationActivity
 {
+    public override void OnBackPressed()
+    {
+        Glob.GoBack();
+    }
+
 }

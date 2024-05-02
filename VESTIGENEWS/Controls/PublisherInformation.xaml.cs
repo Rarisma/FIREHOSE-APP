@@ -18,7 +18,7 @@ public sealed partial class PublisherInformation : UserControl
     /// </summary>
     public Article ItemSource
     {
-        get { return ((Article)GetValue(ItemSourceProperty)); }
+        get { return (Article)GetValue(ItemSourceProperty); }
         set { SetValue(ItemSourceProperty, value); }
     }
 
@@ -67,7 +67,8 @@ public sealed partial class PublisherInformation : UserControl
                 //If it's older than 2 days, show the article in hours
                 if (Diff.TotalHours <= 48)
                 {
-                    return Math.Round(Diff.TotalHours) + " Hours ago";
+                    int difference = (int)Math.Round(Diff.TotalHours);
+                    return difference + (difference == 1 ? " Hour ago" : " Hours ago");
                 }
                 return Math.Round(Diff.TotalDays) + " Days ago";
             }

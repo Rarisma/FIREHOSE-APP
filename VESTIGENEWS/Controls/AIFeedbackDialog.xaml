@@ -10,7 +10,7 @@
   <StackPanel>
     <InfoBar IsOpen="True" IsClosable="False" Severity="Informational">
       <InfoBar.Content >
-        <TextBlock TextWrapping="WrapWholeWords" Padding="10">
+        <TextBlock TextWrapping="WrapWholeWords">
           Firehose News summaries are generated with Large Language Models.
           While they are usually pretty good, they can occasionally be
           inaccurate or complain about things such as safety and access.
@@ -26,7 +26,7 @@
       <TextBlock Text="{x:Bind ItemSource.Summary}" TextWrapping="WrapWholeWords" Margin="10"/>
     </Border>
 
-    <ComboBox HorizontalAlignment="Center">
+    <ComboBox HorizontalAlignment="Center" Header="I think it's" Margin="10">
         <ComboBoxItem Content="It's bad"/>
         <ComboBoxItem Content="It's inaccurate"/>
         <ComboBoxItem Content="It's not detailed enough"/>

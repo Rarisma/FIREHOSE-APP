@@ -27,8 +27,12 @@ public static class Glob
     /// </summary>
     public static void GoBack()
     {
-        NaviStack.Pop();
-        DoNavi();
+        if (NaviStack.Count > 1)
+        {
+            NaviStack.Pop();
+            DoNavi();
+        }
+
     }
 
     public static void OnBackRequested(object? sender, BackRequestedEventArgs e)

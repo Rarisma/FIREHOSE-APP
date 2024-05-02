@@ -124,7 +124,7 @@
                       RightTapped="OpenQuickView"/>
 
         <HyperlinkButton Content="Click to load more Articles" Click="LoadMorePressed"
-                         HorizontalAlignment="Center" Margin="10"/>
+                         HorizontalAlignment="Center" Margin="10" x:Name="LoadMoreButton"/>
       </StackPanel>
     </ScrollViewer>
   </Grid>

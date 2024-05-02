@@ -101,6 +101,8 @@ public sealed partial class ArticleList : Page
 
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
+        LoadMoreButton.Visibility = Visibility.Visible;
+
         string Filter;
 
         //Clear filter buttons
@@ -134,6 +136,7 @@ public sealed partial class ArticleList : Page
                 break;
             case "Bookmarked":
                 Articles.Clear();
+                LoadMoreButton.Visibility = Visibility.Collapsed;
                 foreach (Article Art in Glob.Model.bookmarkedArticles)
                 {
                     Articles.Add(Art);
@@ -195,7 +198,7 @@ public sealed partial class ArticleList : Page
         //Create content dialog
         ContentDialog CD = new()
         {
-            Content = new ScrollViewer()
+            Content = new ScrollViewer
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
