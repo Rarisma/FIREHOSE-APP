@@ -10,7 +10,7 @@ static class StringTools
     private static string[] Blacklist = File.ReadAllLines("Data/Blacklist.txt");
     private const string Proxy = "https://1ft.io/";
 
-    private static List<string> Paywalled = new(){"www.nytimes.com", "https://www.ft.com/" };
+    private static List<string> Paywalled = new(){ "https://www.nytimes.com", "https://www.ft.com/" };
 
     public static bool IsPaywalled(string URL) => Paywalled.Any(URL.Contains);
 
@@ -53,6 +53,34 @@ static class StringTools
         }
         return text;
     }
+
+    public static string MarkdownToPlainText(string markdownText)
+    {
+        // Remove headers
+        string noHeaders = Regex.Replace(markdownText, @"(#+\s)", "");
+
+        // Remove bold and italics
+        string noBoldItalics = Regex.Replace(noHeaders, @"(\*{1,2}|_{1,2})", "");
+
+        // Replace links with link text only
+        string noLinks = Regex.Replace(noBoldItalics, @"\[(.*?)\]\(.*?\)", "$1");
+
+        // Remove images
+        string noImages = Regex.Replace(noLinks, @"\!\[(.*?)\]\(.*?\)", "");
+
+        // Remove HTML tags
+        string noHtml = Regex.Replace(noImages, @"<[^>]*>", "");
+
+        // Replace lists with plain text
+        string noLists = Regex.Replace(noHtml, @"^\s*([-*]|\d+\.)\s+", "", RegexOptions.Multiline);
+
+        // Remove additional Markdown elements as necessary
+        // Example: Remove code blocks
+        string noCodeBlocks = Regex.Replace(noLists, @"(```.*?```|`.*?`)", "");
+
+        return noCodeBlocks;
+    }
+
 
     /// <summary>
     /// Takes a block of HTML Text, like a rich RSS Summary

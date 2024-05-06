@@ -1,12 +1,9 @@
-using System;
-using System.IO;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Firehose2.API_Server;
 internal class APIServer
@@ -24,14 +21,14 @@ internal class APIServer
         // Load the PFX certificate
         var certificate = new X509Certificate2("C:\\Users\\RARI\\Desktop\\Cert.pfx", "");
 
-        // Configure Kestrel to use the certificate for HTTPS
+        IPAddress publicIPv4Address = IPAddress.Any;
         builder.WebHost.ConfigureKestrel(serverOptions =>
         {
-            serverOptions.Listen(System.Net.IPAddress.Any, 443, listenOptions =>
+            serverOptions.Listen(publicIPv4Address, 443, listenOptions =>
             {
                 listenOptions.UseHttps(certificate);
             });
-            serverOptions.Listen(System.Net.IPAddress.Any, 80);  // Listen on port 80 for HTTP
+            serverOptions.Listen(publicIPv4Address, 80);  // Listen on port 80 for HTTP
         });
 
         // Add services to the container.

@@ -4,8 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
-
-//The alright seal
+//The not-so-great seal
 namespace Firehose2;
 
 /// <summary>

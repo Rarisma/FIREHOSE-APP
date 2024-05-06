@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Security.Permissions;
 using Microsoft.UI;
+using VESTIGENEWS.Controls;
 
 namespace VESTIGENEWS;
 
@@ -82,6 +83,12 @@ public sealed partial class ArticleView : Page
             SecondaryButtonText = "Close"
         };
 
-        await CD.ShowAsync();
+        if (await CD.ShowAsync() == ContentDialogResult.Primary) //Send feedback clicked
+        {
+            await new HttpClient().GetAsync(
+                $"https://www.hallon.rarisma.net/Articles/ReportArticleSummary?ArticleURL=" +
+                $"{Uri.EscapeDataString(Article.Url)}&ReportReason=" +
+                $"{(((CD.Content as AIFeedbackDialog).Content as Grid).Children[3] as ComboBox).SelectedIndex}");
+        }
     }
 }

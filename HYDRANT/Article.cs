@@ -58,6 +58,16 @@ public class Article
     /// </summary>
     public int PublisherID { get; set; }
 
+    /// <summary>
+    /// Does the article relate to business?
+    /// </summary>
+    public bool Buisness { get; set; }
+
+    /// <summary>
+    /// Company names/tickers mentioned within the article.
+    /// </summary>
+    public string CompaniesMentioned { get; set; }
+
     #endregion
     /// <summary>
     /// Internally used
@@ -214,9 +224,9 @@ public class Article
                     command.Parameters.AddWithValue("@Summary", Summary);
                     command.Parameters.AddWithValue("@Weighting", 0);
                     command.Parameters.AddWithValue("@Headline", Headline);
-                    command.Parameters.AddWithValue("@BusinessRelated", false);
-                    command.Parameters.AddWithValue("@Paywall", false);
-                    command.Parameters.AddWithValue("@CompaniesMentioned", "");
+                    command.Parameters.AddWithValue("@BusinessRelated", Buisness);
+                    command.Parameters.AddWithValue("@Paywall", Paywall);
+                    command.Parameters.AddWithValue("@CompaniesMentioned", CompaniesMentioned);
                     command.Parameters.AddWithValue("@ExecutivesMentioned", "");
                     command.Parameters.AddWithValue("@JakeFlag", false);
                     command.Parameters.AddWithValue("@ImageURL", ImageURL);

@@ -369,8 +369,8 @@
         
         {
             "ID": 25,
-            "Name": "Mashable",
-            "Favi": "https://mashable.com/favicons/favicon.svg",
+            "Name": "NPR",
+            "Favi": "https://media.npr.org/chrome/favicon/favicon-180x180.png",
             "BaseWeight": 50,
             "AlwaysJakeFlag": 0,
             "URLs": ["https://feeds.npr.org/1004/rss.xml"]

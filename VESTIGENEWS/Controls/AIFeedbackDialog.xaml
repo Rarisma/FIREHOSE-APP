@@ -7,31 +7,39 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-  <StackPanel>
-    <InfoBar IsOpen="True" IsClosable="False" Severity="Informational">
-      <InfoBar.Content >
-        <TextBlock TextWrapping="WrapWholeWords">
-          Firehose News summaries are generated with Large Language Models.
-          While they are usually pretty good, they can occasionally be
-          inaccurate or complain about things such as safety and access.
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
 
-          Reporting feedback about the summary can help us to identify issues
-          with faulty summaries and prevent them from happening in the future.
-        </TextBlock>
-      </InfoBar.Content>
-    </InfoBar>
+      <TextBlock TextWrapping="WrapWholeWords" Margin="10" Grid.Row="0">
+      Firehose News summaries are generated with Large Language Models.
+      <LineBreak/>While they are usually good, they can occasionally be
+      inaccurate or hallucinate.
+      <LineBreak/>
+      <LineBreak/>Reporting feedback about the summary can help us to identify issues
+      with faulty summaries and prevent them from happening in the future.
+    </TextBlock>
 
-    <TextBlock Text="What do you think about this summary?" Margin="10" HorizontalAlignment="Left"/>
-    <Border CornerRadius="4" HorizontalAlignment="Center" Margin="10,10,10,0" Background="#222222">
-      <TextBlock Text="{x:Bind ItemSource.Summary}" TextWrapping="WrapWholeWords" Margin="10"/>
-    </Border>
+    <TextBlock Text="What's up with this summary?" Grid.Row="1"
+               Margin="10" HorizontalAlignment="Left"/>
+    <ScrollViewer Grid.Row="2">
+      <Border CornerRadius="4" HorizontalAlignment="Center" Margin="10,10,10,0" Background="#222222">
+        <TextBlock Text="{x:Bind ItemSource.Summary}" TextWrapping="WrapWholeWords" Margin="10"/>
+      </Border>
+    </ScrollViewer>
 
-    <ComboBox HorizontalAlignment="Center" Header="I think it's" Margin="10">
+
+    <ComboBox HorizontalAlignment="Center" Grid.Row="3"
+              Header="The issue with the summary is that: " Margin="10">
         <ComboBoxItem Content="It's bad"/>
         <ComboBoxItem Content="It's inaccurate"/>
         <ComboBoxItem Content="It's not detailed enough"/>
         <ComboBoxItem Content="The summary says it can't access the article"/>
         <ComboBoxItem Content="The summary complains about safety"/>
     </ComboBox>
-  </StackPanel>
+  </Grid>
 </Page>

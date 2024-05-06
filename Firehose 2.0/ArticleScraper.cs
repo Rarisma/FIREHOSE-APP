@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.ServiceModel.Syndication;
 using Firehose;
+using Firehose2.Stocks;
 using HtmlAgilityPack;
 using HYDRANT;
 using OpenGraphNet;
@@ -32,8 +33,16 @@ internal static class ArticleScraper
         string URL = Article.Item1.Links.FirstOrDefault()?.Uri?.ToString();
 
         string Img;
-        try { Img = (await OpenGraph.ParseUrlAsync(URL)).Image.ToString(); }
-        catch {Img = "?";}
+        try
+        {
+            //Get Open Graph Data
+            var data = await OpenGraph.ParseUrlAsync(URL);
+
+            //Set image if found.
+            if (data.Image != null) { Img = data.Image.ToString(); }
+            else { Img = "?";}
+        }
+        catch (Exception e) {Img = "?";}
 
         string ArticleText;
         try { ArticleText = await StringTools.GetURLText(URL); }
@@ -51,7 +60,8 @@ internal static class ArticleScraper
                 Paywall = StringTools.IsPaywalled(URL),
                 Summary = "",
                 PublisherID = Article.Item2,
-                ImageURL = Img
+                ImageURL = Img,
+                CompaniesMentioned = Company.FindCompaniesInText(ArticleText, CompanyData.Tickers)
             });
         }
         catch { }

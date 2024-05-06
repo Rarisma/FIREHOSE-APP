@@ -115,6 +115,7 @@
               <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
               <AppBarButton Content="Hot" Height="50"  Click="ChangeFilter" Visibility="Collapsed"/>
               <AppBarButton Content="Today" Height="50"  Click="ChangeFilter" />
+              <AppBarButton Content="Business" Height="50"  Click="ChangeFilter" />
             </StackPanel>
           </StackPanel>
         </ScrollViewer>

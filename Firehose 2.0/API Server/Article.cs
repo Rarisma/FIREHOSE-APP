@@ -36,4 +36,16 @@ public class ArticlesController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    /// <summary>
+    /// Report the summary of an article.
+    /// </summary>
+    /// <param name="ArticleURL">URL to report summary for</param>
+    /// <param name="ReportReason"></param>
+    [HttpGet("ReportArticleSummary")]
+    public IActionResult ReportArticleSummary(string ArticleURL, int ReportReason)
+    {
+        System.IO.File.AppendAllText("ReportedURLs.txt", $"[{ReportReason}] - {ArticleURL}\n");
+        return StatusCode(200);
+    }
 }

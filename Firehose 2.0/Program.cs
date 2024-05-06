@@ -9,8 +9,8 @@ namespace Firehose2;
  * No support on getting firehose running or working correctly
  * will be provided as it is consistently in flux. Meaning any part
  * of it bar the API server can change at any time; I aim for firehose
- * to work on any sufficiently powerful machine but I do not
- * gaurantee it as I will frequently make tweaks for it to run as
+ * to work on any sufficiently powerful machine, but I do not
+ * guarantee it as I will frequently make tweaks for it to run as
  * optimally on my machine as possible
  *
  * So for firehose to work as intended you need system similar to mine
@@ -70,6 +70,9 @@ namespace Firehose2;
  *  - HallonAPIServer is now merged into Firehose as a server thread
  *  - Add multiple endpoints for parsing stories at the same time
  *  - Switch to Gemma 1.1 it
+ *
+ * May 2024 -  BELLWETHER/3.1
+ * Start to locate all references to companies.
  *  
  */
 internal class Program

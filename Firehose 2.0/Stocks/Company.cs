@@ -22,4 +22,16 @@ public class Company
     /// Source of the ticker, FTSE, NASDAQ etc.
     /// </summary>
     public TickerSource Source;
+
+    public static string FindCompaniesInText(string text, List<Company> companies)
+    {
+        var c = companies.Where(company => text.Contains(company.Name) || text.Contains(company.Ticker)).ToList();
+        string R = "";
+        foreach (var Comp in c)
+        {
+            R += $"{Comp.Ticker} ({Comp.Name}),";
+        }
+
+        return R;
+    }
 }

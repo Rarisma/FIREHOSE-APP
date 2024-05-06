@@ -8,30 +8,28 @@
     mc:Ignorable="d">
 
   <!-- Header bar -->
-  <StackPanel MaxWidth="400" Margin="0,0,0,50">
+  <StackPanel Margin="0,0,0,50" Padding="50,10">
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-      <Button Style="{StaticResource NavigationBackButtonNormalStyle}"
-              Click="Back"
-              HorizontalAlignment="Left" Background="transparent" CornerRadius="4"/>
-        <TextBlock Text="Preferences" HorizontalAlignment="Center" Height="30"
-                   FontSize="20" MaxWidth="300" Margin="100,0"/>
+      <Button Style="{StaticResource NavigationBackButtonNormalStyle}" Margin="0,0,50,0"
+              Click="Back" HorizontalAlignment="Left" Background="transparent" CornerRadius="4"/>
+        <TextBlock Text="Preferences" HorizontalAlignment="Center" Height="30" FontSize="203"/>
     </StackPanel>
 
-    <TextBox Header="Web Proxy" PlaceholderText="Proxy" MinWidth="200"
+    <TextBox Header="Web Proxy" PlaceholderText="Proxy" MinWidth="200" HorizontalAlignment="Center"
              MaxWidth="400" Margin="10" Text="{x:Bind Model.Proxy, Mode=TwoWay}"/>
 
-    <ToggleSwitch Header="Always open in Reader Mode" Margin="10"
+    <ToggleSwitch Header="Always open in Reader Mode" Margin="10" HorizontalAlignment="Center"
                   IsOn="{x:Bind Model.AlwaysOpenReader, Mode=TwoWay}"/>
 
-    <ToggleSwitch Header="Always shuffle Articles" Margin="10"
-                  IsOn="{x:Bind Model.AlwaysShuffle, Mode=TwoWay}"/>
+    <ToggleSwitch Header="Always shuffle Articles" Margin="10" MinWidth="200" HorizontalAlignment="Center"
+                  IsOn="{x:Bind Model.AlwaysShuffle, Mode=TwoWay}" MaxWidth="400"/>
 
     <NumberBox Header="Articles to fetch" Minimum="20" ValidationMode="InvalidInputOverwritten"
-               Maximum="200" Margin="10" Value="{x:Bind Model.ArticleFetchLimit}"/>
+               Maximum="200" Margin="10" Value="{x:Bind Model.ArticleFetchLimit}" MaxWidth="200"/>
 
     <!-- Info bar -->
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock HorizontalAlignment="Center" Foreground="DarkGray" Opacity="0.3"
                Text="Vestige News 1.0&#x0d;&#x0a;  Rarisma 2024&#x0d;&#x0a;       IDBWS"/>
   </StackPanel>
-</Page>
+</Page> 

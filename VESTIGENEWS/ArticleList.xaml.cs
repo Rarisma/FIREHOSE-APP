@@ -102,6 +102,9 @@ public sealed partial class ArticleList : Page
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
         LoadMoreButton.Visibility = Visibility.Visible;
+        SolidColorBrush ForegroundColor = Application.Current.RequestedTheme == ApplicationTheme.Dark
+            ? new SolidColorBrush(Colors.White)
+            : new SolidColorBrush(Colors.Black);
 
         string Filter;
 
@@ -109,15 +112,23 @@ public sealed partial class ArticleList : Page
         foreach (var FitlerButton in Filters.Children)
         {
             (FitlerButton as AppBarButton)!.Background = new SolidColorBrush(Colors.Transparent);
-            (FitlerButton as AppBarButton)!.Foreground = new SolidColorBrush(Colors.White);
+            (FitlerButton as AppBarButton)!.Foreground = ForegroundColor;
         }
         //Bookmarks button isn't in the filters stack panel so clear them manually.
         BookmarksButton.Background = new SolidColorBrush(Colors.Transparent);
-        BookmarksButton.Foreground = new SolidColorBrush(Colors.White);
+        BookmarksButton.Foreground = ForegroundColor;
 
         //Set filter button background and foreground.
-        ((AppBarButton)sender).Background = new SolidColorBrush(Colors.White);
-        ((AppBarButton)sender).Foreground = new SolidColorBrush(Colors.Black);
+        ((AppBarButton)sender).Background = ForegroundColor;
+
+        if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+        {
+            ((AppBarButton)sender).Foreground = new SolidColorBrush(Colors.Black);
+        }
+        else
+        {
+            ((AppBarButton)sender).Foreground = new SolidColorBrush(Colors.White);
+        }
 
         //Set correct filter
         switch (((AppBarButton)sender).Content)
@@ -133,6 +144,9 @@ public sealed partial class ArticleList : Page
                 break;
             case "Today":
                 Filter = "WHERE PUBLISH_DATE > NOW() - INTERVAL 1 DAY";
+                break;
+            case "Business":
+                Filter = "WHERE BUSINESS_RELATED = 1 ORDER BY PUBLISH_DATE DESC";
                 break;
             case "Bookmarked":
                 Articles.Clear();

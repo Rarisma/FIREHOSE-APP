@@ -6,7 +6,7 @@ namespace Firehose2.Stocks;
 /// </summary>
 internal class CompanyData
 {
-    private static List<Company> Tickers = new();
+    public static List<Company> Tickers = new();
 
     private static readonly HttpClient client = new();
 
@@ -62,7 +62,7 @@ internal class CompanyData
             {
                 Ticker = cells[1].InnerText.Trim() + tickerSuffix,
                 Name = cells[0].InnerText.Trim(),
-                Excectives = ["{cells[0].InnerText.Trim()}§{cells[2].InnerText.Trim()}"],
+                Excectives = [],
                 Source = Source
             });
         }
