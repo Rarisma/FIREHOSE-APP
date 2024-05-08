@@ -22,6 +22,8 @@
     <None Remove="ArticleList.xaml" />
     <None Remove="ArticleView.xaml" />
     <None Remove="Controls\AIFeedbackDialog.xaml" />
+    <None Remove="Controls\BindableSwipeItem.xaml" />
+    <None Remove="Controls\PublisherFilter.xaml" />
     <None Remove="Controls\PublisherInformation.xaml" />
     <None Remove="Preferences.xaml" />
     <None Remove="ReaderMode.xaml" />
@@ -30,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="OpenGraph-Net" />
     <PackageReference Include="Uno.Fonts.Fluent" />
+    <PackageReference Include="Uno.Toolkit.WinUI" />
     <PackageReference Include="Uno.WinUI" />
     <PackageReference Include="Uno.WinUI.Lottie" Condition="!$(TargetFramework.Contains('windows10'))" />
     <PackageReference Include="Uno.WinUI.DevServer" Condition="'$(Configuration)'=='Debug' AND !$(TargetFramework.Contains('windows10'))" />
@@ -40,6 +43,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Condition="$(TargetFramework.Contains('windows10'))" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Condition="$(TargetFramework.Contains('windows10'))" />
+    <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +72,14 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\AIFeedbackDialog.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\BindableSwipeItem.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\PublisherFilter.xaml" />
   </ItemGroup>
 
 

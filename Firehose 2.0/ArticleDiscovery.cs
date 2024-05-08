@@ -5,6 +5,8 @@ using HYDRANT;
 namespace Firehose2;
 internal class ArticleDiscovery
 {
+    private static List<Publication> Publications = Publication.LoadFromJSON();
+
     /// <summary>
     /// Feeds ready to be processed by the next stage.
     /// </summary>
@@ -22,7 +24,7 @@ internal class ArticleDiscovery
         while (true)
         {
             RefreshBlacklist();
-            foreach (var Feed in Program.Publications)
+            foreach (var Feed in Publications)
             {
                 foreach (var URL in Feed.URLs)
                 {

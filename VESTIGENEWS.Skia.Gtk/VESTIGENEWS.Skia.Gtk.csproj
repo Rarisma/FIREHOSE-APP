@@ -11,13 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Svg.Skia" />
     <PackageReference Include="Uno.Fonts.Fluent" />
+    <PackageReference Include="Uno.Toolkit.WinUI" />
     <PackageReference Include="Uno.WinUI.Skia.Gtk" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" />
     <PackageReference Include="SkiaSharp.Skottie" />
     <PackageReference Include="Uno.WinUI.DevServer" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
+    <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VESTIGENEWS\VESTIGENEWS.csproj" />

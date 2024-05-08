@@ -93,10 +93,14 @@ public class ArticleAnalyser
     private static async Task<bool> Headline(string Text, int ID)
     {
         string Response =  await LLM.SendPostRequest(
-                        """
-                        Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
-                        Text for analysis:Analyze the text below and determine if it qualifies as breaking news. Consider elements such as recency, relevance, urgency, and the presence of significant events. Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
-                        """, $"Text for analysis:{Text}", ID);
+                            """
+                            Analyze the text below to determine if it qualifies as breaking news.
+                            Consider elements such as recency, relevance, and urgency. Specifically, 
+                            evaluate if the content involves significant unexpected events or developments that have occurred within the last 24 hours,
+                            which are of high importance and impact a substantial number of
+                             people or critical sectors such as public health, safety, or major economic areas. 
+                             Respond with a single word: "Yes" if it is breaking news, or "No" if it is not.
+                            """, $"Text for analysis:{Text}", ID);
 
         if (String.IsNullOrEmpty(Response))
         {

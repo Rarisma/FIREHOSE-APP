@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using HYDRANT;
 using System.Text.Json;
-//GREENWALD API IS REAL 2401
+using HYDRANT;
+using Microsoft.AspNetCore.Mvc;
+
+//Jia Tan?
 namespace HallonAPIServer;
 
 [ApiController]
@@ -10,11 +11,12 @@ public class ArticlesController : ControllerBase
 {
 
     [HttpGet("GetArticles")]
-    public IActionResult GetArticles(int limit = 9999999)
+    public IActionResult GetArticles(int limit = 9999999, int Offset = 0, string Filter = "")
     {
         try
         {
-            return Ok(JsonSerializer.Serialize<List<Article>>(Article.GetArticlesFromDB(limit,0)));
+            // ReSharper disable once RedundantTypeArgumentsOfMethod
+            return Ok(JsonSerializer.Serialize<List<Article>>(Article.GetArticlesFromDB(limit,Offset,Filter:Filter)));
         }
         catch (Exception ex)
         {
@@ -34,5 +36,17 @@ public class ArticlesController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Report the summary of an article.
+    /// </summary>
+    /// <param name="ArticleURL">URL to report summary for</param>
+    /// <param name="ReportReason"></param>
+    [HttpGet("ReportArticleSummary")]
+    public IActionResult ReportArticleSummary(string ArticleURL, int ReportReason)
+    {
+        System.IO.File.AppendAllText("ReportedURLs.txt", $"[{ReportReason}] - {ArticleURL}\n");
+        return StatusCode(200);
     }
 }

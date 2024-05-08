@@ -14,7 +14,7 @@ internal static class ArticleScraper
     {
         while (true)
         {
-            var keys = ArticleDiscovery.Pending.Keys.ToList();
+            var keys = ArticleDiscovery.Pending.Keys.ToArray();
             foreach (var key in keys)
             {
                 if (ArticleDiscovery.Pending.TryGetValue(key, out (SyndicationItem, int) Item))

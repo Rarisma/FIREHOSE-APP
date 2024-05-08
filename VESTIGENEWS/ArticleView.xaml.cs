@@ -26,7 +26,7 @@ public sealed partial class ArticleView : Page
     public void SetBookmarkIcon()
     {
         //Handle bookmarked status
-        if (Glob.Model.bookmarkedArticles.Contains(Article))
+        if (Glob.Model.BookmarkedArticles.Contains(Article))
         {
             Glyphy.Glyph = "\xE735";
         }
@@ -58,13 +58,13 @@ public sealed partial class ArticleView : Page
     private void BookmarkClick(object sender, RoutedEventArgs e)
     {
         // Add or Remove article from bookmarked articles.
-        if (Glob.Model.bookmarkedArticles.Contains(Article))
+        if (Glob.Model.BookmarkedArticles.Contains(Article))
         {
-            Glob.Model.bookmarkedArticles.Remove(Article);
+            Glob.Model.BookmarkedArticles.Remove(Article);
         }
         else
         {
-            Glob.Model.bookmarkedArticles.Add(Article);
+            Glob.Model.BookmarkedArticles.Add(Article);
         }
 
         // update icon state and save bookmarks
@@ -86,9 +86,9 @@ public sealed partial class ArticleView : Page
         if (await CD.ShowAsync() == ContentDialogResult.Primary) //Send feedback clicked
         {
             await new HttpClient().GetAsync(
-                $"https://www.hallon.rarisma.net/Articles/ReportArticleSummary?ArticleURL=" +
+                $"{Article.HallonEndpoint}/Articles/ReportArticleSummary?ArticleURL=" +
                 $"{Uri.EscapeDataString(Article.Url)}&ReportReason=" +
-                $"{(((CD.Content as AIFeedbackDialog).Content as Grid).Children[3] as ComboBox).SelectedIndex}");
+                $"{(((CD.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex}");
         }
     }
 }

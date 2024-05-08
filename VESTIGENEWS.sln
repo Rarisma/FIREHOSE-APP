@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HYDRANT", "HYDRANT\HYDRANT.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firehose2", "Firehose 2.0\Firehose2.csproj", "{5C47A924-658C-4476-B1D6-1DA7004F7488}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HallonAPIServer", "HallonAPIServer\HallonAPIServer.csproj", "{F76EF979-6384-4600-8B93-F6F69C9F4E3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -184,6 +186,22 @@ Global
 		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x64.Build.0 = Release|Any CPU
 		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C47A924-658C-4476-B1D6-1DA7004F7488}.Release|x86.Build.0 = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|arm64.Build.0 = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|x64.Build.0 = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Debug|x86.Build.0 = Debug|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|arm64.ActiveCfg = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|arm64.Build.0 = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|x64.ActiveCfg = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|x64.Build.0 = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|x86.ActiveCfg = Release|Any CPU
+		{F76EF979-6384-4600-8B93-F6F69C9F4E3D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,5 @@
 //The "what's-it-called café"
-using Firehose2.API_Server;
 using Firehose2.Stocks;
-using Microsoft.Extensions.Hosting;
 
 namespace Firehose2;
 /* WARNING
@@ -73,20 +71,15 @@ namespace Firehose2;
  *
  * May 2024 -  BELLWETHER/3.1
  * Start to locate all references to companies.
+ * Undo Hallon API Server (Raspberrys are now free again)
  *  
  */
-internal class Program
+public class Program
 {
-    public static List<HYDRANT.Publication> Publications => HYDRANT.Publication.LoadFromJSON();
 
     static void Main(string[] args)
     {
         Console.WriteLine("Firehose Initialised");
-
-
-        Console.WriteLine("Initialising API Server");
-        Thread APIThread = new(APIServer.LaunchAPIServer);
-        APIThread.Start();
 
         Console.WriteLine("API Server Started, press enter to start summarising stories");
         Console.ReadLine();
@@ -96,7 +89,7 @@ internal class Program
 
         //Configure LLM Server
         Console.WriteLine("Checking for or loading LLM Server");
-        LLM.LaunchServer();
+        //LLM.LaunchServer();
         Thread.Sleep(8000);
 
         Thread ArticleDiscoveryThread = new(ArticleDiscovery.StartFilter);

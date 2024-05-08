@@ -18,6 +18,10 @@ public class App : Application
 #if DEBUG
         MainWindow.EnableHotReload();
 #endif
+#if  !WINDOWS
+        
+#endif
+
         App.Current.UnhandledException += Current_UnhandledException;
 
         // Do not repeat app initialization when the Window already has content,

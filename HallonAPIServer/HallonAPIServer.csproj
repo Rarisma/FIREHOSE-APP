@@ -11,6 +11,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Firehose 2.0\Firehose2.csproj" />
     <ProjectReference Include="..\HYDRANT\HYDRANT.csproj" />
   </ItemGroup>
 

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Uno.Fonts.Fluent" />
+    <PackageReference Include="Uno.Toolkit.WinUI" />
     <PackageReference Include="Uno.WinUI" />
     <PackageReference Include="Microsoft.WindowsAppSDK" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
@@ -22,8 +23,7 @@
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!--
+  <ItemGroup><!--
     If you encounter this error message:
 
       error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
@@ -35,6 +35,8 @@
     -->
     <!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
+  
+    <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
 
   <ItemGroup>

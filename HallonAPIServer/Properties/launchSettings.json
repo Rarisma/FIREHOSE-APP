@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://*:5257",
+      "applicationUrl": "http://*:80",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -24,10 +24,11 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://*:7255;http://*:5257",
+      "applicationUrl": "https://*:443;http://*:80;https://*:5000;",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "ASPNETCORE_Kestrel__Certificates__Default__Path": "C:\\Users\\RARI\\Desktop\\Cert.pfx"
     },
     "IIS Express": {
       "commandName": "IISExpress",

@@ -37,7 +37,7 @@ public class Publication
             try
             {
                 // Send a GET request to the specified URI
-                HttpResponseMessage response = await client.GetAsync("https://www.hallon.rarisma.net/Publication/GetPublicationData");
+                HttpResponseMessage response = await client.GetAsync($"{Article.HallonEndpoint}/Publication/GetPublicationData");
 
                 if (response.IsSuccessStatusCode)
                 {

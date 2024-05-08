@@ -8,6 +8,8 @@
   <ItemGroup>
     <None Include="**\*" Exclude="obj\**;bin\**;*.csproj" />
     <PackageReference Include="Uno.Fonts.Fluent" />
+    <PackageReference Include="Uno.Toolkit.WinUI" />
+    <PackageReference Include="Uno.WinUI.Svg" />
     <None Update="AppHead.xaml.cs" DependentUpon="AppHead.xaml" />
   </ItemGroup>
 </Project>

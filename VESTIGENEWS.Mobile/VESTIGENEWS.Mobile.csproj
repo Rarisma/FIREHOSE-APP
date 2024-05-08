@@ -22,32 +22,42 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <AndroidKeyStore>False</AndroidKeyStore>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <AndroidKeyStore>False</AndroidKeyStore>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-    <ApplicationTitle>Relic</ApplicationTitle>
+    <ApplicationTitle>Firehose News</ApplicationTitle>
+    <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Uno.Fonts.Fluent" />
+    <PackageReference Include="Uno.Toolkit.WinUI" />
     <PackageReference Include="Uno.WinUI" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Uno.Extensions.Logging.OSLog" />
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
     <PackageReference Include="Uno.WinUI.DevServer" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
@@ -88,9 +98,6 @@
   <ItemGroup>
     <ProjectReference Include="..\VESTIGENEWS\VESTIGENEWS.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="drawable\" />
-  </ItemGroup>
   <Import Project="..\VESTIGENEWS.Shared\base.props" />
 
   <Target Name="ValidateOverrides" BeforeTargets="Restore;_CheckForUnsupportedTargetFramework" Condition="'$(OverrideTargetFramework)' != ''">
@@ -98,6 +105,7 @@
   </Target>
 
   <ItemGroup>
+    <None Remove="Android\Resources\firehose_news1024.jpg" />
     <None Remove="C:\Users\RARI\Documents\Repos\Personal\REMNANT\VESTIGENEWS.Shared\Splash\splash_screen.svg" />
   </ItemGroup>
 
@@ -106,5 +114,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="drawable\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Android\Resources\firehose_news1024.jpg" Link="Android\Resources\firehose_news1024.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UnoIcon Include="Android\Resources\firehose_news1024.jpg" />
   </ItemGroup>
 </Project>

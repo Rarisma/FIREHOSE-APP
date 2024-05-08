@@ -69,6 +69,7 @@ public class Article
     public string CompaniesMentioned { get; set; }
 
     #endregion
+
     /// <summary>
     /// Internally used
     /// </summary>
@@ -77,25 +78,17 @@ public class Article
     private const string IP = "localhost";
     private const string User = "root";
     private const string Pass = "Mavik";
-    public const string HallonEndpoint = "https://www.hallon.rarisma.net";
+    public const string HallonEndpoint = "https://www.hallon.rarisma.net:5000";
 
-    public static async Task<List<Article>> GetArticles(int Limit = 0, int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
-    {
-#if HAS_UNO //Use raw DB Calls on supported platforms
-        return await GetArticlesFromHallon(Limit, Offset, Filter);
-#else //Other platforms, i.e WASM/IOS/Android etc. do not support code within MySQL so use HallonAPIServer for it
-        return GetArticlesFromDB(Limit, Offset, Filter: Filter);
-#endif
-    }
 
     /// <summary>
-    /// This runs GetArticlesFromDB through HallonAPIServer, a middleware solution.
+    /// This runs GetArticlesFromDB through Hallon API Server, a middleware solution.
     /// </summary>
-    /// <returns></returns>
-    private static async Task<List<Article>?> GetArticlesFromHallon(int Limit = 0,
+    /// <returns>List of articles</returns>
+    public static async Task<List<Article>> GetArticlesFromHallon(int Limit = 0,
         int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
-        var endpoint = $"/Articles/GetArticles?limit={Limit}";
+        var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}";
 
         using (var client = new HttpClient())
         {
@@ -105,7 +98,7 @@ public class Article
                 response.EnsureSuccessStatusCode(); // Throw an exception if not successful
 
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Article>>(content);
+                return JsonSerializer.Deserialize<List<Article>>(content)!;
             }
             catch (HttpRequestException e)
             {

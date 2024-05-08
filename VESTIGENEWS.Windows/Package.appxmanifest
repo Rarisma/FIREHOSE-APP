@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="VESTIGENEWS"
+    Name="FirehoseNews"
     Publisher="O=HalithonLabs"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>VESTIGENEWS</DisplayName>
-    <PublisherDisplayName>VESTIGENEWS</PublisherDisplayName>
+    <DisplayName>Firehose News</DisplayName>
+    <PublisherDisplayName>Rarisma</PublisherDisplayName>
   </Properties>
 
   <Dependencies>
@@ -30,9 +30,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="VESTIGENEWS"
-        Description="VESTIGENEWS">
+        DisplayName="Firehose News"
+        Description="newsapp">
         <uap:SplashScreen />
+        <uap:DefaultTile/>
       </uap:VisualElements>
     </Application>
   </Applications>

@@ -6,7 +6,7 @@ public static class Glob
 {
     public static Stack<object> NaviStack = new();
     public static Frame Frame = new();
-
+    public static PreferencesModel Model;
     /// <summary>
     /// List of publications from firehose
     /// </summary>
@@ -39,8 +39,6 @@ public static class Glob
     {
         if (NaviStack.Count > 1) { GoBack(); }
     }
-
-    public static PreferencesModel Model = new();
 
     public static void Log(LogLevel Level, String Message)
     {
