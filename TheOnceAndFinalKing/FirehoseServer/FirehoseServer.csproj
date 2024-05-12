@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
-    <PackageReference Include="OpenGraph-Net" Version="4.0.1" />
-    <PackageReference Include="SmartReader" Version="0.9.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="OpenGraph-Net" />
+    <PackageReference Include="SmartReader" VersionOverride="0.9.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="System.ServiceModel.Syndication" />
   </ItemGroup>
 
   <ItemGroup>

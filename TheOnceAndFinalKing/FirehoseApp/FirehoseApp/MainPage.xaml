@@ -21,7 +21,7 @@
 
     <utu:LoadingView.Source>
       <utu:CompositeLoadableSource>
-        <utu:LoadableSource Source="{x:Bind LoadPublicationDataCommand}" />
+        <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
       </utu:CompositeLoadableSource>
     </utu:LoadingView.Source>
 

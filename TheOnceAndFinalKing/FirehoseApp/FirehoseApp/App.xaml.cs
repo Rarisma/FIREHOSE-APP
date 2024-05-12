@@ -1,5 +1,8 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Services;
+using FirehoseApp.Views.Models;
 using Serilog;
+using Serilog.Core;
 using Uno.Resizetizer;
 
 namespace FirehoseApp;
@@ -40,13 +43,13 @@ public partial class App : Application
                     // Uno Platform namespace filter groups
                     // Uncomment individual methods to see more detailed logging
                     //// Generic Xaml events
-                    //logBuilder.XamlLogLevel(LogLevel.Debug);
+                    logBuilder.XamlLogLevel(LogLevel.Debug);
                     //// Layout specific messages
                     //logBuilder.XamlLayoutLogLevel(LogLevel.Debug);
                     //// Storage messages
-                    //logBuilder.StorageLogLevel(LogLevel.Debug);
+                    logBuilder.StorageLogLevel(LogLevel.Debug);
                     //// Binding related messages
-                    //logBuilder.XamlBindingLogLevel(LogLevel.Debug);
+                    logBuilder.XamlBindingLogLevel(LogLevel.Debug);
                     //// Binder memory references tracking
                     //logBuilder.BinderMemoryReferenceLogLevel(LogLevel.Debug);
                     //// DevServer and HotReload related
@@ -56,18 +59,23 @@ public partial class App : Application
 
                 }, enableUnoLogging: true)
                 .UseSerilog(consoleLoggingEnabled: true, fileLoggingEnabled: true)
-                .ConfigureServices((context, services) =>
-                {
-                    services.AddSingleton<AppState>();
-                })
+                //.ConfigureServices((context, services) =>
+                //{
+                //    services.AddSingleton<AppState>();
+                //    services.AddSingleton<ShellVM>();
+                //})
             );
-        Serilog.Log.Logger.Log().Log(LogLevel.Information, "App Booted.");
+        Log.Information($"Firehose News {AppState.Version} started");
+        configureIOC();
+        Log.Information("IOC built");
         MainWindow = builder.Window;
 
 #if DEBUG
+        Log.Information("Hot reload enabled.");
         MainWindow.EnableHotReload();
 #endif
         MainWindow.SetWindowIcon();
+        Log.Information("Icon set");
 
         Host = builder.Build();
 
@@ -80,6 +88,7 @@ public partial class App : Application
 
             // Place the frame in the current Window
             MainWindow.Content = rootFrame;
+            Log.Information("Window initalised.");
         }
 
         if (rootFrame.Content == null)
@@ -88,8 +97,21 @@ public partial class App : Application
             // configuring the new page by passing required information as a navigation
             // parameter
             rootFrame.Navigate(typeof(MainPage), args.Arguments);
+            Log.Information("window frame has no content, navigating to mainpage.");
         }
+
         // Ensure the current window is active
+        Log.Information("Displaying window.");
         MainWindow.Activate();
+    }
+
+    void configureIOC()
+    {
+        var Services = new ServiceCollection()
+            .AddSingleton<AppState>()
+            .AddSingleton<ShellVM>()
+            .BuildServiceProvider();
+
+        Ioc.Default.ConfigureServices(Services);
     }
 }

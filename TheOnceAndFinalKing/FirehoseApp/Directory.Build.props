@@ -20,4 +20,12 @@
     <UnoThemesVersion>5.0.13</UnoThemesVersion>
     <UnoCSharpMarkupVersion>5.2.13</UnoCSharpMarkupVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion  Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageVersion  Include="OpenGraph-Net" Version="4.0.1" />
+    <PackageVersion  Include="SmartReader" Version="0.9.4" />
+    <PackageVersion  Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion  Include="System.ServiceModel.Syndication" Version="8.0.0" />
+  </ItemGroup>
 </Project>
