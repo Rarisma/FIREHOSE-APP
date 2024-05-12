@@ -38,72 +38,14 @@ namespace Firehose2;
  *
  */
 
-/* Firehose 2.0
- * Firehose is a News Data Aggregator, this is a complete rewrite from python.
- * Firehose's mission is to try and get every news article in real time.
- *
- * History of Firehose
- * Dec 2023 - Firehose 1.0
- * Under IAI, the concept of firehose was created.
- * Here it was written in python and the concept of firehose was proven.
- *
- * Jan/Feb 2024 Firehose 1.5
- * After IAI disappeared due to *reasons* Firehose was tweaked to
- * better serve news analysis instead of its original purpose.
- * It was also rewritten in C# with a few tweaks to make it run better,
- * this had major performance improvements compared to 1.0
- *
- * April 2024 Firehose 2.0
- * Firehose 2.0 is another rewrite of firehose to make the codebase more
- * professional and make further use of multi-threading to make sure we are
- * using 100% of the CPU at all times.
- *  
- * Future Ideas:
- *  - Publisher information scraping
- *  - Author information scraping
- *
- * May 2024 Firehose 3.0
- * Firehose 3.0 is a massive overhaul on how Firehose works:
- *  - Firehose now uses publication IDs to track publishers
- *  - HallonAPIServer is now merged into Firehose as a server thread
- *  - Add multiple endpoints for parsing stories at the same time
- *  - Switch to Gemma 1.1 it
- *
- * May 2024 -  BELLWETHER/3.1
- * Start to locate all references to companies.
- * Undo Hallon API Server (Raspberrys are now free again)
- *  
- */
+
 public class Program
 {
 
     static void Main(string[] args)
     {
-        Console.WriteLine("Firehose Initialised");
-
-        Console.WriteLine("API Server Started, press enter to start summarising stories");
-        Console.ReadLine();
-
-        CompanyData.LoadTickers();
-        //SyncFeeds();
-
-        //Configure LLM Server
-        Console.WriteLine("Checking for or loading LLM Server");
-        //LLM.LaunchServer();
-        Thread.Sleep(8000);
-
-        Thread ArticleDiscoveryThread = new(ArticleDiscovery.StartFilter);
-        ArticleDiscoveryThread.Start();
-
-        Thread ArticleScrapingThread = new(ArticleScraper.StartScraping);
-        ArticleScrapingThread.Start();
 
 
-        for (int id = 0; id < LLM.Endpoints.Length; id++)
-        {
-            Thread ArticleAnalyserThread = new(new ArticleAnalyser(id).StartAnalysis);
-            ArticleAnalyserThread.Start();
-        }
 
 
         while (true)

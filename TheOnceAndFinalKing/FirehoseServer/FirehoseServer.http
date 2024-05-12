@@ -1,0 +1,6 @@
+@FirehoseServer_HostAddress = http://localhost:5219
+
+GET {{FirehoseServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

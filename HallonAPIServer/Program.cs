@@ -5,7 +5,7 @@ namespace HallonAPIServer;
 
 public class Program
 {
-    public static List<HYDRANT.Publication> Publications => HYDRANT.Publication.LoadFromJSON("..\\Firehose 2.0\\Data\\Feeds.json");
+    public static List<HYDRANT.Publication> Publications => HYDRANT.Publication.LoadFromJSON("..\\FirehoseServer\\Data\\Feeds.json");
 
     public static void Main(string[] args)
     {
@@ -26,7 +26,7 @@ public class Program
             });
             serverOptions.Listen(publicIPv4Address, 443, listenOptions =>
             {
-                listenOptions.UseHttps(certificate);
+                listenOptions.UseHttps(certificate);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             });
             serverOptions.Listen(publicIPv4Address, 80);  // Listen on port 80 for HTTP
         });

@@ -63,7 +63,7 @@ public sealed partial class ArticleList : Page
         {
             XamlRoot = this.XamlRoot,
             Title = "Filter by publisher",
-            Content = new Controls.PublisherFilter(),
+            Content = new PublisherFilter(),
             PrimaryButtonText = "Filter by Publisher",
             SecondaryButtonText = "Clear publisher filter",
         };
@@ -75,8 +75,10 @@ public sealed partial class ArticleList : Page
         }
         else
         {
+            ExFilter = "";
             PublisherFilter = false;
             PublisherID = -1;
+            SourcesButton.Content = "Filter Publisher";
         }
     }
     #endregion
@@ -192,6 +194,7 @@ public sealed partial class ArticleList : Page
 
     private async void ChangeFilter(object sender, RoutedEventArgs e)
     {
+        Offset = 0;
         LoadMoreButton.Visibility = Visibility.Visible;
         SolidColorBrush ForegroundColor = Application.Current.RequestedTheme == ApplicationTheme.Dark
             ? new SolidColorBrush(Colors.White)
@@ -281,7 +284,6 @@ public sealed partial class ArticleList : Page
         {
             SourcesButton.Background = BackgroundColor;
             SourcesButton.Foreground = ForegroundColor;
-            SourcesButton.Content = "Filter Publisher";
         }
 
         LoadDataAsync(Filter);
@@ -382,9 +384,4 @@ public sealed partial class ArticleList : Page
         await QuickViewMenu(Articles.First(x => x.Url == args.SwipeControl.Tag.ToString()));
     }
     #endregion
-
-
-    private void ShowSources(object sender, RoutedEventArgs e)
-    {
-    }
 }

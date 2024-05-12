@@ -27,7 +27,8 @@
     <TextBlock Text="What's up with this summary?" Grid.Row="1"
                Margin="10" HorizontalAlignment="Left"/>
     <ScrollViewer Grid.Row="2">
-      <Border CornerRadius="4" HorizontalAlignment="Center" Margin="10,10,10,0" Background="#222222">
+      <Border CornerRadius="4" HorizontalAlignment="Center" Margin="10,10,10,0"
+              BorderBrush="#222222" BorderThickness="1">
         <TextBlock Text="{x:Bind ItemSource.Summary}" TextWrapping="WrapWholeWords" Margin="10"/>
       </Border>
     </ScrollViewer>

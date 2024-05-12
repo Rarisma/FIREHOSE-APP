@@ -85,7 +85,7 @@ public class Article
     /// This runs GetArticlesFromDB through Hallon API Server, a middleware solution.
     /// </summary>
     /// <returns>List of articles</returns>
-    public static async Task<List<Article>> GetArticlesFromHallon(int Limit = 0,
+    public static async Task<List<Article>> GetArticlesFromHallon(int Limit = 20,
         int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
         var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}";
@@ -134,7 +134,6 @@ public class Article
     }
 
     public static List<Article> GetArticlesFromDB(int Limit = 0, int Offset = 0,
-        string ConnectionString = $"server={IP};user={User};database=fhdb;port=3306;password={Pass}",
         string Filter = "ORDER BY PUBLISH_DATE DESC")
     {
         string query = $@"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE, PAYWALL, SUMMARY, ImageURL,

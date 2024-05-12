@@ -1,0 +1,34 @@
+﻿<Page x:Class="FirehoseApp.MainPage"
+			xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:local="using:FirehoseApp"
+			xmlns:utu="using:Uno.Toolkit.UI"
+			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+	<utu:LoadingView>
+    <!-- Shown while loading -->
+    <utu:LoadingView.LoadingContent>
+      <StackPanel>
+        <ProgressBar IsIndeterminate="True"/>
+        <TextBlock Text="Loading Publication and article data..." Margin="0,10,0,50"/>
+        <TextBlock HorizontalAlignment="Center">
+          Loading taking too long?
+          <LineBreak/>
+          Decrease the amount of articles loaded at a time in settings
+        </TextBlock>
+      </StackPanel>
+    </utu:LoadingView.LoadingContent>
+
+    <utu:LoadingView.Source>
+      <utu:CompositeLoadableSource>
+        <utu:LoadableSource Source="{x:Bind LoadPublicationDataCommand}" />
+      </utu:CompositeLoadableSource>
+    </utu:LoadingView.Source>
+
+    <!-- Shown once loaded. -->
+    <utu:LoadingView.Content>
+      <TextBlock>LOADED.</TextBlock>
+    </utu:LoadingView.Content>
+
+	</utu:LoadingView>
+</Page>

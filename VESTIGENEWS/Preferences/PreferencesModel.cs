@@ -89,7 +89,7 @@ public class PreferencesModel
                 Glob.Model = ((PreferencesModel)JsonSerializer.Deserialize(MemoryStream, typeof(PreferencesModel))!);
             }
 
-            if (Glob.Model.ArticleFetchLimit < 5)
+            if (Glob.Model.ArticleFetchLimit == null || Glob.Model.ArticleFetchLimit <= 5)
             {
                 Glob.Model.ArticleFetchLimit = 20;
             }
