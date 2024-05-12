@@ -5,30 +5,40 @@
 			xmlns:utu="using:Uno.Toolkit.UI"
 			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-	<utu:LoadingView>
-    <!-- Shown while loading -->
-    <utu:LoadingView.LoadingContent>
-      <StackPanel>
-        <ProgressBar IsIndeterminate="True"/>
-        <TextBlock Text="Loading Publication and article data..." Margin="0,10,0,50"/>
-        <TextBlock HorizontalAlignment="Center">
-          Loading taking too long?
-          <LineBreak/>
-          Decrease the amount of articles loaded at a time in settings
-        </TextBlock>
-      </StackPanel>
-    </utu:LoadingView.LoadingContent>
+  <StackPanel>
+    <ItemsRepeater Layout="">
+      
+    </ItemsRepeater>
+    
+    <!-- Article View area.-->
+    <utu:LoadingView>
+      <!-- Shown while loading -->
+      <utu:LoadingView.LoadingContent>
+        <StackPanel VerticalAlignment="Center">
+          <ProgressRing IsIndeterminate="True"/>
+          <TextBlock Text="{x:Bind ShellVM.LoadingText}" HorizontalAlignment="Center"
+                   Margin="0,10,0,50"/>
 
-    <utu:LoadingView.Source>
-      <utu:CompositeLoadableSource>
-        <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
-      </utu:CompositeLoadableSource>
-    </utu:LoadingView.Source>
+          <!-- show loading message -->
+          <TextBlock Text="Loading taking too long?" HorizontalAlignment="Center"/>
+          <TextBlock HorizontalAlignment="Center"  
+                   Text="Try lowering the amount of articles loaded at a time in settings"/>
+        </StackPanel>
+      </utu:LoadingView.LoadingContent>
 
-    <!-- Shown once loaded. -->
-    <utu:LoadingView.Content>
-      <TextBlock>LOADED.</TextBlock>
-    </utu:LoadingView.Content>
+      <!-- Loading content shown when these are running -->
+      <utu:LoadingView.Source>
+        <utu:CompositeLoadableSource>
+          <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
+          <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand}" />
+        </utu:CompositeLoadableSource>
+      </utu:LoadingView.Source>
 
-	</utu:LoadingView>
+      <!-- Shown once loaded. -->
+      <utu:LoadingView.Content>
+      </utu:LoadingView.Content>
+
+    </utu:LoadingView>
+  </StackPanel>
+
 </Page>

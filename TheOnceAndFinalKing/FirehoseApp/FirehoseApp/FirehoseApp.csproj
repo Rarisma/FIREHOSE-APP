@@ -44,6 +44,9 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Uno.WinUI.Lottie" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Hydrant\Hydrant.csproj" />
   </ItemGroup>
 

@@ -6,4 +6,7 @@
   -->
   <ItemGroup>
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="Uno.WinUI.Lottie" Version="5.2.121" />
+  </ItemGroup>
 </Project>
