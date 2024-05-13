@@ -17,7 +17,7 @@
                 Padding="20"/>
 
       </StackPanel>
-      <TextBlock Text="{x:Bind Article.ArticleText}" TextWrapping="WrapWholeWords"/>
+      <TextBlock Text="{x:Bind Article.Text}" TextWrapping="WrapWholeWords"/>
     </StackPanel>
 
   </ScrollViewer>

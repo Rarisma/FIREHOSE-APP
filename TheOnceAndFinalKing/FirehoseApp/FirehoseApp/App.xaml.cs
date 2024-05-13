@@ -2,8 +2,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Services;
 using FirehoseApp.Views.Models;
 using Serilog;
-using Serilog.Core;
-using Uno.Resizetizer;
 
 namespace FirehoseApp;
 public partial class App : Application
@@ -76,7 +74,7 @@ public partial class App : Application
         Log.Information("Hot reload enabled.");
         MainWindow.EnableHotReload();
 #endif
-        MainWindow.SetWindowIcon();
+        //MainWindow.SetWindowIcon();
         Log.Information("Icon set");
 
         Host = builder.Build();
@@ -117,6 +115,7 @@ public partial class App : Application
         var Services = new ServiceCollection()
             .AddSingleton<AppState>()
             .AddSingleton<ShellVM>()
+            .AddSingleton<ThemeVM>()
             .BuildServiceProvider();
 
         Ioc.Default.ConfigureServices(Services);

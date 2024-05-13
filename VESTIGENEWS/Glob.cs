@@ -1,5 +1,6 @@
 //I'VE GOT A RECKLESS TONGUE
 using Windows.UI.Core;
+using HYDRANT.Definitions;
 
 namespace VESTIGENEWS;
 public static class Glob
@@ -7,6 +8,8 @@ public static class Glob
     public static Stack<object> NaviStack = new();
     public static Frame Frame = new();
     public static PreferencesModel Model;
+    public static string APIKEY = "gYW-rhYS6GhqohpTjRbwmLVQsThH29HDIeReVWpEjm8=";
+
     /// <summary>
     /// List of publications from firehose
     /// </summary>

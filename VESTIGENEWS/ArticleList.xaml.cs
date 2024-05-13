@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Windows.UI;
+using HYDRANT.Definitions;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -103,8 +104,7 @@ public sealed partial class ArticleList : Page
             Articles.Clear(); //Reset collection
 
             //Load articles and filter articles from the future.
-            Articles.AddRange((await 
-                Article.GetArticlesFromHallon(Glob.Model.ArticleFetchLimit, Offset, Filter))
+            Articles.AddRange((await new API(Glob.APIKEY).GetArticles(Glob.Model.ArticleFetchLimit, Offset, Filter))
                 .Where(x => DateTime.Now.AddHours(3) > x.PublishDate));
         }
         catch (Exception ex)

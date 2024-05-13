@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Permissions;
+using HYDRANT.Definitions;
 using Microsoft.UI;
 using VESTIGENEWS.Controls;
 
@@ -77,18 +79,17 @@ public sealed partial class ArticleView : Page
         ContentDialog CD = new()
         {
             Title = "Report issue with summary for " + Article.Title,
-            XamlRoot = this.XamlRoot,
-            Content = new Controls.AIFeedbackDialog(Article),
+            XamlRoot = XamlRoot,
+            Content = new AIFeedbackDialog(Article),
             PrimaryButtonText = "Send Feedback",
             SecondaryButtonText = "Close"
         };
 
         if (await CD.ShowAsync() == ContentDialogResult.Primary) //Send feedback clicked
         {
-            await new HttpClient().GetAsync(
-                $"{Article.HallonEndpoint}/Articles/ReportArticleSummary?ArticleURL=" +
-                $"{Uri.EscapeDataString(Article.Url)}&ReportReason=" +
-                $"{(((CD.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex}");
+            int reason = (((CD.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex;
+            new API(Glob.APIKEY).ReportArticle(Article, reason);
+
         }
     }
 }

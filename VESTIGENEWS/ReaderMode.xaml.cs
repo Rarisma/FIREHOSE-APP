@@ -1,5 +1,4 @@
-using Microsoft.UI.Xaml.Media.Animation;
-
+using HYDRANT.Definitions;
 namespace VESTIGENEWS;
 
 public sealed partial class ReaderMode : Page

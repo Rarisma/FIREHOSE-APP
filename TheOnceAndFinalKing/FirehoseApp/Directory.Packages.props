@@ -7,6 +7,7 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.WinUI.Lottie" Version="8.0.280225" />
     <PackageVersion Include="Microsoft.OpenApi" Version="1.3.0" />
   </ItemGroup>
 </Project>

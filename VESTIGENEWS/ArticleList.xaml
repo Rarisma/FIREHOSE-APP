@@ -5,7 +5,7 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d"
-		xmlns:hydrant="using:HYDRANT"
+		xmlns:hydrant="using:HYDRANT.Definitions"
 		xmlns:vestigeNews="using:VESTIGENEWS"
 		xmlns:controls="using:VESTIGENEWS.Controls"
     xmlns:utu="using:Uno.Toolkit.UI"

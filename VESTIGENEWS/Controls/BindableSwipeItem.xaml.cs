@@ -1,3 +1,5 @@
+using HYDRANT.Definitions;
+
 namespace VESTIGENEWS.Controls;
 public sealed partial class BindableSwipeItem : SwipeItem
 {

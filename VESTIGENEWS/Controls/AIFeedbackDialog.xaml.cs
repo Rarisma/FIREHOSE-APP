@@ -1,3 +1,4 @@
+using HYDRANT.Definitions;
 //Let it ride
 namespace VESTIGENEWS.Controls;
 

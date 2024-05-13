@@ -1,8 +1,8 @@
-namespace VESTIGENEWS.Controls;
+using HYDRANT.Definitions;
 //NO MORE FREESTYLE
+namespace VESTIGENEWS.Controls;
 public sealed partial class PublisherInformation : UserControl
 {
-
     /// <summary>
     /// Set this to the Article Object you want to display publisher information for
     /// </summary>
@@ -99,7 +99,11 @@ public sealed partial class PublisherInformation : UserControl
                 return "Assets/QuestionMark.png";
             }
         }
-    } 
-
-    public PublisherInformation() => InitializeComponent();
+    }
+    
+    public PublisherInformation()
+    {
+        InitializeComponent();
+    }
+    
 }

@@ -3,32 +3,49 @@
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			xmlns:local="using:FirehoseApp"
 			xmlns:utu="using:Uno.Toolkit.UI"
-			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+			Background="{x:Bind ThemeVM.MainBrush}">
+ 
+  <StackPanel>
+    <!-- Top bar -->
+    <ScrollViewer Height="50" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+      <CommandBar OverflowButtonVisibility="Collapsed" HorizontalAlignment="Left" x:Name="TopBar">
+        <CommandBar.PrimaryCommands>
+          <AppBarButton Icon="Setting" Click="AppBarButton_Click"/>
+          <AppBarButton Icon="Favorite" Click="AppBarButton_Click"/>
+          <AppBarSeparator/>
+          <AppBarButton Content="Latest" Click="AppBarButton_Click"/>
+          <AppBarButton Content="Today" Click="AppBarButton_Click"/>
+          <AppBarButton Content="Headlines" Click="AppBarButton_Click"/>
+        </CommandBar.PrimaryCommands>
+      </CommandBar>
+    </ScrollViewer>
 
-	<utu:LoadingView>
-    <!-- Shown while loading -->
-    <utu:LoadingView.LoadingContent>
-      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ProgressRing IsIndeterminate="True"/>
-        <TextBlock Text="Loading Publication and article data..." Margin="0,10,0,50" HorizontalAlignment="Center"/>
-        <TextBlock Text="Loading taking too long?" HorizontalAlignment="Center"/>
-        <TextBlock HorizontalAlignment="Center"
+    
+    <utu:LoadingView>
+      <!-- Shown while loading -->
+      <utu:LoadingView.LoadingContent>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          <ProgressRing IsIndeterminate="True"/>
+          <TextBlock Text="Loading Publication and article data..." Margin="0,10,0,50" HorizontalAlignment="Center"/>
+          <TextBlock Text="Loading taking too long?" HorizontalAlignment="Center"/>
+          <TextBlock HorizontalAlignment="Center"
                    Text="Decrease the amount of articles loaded at a time in settings"/>
 
-      </StackPanel>
-    </utu:LoadingView.LoadingContent>
+        </StackPanel>
+      </utu:LoadingView.LoadingContent>
 
-    <utu:LoadingView.Source>
-      <utu:CompositeLoadableSource>
-        <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
-        <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand}" />
-      </utu:CompositeLoadableSource>
-    </utu:LoadingView.Source>
+      <!-- Loading view will trigger when commands are ran -->
+      <utu:LoadingView.Source>
+        <utu:CompositeLoadableSource>
+          <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
+          <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand}" />
+        </utu:CompositeLoadableSource>
+      </utu:LoadingView.Source>
 
-    <!-- Shown once loaded. -->
-    <utu:LoadingView.Content>
-      <TextBlock>LOADED.</TextBlock>
-    </utu:LoadingView.Content>
-
-	</utu:LoadingView>
-</Page>
+      <!-- Shown once loaded. -->
+      <utu:LoadingView.Content>
+        <TextBlock>LOADED.</TextBlock>
+      </utu:LoadingView.Content>
+    </utu:LoadingView>
+  </StackPanel>
+ </Page>

@@ -1,4 +1,7 @@
 //LIVING WITH DETERMINATION
+
+using HYDRANT.Definitions;
+
 namespace VESTIGENEWS;
 
 /// <summary>
@@ -14,9 +17,9 @@ public class ArticleSelector : DataTemplateSelector
     {
         if (item is Article multiTypeItem)
         {
-            if (multiTypeItem.Headline) { return HeadlineTemplate!; }
-            if (multiTypeItem.ImageURL == "?" & !multiTypeItem.Headline) { return NoImageTemplate!; }
-            if ( multiTypeItem.Headline == false) { return MinimalTemplate!; }
+            if (multiTypeItem.IsHeadline) { return HeadlineTemplate!; }
+            if (multiTypeItem.ImageURL == "?" & !multiTypeItem.IsHeadline) { return NoImageTemplate!; }
+            if ( multiTypeItem.IsHeadline == false) { return MinimalTemplate!; }
 
         }
         return base.SelectTemplateCore(item, container);

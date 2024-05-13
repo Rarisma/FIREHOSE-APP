@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using HYDRANT.Definitions;
 
 namespace VESTIGENEWS;
 public class PreferencesModel

@@ -1,5 +1,6 @@
 using Microsoft.UI.Dispatching;
 using Windows.UI.Core;
+using HYDRANT.Definitions;
 
 namespace VESTIGENEWS;
 
@@ -35,7 +36,7 @@ public class App : Application
         }
 
 
-        Glob.Publications = await Publication.LoadFromAPI();
+        Glob.Publications = await new API(Glob.APIKEY).GetPublications();
         PreferencesModel.Load();
 
         if (Glob.Frame.Content == null)
