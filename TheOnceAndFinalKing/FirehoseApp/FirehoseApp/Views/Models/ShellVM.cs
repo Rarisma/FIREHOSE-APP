@@ -8,7 +8,6 @@ class ShellVM : ObservableObject
 
     public LoadableCommand LoadPublicationDataCommand { get; }
     public LoadableCommand LoadArticleDataCommand { get; }
-    public string LoadingText { get; set; }
 
     public ShellVM()
     {
@@ -19,15 +18,12 @@ class ShellVM : ObservableObject
 
     async Task LoadArticleData()
     {
-        LoadingText = "Loading Article data...";
         await new HYDRANT.API(AppState.APIKey).GetArticles(9999);
-        LoadingText = "Loaded Article data";
+
     }
 
     async Task LoadPublicationData()
     {
-        LoadingText = "Loading Publication data...";
         await new HYDRANT.API(AppState.APIKey).GetPublications();
-        LoadingText = "Loaded Publication data";
     }
 }

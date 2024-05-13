@@ -27,5 +27,6 @@
     <PackageVersion  Include="SmartReader" Version="0.9.4" />
     <PackageVersion  Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion  Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageVersion Include="Uno.WinUI.Lottie" Version="5.2.121" />
   </ItemGroup>
 </Project>

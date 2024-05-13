@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>b6f7fd8d-9183-4464-8020-37afe18d6734</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,11 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" />
-    <PackageReference Include="OpenGraph-Net" />
-    <PackageReference Include="SmartReader" VersionOverride="0.9.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="System.ServiceModel.Syndication" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageReference Include="OpenGraph-Net" Version="4.0.1" />
+    <PackageReference Include="SmartReader" VersionOverride="0.9.4" Version="0.9.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+	<PackageReference Include="Microsoft.OpenApi" Version="1.6.14" />
+
   </ItemGroup>
 
   <ItemGroup>

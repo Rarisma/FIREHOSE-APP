@@ -14,9 +14,16 @@ public class ArticlesController : ControllerBase
     {
         try
         {
-            // ReSharper disable once RedundantTypeArgumentsOfMethod
-            return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQL.GetArticles(limit,Offset,Filter:Filter)));
-        }
+			// ReSharper disable once RedundantTypeArgumentsOfMethod
+			if (Filter == "")
+			{
+				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQL.GetArticles(limit, Offset)));
+			}
+			else
+			{
+				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQL.GetArticles(limit, Offset, Filter: Filter)));
+			}
+		}
         catch (Exception ex)
         {
             return StatusCode(500, ex.Message);

@@ -65,6 +65,8 @@ public partial class App : Application
                 //    services.AddSingleton<ShellVM>();
                 //})
             );
+
+        UnhandledException += App_UnhandledException;
         Log.Information($"Firehose News {AppState.Version} started");
         configureIOC();
         Log.Information("IOC built");
@@ -103,6 +105,11 @@ public partial class App : Application
         // Ensure the current window is active
         Log.Information("Displaying window.");
         MainWindow.Activate();
+    }
+
+    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        Log.Logger.Error(e.Exception.Message);
     }
 
     void configureIOC()

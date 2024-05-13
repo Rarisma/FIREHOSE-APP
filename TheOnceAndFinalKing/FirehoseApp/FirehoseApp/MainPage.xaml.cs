@@ -11,14 +11,7 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
-        
-        //Load publication and article data
         ShellVM.LoadPublicationDataCommand.Execute(this);
-        ShellVM.LoadArticleDataCommand.Execute(this);
-    }
-
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
         ShellVM.LoadArticleDataCommand.Execute(this);
     }
 }
