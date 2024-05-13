@@ -24,7 +24,7 @@
     <PackageVersion Include="Uno.Wasm.Bootstrap" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.Server" Version="9.0.0-dev.35" />
-    <PackageVersion Include="Uno.WinUI" Version="5.2.108" />
+    <PackageVersion Include="Uno.WinUI" Version="5.2.121" />
     <PackageVersion Include="Uno.WinUI.Lottie" Version="5.2.108" />
     <PackageVersion Include="Uno.WinUI.DevServer" Version="5.2.108" />
     <PackageVersion Include="Uno.WinUI.Skia.Gtk" Version="5.2.108" />
