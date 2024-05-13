@@ -1,7 +1,7 @@
 <Project ToolsVersion="15.0">
   <ItemGroup>
     <PackageVersion Include="HtmlAgilityPack" Version="1.11.61" />
-    <PackageVersion Include="LLamaSharp" Version="0.11.2" />
+    <PackageVersion Include="LLamaSharp" Version="0.12.0" />
     <PackageVersion Include="LLamaSharp.Backend.Cuda12" Version="0.11.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Windows.Compatibility" Version="8.0.4" />
