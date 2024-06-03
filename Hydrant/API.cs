@@ -55,26 +55,46 @@ public class API
 	public async Task<List<Publication>> GetPublications()
 	{
 		// Send a GET req
-		using HttpClient client = new();
-		client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
-		var response = await client.GetAsync($"{Endpoint}/Publication/GetPublicationData");
+        try
+        {
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+            var response = await client.GetAsync($"{Endpoint}/Publication/GetPublicationData");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                // Read the response content as a string (if needed)
+                string content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Publication>>(content)!;
+            }
 
-		if (response.IsSuccessStatusCode)
-		{
-			// Read the response content as a string (if needed)
-			string content = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<List<Publication>>(content)!;
-		}
+        }
+        catch (Exception e)
+        {
+
+        }
 
 		//return new list if something went wrong.
 		return new();
 	}
-    
+    public async Task VoteClickbait(Article Article)
+    {
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+        string url = $"{Endpoint}/Articles/ReportAsClickbait?URL={Uri.EscapeDataString(Article.Url)}";
+        await client.GetAsync(url);
+    }
+
+    /// <summary>
+    /// Reports an article summary as incorrect.
+    /// </summary>
+    /// <param name="Article">Article to report</param>
+    /// <param name="Reason">Reason to report.</param>
     public async Task ReportArticle(Article Article, int Reason)
     {
         using HttpClient client = new();
         client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
-        string url = $"{Endpoint}/Publication/GetPublicationData{Uri.EscapeDataString(Article.Url)}&ReportReason={Reason}";
+        string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}&ReportReason={Reason}";
         await client.GetAsync(url);
     }
 }

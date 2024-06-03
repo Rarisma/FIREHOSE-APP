@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseNews.UI.Controls;
 using FirehoseNews.Viewmodels;
@@ -14,7 +13,6 @@ public sealed partial class ArticleList : Page
 {
     private ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
     private ShellVM ShellVM = Ioc.Default.GetRequiredService<ShellVM>();
-    
     /// <summary>
     /// Sets ex filter to filter via publications
     /// </summary>
@@ -33,27 +31,33 @@ public sealed partial class ArticleList : Page
         if (await CD.ShowAsync() == ContentDialogResult.Primary)
         {
             ShellVM.PublisherID = ((CD.Content as PublisherFilter).Content as ListView)!.SelectedIndex + 1;
+            ShellVM.FilterExtension = $"PUBLISHER_ID = {ShellVM.PublisherID}";
+
         }
         else
         {
             ShellVM.PublisherID = -1;
             SourcesButton.Content = "Filter Publisher";
+            ShellVM.FilterExtension = "";
         }
+        ShellVM.FilterOrder = ShellVM.Filters[0].FilterOrder;
+        ShellVM.Offset = 0;
+        UpdateButtons(ShellVM.Filters[0]);
+        ShellVM.LoadArticleDataCommand.Execute(null);
     }
 
     public ArticleList()
     {
+        ShellVM.UpdateButtonsDelegate = new(UpdateButtons);
         ShellVM.Articles = new();
         InitializeComponent();
-        ChangeFilter(LatestButton, new());
+        ChangeFilter(ShellVM.Filters[0], new());
     }
 
 
     /// <summary>
     /// Opens a tapped article object.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private void ArticleTapped(object sender, TappedRoutedEventArgs e)
     {
         //Get article object
@@ -61,17 +65,6 @@ public sealed partial class ArticleList : Page
         ShellVM.OpenArticle(Data); //Open article.
     }
 
-    /// <summary>
-    /// Load more stories
-    /// </summary>
-    private void LoadMorePressed(object sender, RoutedEventArgs e)
-    {
-        //Update offset so we don't load the same articles, call article update
-        ShellVM.LoadArticleDataCommand.Execute(null);
-
-        //Scroll back to top
-        ArticleScroller.ChangeView(0, 0, ArticleScroller.ZoomFactor);
-    }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
@@ -80,15 +73,22 @@ public sealed partial class ArticleList : Page
     }
     
     /// <summary>
-    /// I </summary>
-    /// <param name="Button"></param>
-    public void UpdateButtons(AppBarButton Button)
+    /// Updates UI on top row of buttons.
+    /// </summary>
+    /// <param name="Button">Button to set as selected.</param>
+    public void UpdateButtons(Button Button)
     {
+        //Hide no bookmarks message.
+        NoBookmarks.Text = " ";
+
+        //Show load more button
+        LoadMoreButton.Visibility = Visibility.Visible;
+
         //Clear filter buttons
-        foreach (var FilterButton in Filters.Children)
+        foreach (var FilterButton in ShellVM.Filters)
         {
-            Button.Background = new SolidColorBrush(Colors.Transparent);
-            Button.Foreground = Themer.SecondaryBrush;
+            FilterButton.Background = new SolidColorBrush(Colors.Transparent);
+            FilterButton.Foreground = Themer.SecondaryBrush;
         }
         //Bookmarks button isn't in the filters stack panel so clear them manually.
         BookmarksButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -128,11 +128,8 @@ public sealed partial class ArticleList : Page
     {
         ShellVM.Offset = 0;
         LoadMoreButton.Visibility = Visibility.Visible;
-        UpdateButtons((AppBarButton)sender);
+        UpdateButtons((Button)sender);
 
-        //Reset filters to default
-        ShellVM.FilterBy = "";
-        ShellVM.FilterOrder = "ORDER BY PUBLISH_DATE DESC";
 
         //Set correct filter
         ShellVM.LoadArticleDataCommand.Execute(null);
@@ -182,23 +179,19 @@ public sealed partial class ArticleList : Page
     
     private void ShowBookmarks(object sender, RoutedEventArgs e)
     {
+        UpdateButtons(sender as Button);
         ShellVM.Articles.Clear();
         ShellVM.Offset = 0;
         LoadMoreButton.Visibility = Visibility.Collapsed;
         ShellVM.Articles.AddRange(Glob.Model.BookmarkedArticles);
+
+        if (Glob.Model.BookmarkedArticles.Count == 0)
+        {
+            NoBookmarks.Text = "You have no bookmarked articles.";
+
+
+        }
     }
     
-    private async void FilterSource(object sender, RoutedEventArgs e)
-    {
-        await SetPublisherFilter();
-        if (ShellVM.PublisherID == -1)
-        {
-            ShellVM.FilterOrder = $" AND PUBLISHER_ID = {ShellVM.PublisherID} ";
-        }
-        else
-        {
-            ShellVM.FilterOrder = "";
-            ChangeFilter(LatestButton, new());
-        }
-    }
+    private async void FilterSource(object sender, RoutedEventArgs e) => await SetPublisherFilter();
 }

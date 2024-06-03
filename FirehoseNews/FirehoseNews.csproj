@@ -23,6 +23,7 @@
     <None Remove="ArticleView.xaml" />
     <None Remove="UI\AIFeedbackDialog.xaml" />
     <None Remove="UI\Controls\CommonNavigationBar.xaml" />
+    <None Remove="UI\Controls\Filters.xaml" />
     <None Remove="UI\PublisherFilter.xaml" />
     <None Remove="UI\PublisherInformation.xaml" />
     <None Remove="UI\QuickView.xaml" />
@@ -98,6 +99,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="UI\Controls\CommonNavigationBar.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="UI\Controls\Filters.xaml" />
   </ItemGroup>
 
 

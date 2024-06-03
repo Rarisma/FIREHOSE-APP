@@ -23,6 +23,8 @@ public class App : Application
 #if !WINDOWS
 
 #endif
+        PreferencesModel.Load();
+
         configureIOC();
         App.Current.UnhandledException += Current_UnhandledException;
 
@@ -35,9 +37,7 @@ public class App : Application
             Glob.Frame.NavigationFailed += OnNavigationFailed;
         }
 
-
-        Glob.Publications = await new API(Glob.APIKEY).GetPublications();
-        PreferencesModel.Load();
+        Glob.Publications = await new API().GetPublications();
 
         if (Glob.Frame.Content == null)
         {
@@ -58,7 +58,6 @@ public class App : Application
     void configureIOC()
     {
         var Services = new ServiceCollection()
-            //.AddSingleton<AppState>()
             .AddSingleton<ShellVM>()
             .AddSingleton<ThemeVM>()
             .BuildServiceProvider();

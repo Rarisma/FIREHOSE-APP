@@ -1,15 +1,13 @@
-//I'VE GOT A RECKLESS TONGUE
 using Windows.UI.Core;
 using FirehoseNews.Preferences;
 using HYDRANT.Definitions;
-
+//I'VE GOT A RECKLESS TONGUE
 namespace FirehoseNews;
 public static class Glob
 {
     public static Stack<object> NaviStack = new();
     public static Frame Frame = new();
     public static PreferencesModel Model;
-    public static string APIKEY = "gYW-rhYS6GhqohpTjRbwmLVQsThH29HDIeReVWpEjm8=";
     public static XamlRoot XamlRoot;
 
     /// <summary>

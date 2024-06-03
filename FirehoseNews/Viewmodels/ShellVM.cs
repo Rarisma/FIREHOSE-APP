@@ -10,24 +10,29 @@ namespace FirehoseNews.Viewmodels;
 
 class ShellVM : ObservableObject
 {
-    public ObservableCollection<Article> Articles { get; set; }
-
-    public LoadableCommand LoadPublicationDataCommand { get; }
-    public LoadableCommand LoadArticleDataCommand { get; }
+    public delegate void UpdateButtons(Button Button);
     
-    public ObservableCollection<(string, string)> Filters = new()
-    {
-        new("Headlines", "HEADLINE = 1"),
+    public UpdateButtons UpdateButtonsDelegate;
+    public ObservableCollection<Article> Articles { get; set; }
+    public AsyncCommand LoadPublicationDataCommand { get; set; }
+    public AsyncCommand LoadArticleDataCommand { get; set; }
+    
+    public ObservableCollection<Filters> Filters =
+    [
         new("Latest", ""),
-        new("Today", "BUSINESS_RELATED = 1"),
-        new("Business", "BUSINESS_RELATED = 1"),
-    };
-    private API Hallon = new(Glob.APIKEY);
+        new("Headlines", "HEADLINE = 1"),
+        new("Today", "DATE(Publish_Date) = CURDATE()"),
+        new("Business", "SECTORS NOT LIKE ''"),
+        new("Elections", "title LIKE '%election%'\r\nOR ARTICLE_TEXT LIKE '%election%'")
+    ];
+
+    //Access to the hallon API server
+    public API Hallon = new();
 
     public ShellVM()
     {
-        LoadPublicationDataCommand = new LoadableCommand(LoadPublicationData);
-        LoadArticleDataCommand = new LoadableCommand(LoadArticleData);
+        LoadPublicationDataCommand = new AsyncCommand(LoadPublicationData);
+        LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
     }
     
     /// <summary>
@@ -42,26 +47,28 @@ class ShellVM : ObservableObject
     /// </summary>
     public int PublisherID = -1;
     
+    /// <summary>
+    /// How far we are into the category
+    /// </summary>
     public int Offset = 0;
 
-    async Task LoadArticleData()
+    public async Task LoadArticleData()
     {
         try
         {
-            Offset += Articles.Count;
             Articles.Clear(); //Reset collection
             string filter;
-            if (FilterBy != "")
-            {
-                filter = $"WHERE {FilterBy} {FilterExtension} {FilterOrder}";
-            }
+            if (FilterBy != "" && FilterExtension != "") { filter = $"WHERE {FilterBy} AND {FilterExtension} {FilterOrder}"; }
+            else if (FilterExtension != "" && FilterBy == "") { filter = $"WHERE {FilterExtension} {FilterOrder}"; }
+            else if (FilterBy != "") {filter = $"WHERE {FilterBy} {FilterOrder}"; }
             else { filter = FilterOrder; }
             
 
             //Load articles and filter articles from the future.
-            Articles.AddRange((await new API(Glob.APIKEY).GetArticles(Glob.Model.ArticleFetchLimit,
+            Articles.AddRange((await Hallon.GetArticles(Glob.Model.ArticleFetchLimit,
                     Offset, filter))
                 .Where(x => DateTime.Now.AddHours(3) > x.PublishDate));
+            Offset += Articles.Count;
         }
         catch (Exception ex)
         {
@@ -77,7 +84,7 @@ class ShellVM : ObservableObject
         }
     }
 
-    async Task LoadPublicationData() => await Hallon.GetPublications();
+    public async Task LoadPublicationData() => await Hallon.GetPublications();
 
     public async void OpenArticle(Article article, bool IgnoreQuickView = false)
     {
@@ -118,5 +125,4 @@ class ShellVM : ObservableObject
             OpenArticle(article, true);
         }
     }
-
 }

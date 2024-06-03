@@ -49,14 +49,14 @@ public class ThemeVM : ObservableObject
             MainBrush = new SolidColorBrush(Colors.Black);
             SecondaryBrush = new SolidColorBrush(Colors.White);
             TertiaryBrush = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
-            StatusBar = StatusBarForegroundTheme.Dark;
+            StatusBar = StatusBarForegroundTheme.Light;
         }
         else
         {
             MainBrush = new SolidColorBrush(Colors.White);
             SecondaryBrush = new SolidColorBrush(Colors.Black);
             TertiaryBrush = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
-            StatusBar = StatusBarForegroundTheme.Light;
+            StatusBar = StatusBarForegroundTheme.Dark;
         }
     }
 }

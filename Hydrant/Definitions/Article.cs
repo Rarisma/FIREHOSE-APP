@@ -73,19 +73,18 @@ public class Article
     /// Company names/tickers mentioned within the article.
     /// </summary>
     public string CompaniesMentioned { get; set; }
-
-	/// <summary>
-	/// Author of the article.
-	/// Will be unknown author if we can't find the author.
-	/// If an article has multiple Authors, they will be separated by commas.
-	/// </summary>
-	public string Author { get; set; }
+    
+    /// <summary>
+    /// Company names/tickers mentioned within the article.
+    /// </summary>
+    public string ExecsMentioned { get; set; }
 
     /// <summary>
-    /// Internal field, reserved.
-    /// (Will always return false via FirehoseServer)
+    /// Author of the article.
+    /// Will be unknown author if we can't find the author.
+    /// If an article has multiple Authors, they will be separated by commas.
     /// </summary>
-    public bool HasJakeFlag { get; set; }
+    public string Author { get; set; }
     
     /// <summary>
     /// Is the headline clickbait?
@@ -101,6 +100,8 @@ public class Article
     /// Market Sectors the article is mentioned in
     /// </summary>
     public string Sectors { get; set; }
+    
+    public int Weighting = 0;
     
     #endregion
 }

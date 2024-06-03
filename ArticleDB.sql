@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS FHDB; -- FHDB = Firehose Database
 USE FHDB;
---drop TABLE ARTICLES;
 CREATE TABLE IF NOT EXISTS ARTICLES (
     URL VARCHAR(512) NOT NULL PRIMARY KEY,  -- URL to article
     TITLE VARCHAR(512) NOT NULL,            -- Story title
@@ -14,7 +13,6 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     PUBLISHER_ID INT NOT NULL, 				-- Firehose Publication ID
     BUSINESS_RELATED BOOLEAN NOT NULL,      -- Does the article talk about/relate to business
     COMPANIES_MENTIONED LONGTEXT,           -- List of companies mentioned in the article
-    JAKE_FLAG BOOLEAN NOT NULL,             -- Should Jake be informed immediately?
 	AUTHOR VARCHAR(1024),					-- Name of author(s) separated by commas.
 	SECTORS LONGTEXT,						-- List of sectors the article is mentioned in
     Votes INT NOT NULL, 					-- Does a user think 
@@ -22,7 +20,8 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
 
     WEIGHTING INT,                          -- UNIMPLEMENTED (Trustworthiness Score)
     EXECUTIVES_MENTIONED LONGTEXT,          -- List of executives
-    ClickbaitHeadline BOOLEAN NOT NULL, 	-- Does the article have a clickbait headline
+    TimesReportedAsClickbait INT NOT NULL, 	-- Does the article have a clickbait headline
+    ClickbaitHeadline VARCHAR(255)
 );
 
-select * from ARTICLES WHERE SECTORS NOT LIKE "%UNKNOWN%" ORDER BY PUBLISH_DATE DESC;
+select * from ARTICLES;

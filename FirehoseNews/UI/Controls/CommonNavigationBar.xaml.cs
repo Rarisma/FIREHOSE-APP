@@ -3,7 +3,7 @@ using FirehoseNews.UI.Dialogs;
 using HYDRANT.Definitions;
 
 namespace FirehoseNews.UI.Controls;
-public sealed partial class CommonNavigationBar : UserControl
+public sealed partial class CommonNavigationBar : Grid
 {
 
     /// <summary>
@@ -28,7 +28,6 @@ public sealed partial class CommonNavigationBar : UserControl
     public CommonNavigationBar()
     {
         InitializeComponent();
-        SetBookmarkIcon();
     }
 
     private async void ReportSummary(object sender, RoutedEventArgs e)
@@ -45,7 +44,7 @@ public sealed partial class CommonNavigationBar : UserControl
         if (await CD.ShowAsync() == ContentDialogResult.Primary) //Send feedback clicked
         {
             int reason = (((CD.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex;
-            new API(Glob.APIKEY).ReportArticle(ItemSource, reason);
+            new API().ReportArticle(ItemSource, reason);
             
         }
     }
@@ -70,7 +69,7 @@ public sealed partial class CommonNavigationBar : UserControl
     public void SetBookmarkIcon()
     {
         //Handle bookmarked status
-        if (Glob.Model.BookmarkedArticles.Contains(ItemSource))
+        if (Glob.Model.BookmarkedArticles.Count(article => article.Url == ItemSource.Url) != 0)
         {
             Glyphy.Glyph = "\xE735";
         }
@@ -96,6 +95,16 @@ public sealed partial class CommonNavigationBar : UserControl
     
     private void ReportClickbait(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        new API().VoteClickbait(ItemSource);
+
+        //Show visual feedback
+        ClickbaitButton.Text = "Already reported";
+        ClickbaitButton.IsEnabled = false; //Prevent multiple reports.
+    }
+    
+    private void CommonNavigationBar_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        SetBookmarkIcon();
+        
     }
 }

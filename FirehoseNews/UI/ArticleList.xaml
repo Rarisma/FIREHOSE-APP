@@ -9,7 +9,7 @@
     xmlns:utu="using:Uno.Toolkit.UI"
     xmlns:controls="using:FirehoseNews.UI.Controls"
     utu:StatusBar.Foreground="{x:Bind Themer.StatusBar}"
-    utu:StatusBar.Background="{x:Bind Themer.TertiaryBrush}"
+    utu:StatusBar.Background="{x:Bind Themer.MainBrush}"
     Loaded="ArticleList_OnLoaded">
 
   <Page.Resources>
@@ -129,63 +129,58 @@
 																 MinimalTemplate="{StaticResource MinimalTemplate}"
 																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
   </Page.Resources>
-
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-
-    <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch"
-                  Name="ArticleScroller" Margin="10,0" MaxWidth="600">
-
-      <StackPanel Orientation="Vertical">
-        <ScrollViewer HorizontalScrollBarVisibility="Visible">
-          <StackPanel Orientation="Horizontal">
-            <AppBarButton Icon="Setting" Click="OpenSettings" VerticalAlignment="Center" LabelPosition="Collapsed"/>
-            <AppBarButton Content="Bookmarked" Height="50"  Click="ShowBookmarks"
-                          Name="BookmarksButton" Width="90"/>
-            <AppBarButton Content="Filter Publisher" Height="50"  Click="FilterSource"  Name="SourcesButton"
-                          MaxHeight="200" HorizontalAlignment="Center" Width="120"/>
-            <Border Width="2" Height="20" BorderThickness="5" HorizontalAlignment="Center"
-                    BorderBrush="Gray" CornerRadius="1" Margin="10,0,10,10"/>
-
-            <!-- Filter button -->
-            <StackPanel Orientation="Horizontal" Name="Filters">
-              <AppBarButton Content="Latest" Height="50" Click="ChangeFilter" x:Name="LatestButton"/>
-              <AppBarButton Content="Headlines" Height="50"  Click="ChangeFilter"/>
-              <AppBarButton Content="Today" Height="50"  Click="ChangeFilter" />
-              <AppBarButton Content="Business" Height="50"  Click="ChangeFilter" />
-            </StackPanel>
-          </StackPanel>
-        </ScrollViewer>
-
-        <utu:LoadingView>
-          <utu:LoadingView.LoadingContent>
-            <StackPanel Height="200">
-              <ProgressRing IsActive="True"/>
-              <TextBlock Text="Loading more articles..."/>
-            </StackPanel>
-          </utu:LoadingView.LoadingContent>
-
-          <utu:LoadingView.Source>
-            <utu:CompositeLoadableSource>
-                <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand}" />
-                <utu:LoadableSource Source="{x:Bind ShellVM.LoadPublicationDataCommand}" />
-            </utu:CompositeLoadableSource>
-          </utu:LoadingView.Source>
-
-          <StackPanel>
-            <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}" Tapped="ArticleTapped"
-                          ItemTemplateSelector="{StaticResource ArticleSelector}"
-                          RightTapped="OpenQuickViewHold"/>
-
-            <HyperlinkButton Content="Click to load more Articles"
-                             Command="{x:Bind ShellVM.LoadArticleDataCommand}"
-                             HorizontalAlignment="Center" Margin="10" x:Name="LoadMoreButton"/>
-          </StackPanel>
-        </utu:LoadingView>
+  <utu:LoadingView Source="{x:Bind ShellVM.LoadArticleDataCommand, Mode=TwoWay}">
+    <utu:LoadingView.LoadingContent>
+      <StackPanel Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ProgressRing IsActive="True"/>
+        <TextBlock Text="Loading more articles..."/>
       </StackPanel>
-    </ScrollViewer>
-  </Grid>
+    </utu:LoadingView.LoadingContent>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" Padding="10,0"
+                    Name="ArticleScroller" Margin="10" MaxWidth="600">
+
+        <StackPanel Orientation="Vertical">
+          <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" MinHeight="40">
+              <AppBarButton Icon="Setting" Click="OpenSettings" VerticalAlignment="Center" LabelPosition="Collapsed"
+                            Margin="0,10,0,0"/>
+              <AppBarButton Content="Bookmarked" Height="50"  Click="ShowBookmarks" Margin="0,10,0,0"
+                            Name="BookmarksButton" Width="90"/>
+              <AppBarButton Content="Filter Publisher" Height="50"  Click="FilterSource"  Name="SourcesButton"
+                            MaxHeight="200" HorizontalAlignment="Center" Width="120" Margin="0,10,0,0"/>
+              <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                      BorderBrush="Gray" Margin="5"/>
+
+              <!-- Filter buttons -->
+              <ItemsRepeater x:Name="FilterButtons" ItemsSource="{x:Bind ShellVM.Filters}"
+                             VerticalAlignment="Center" Margin="0,10,0,0">
+                <ItemsRepeater.Layout>
+                  <StackLayout Orientation="Horizontal" />
+                </ItemsRepeater.Layout>
+              </ItemsRepeater>
+            </StackPanel>
+          </ScrollViewer>
+
+            <StackPanel>
+              <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}" Tapped="ArticleTapped"
+                            ItemTemplateSelector="{StaticResource ArticleSelector}"
+                            RightTapped="OpenQuickViewHold"/>
+
+              <TextBlock Text="You have no bookmarked stories." Name="NoBookmarks" VerticalAlignment="Center"
+                         HorizontalAlignment="Center" Margin="10"/>
+
+              <HyperlinkButton Content="Click to load more Articles"
+                               Command="{x:Bind ShellVM.LoadArticleDataCommand}"
+                               HorizontalAlignment="Center" Margin="10" x:Name="LoadMoreButton"/>
+            </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </utu:LoadingView>
 </Page>

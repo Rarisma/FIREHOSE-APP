@@ -41,7 +41,7 @@ internal static class ArticleScraper
             if (data.Image != null) { Img = data.Image.ToString(); }
             else { Img = "?";}
         }
-        catch (Exception e) {Img = "?";}
+        catch (Exception e) { Img = "?"; }
 
         (string,string) temp; //Item 1 is Article Text, Item 2 is the Author if one is found
         Publication pub = Program.Publications[Article.Item2];

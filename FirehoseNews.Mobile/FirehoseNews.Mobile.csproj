@@ -25,28 +25,50 @@
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <AndroidKeyStore>False</AndroidKeyStore>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <JavaMaximumHeapSize>2G</JavaMaximumHeapSize>
+    <EnableLLVM>True</EnableLLVM>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <AndroidKeyStore>False</AndroidKeyStore>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <JavaMaximumHeapSize>2G</JavaMaximumHeapSize>
+    <AndroidLinkTool>r8</AndroidLinkTool>
+    <EnableLLVM>True</EnableLLVM>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
     <ApplicationTitle>Firehose News</ApplicationTitle>
     <ApplicationId>net.Rarisma.REMNANT</ApplicationId>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>

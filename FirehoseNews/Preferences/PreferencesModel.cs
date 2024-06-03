@@ -5,9 +5,13 @@ using HYDRANT.Definitions;
 namespace FirehoseNews.Preferences;
 public class PreferencesModel
 {
+    
+    static StorageFolder SaveFolder = ApplicationData.Current.LocalFolder;
+    static string SavePath = Path.Combine(SaveFolder.Path, "prefs.json");
     public PreferencesModel()
     {
         Proxy = string.Empty;
+        ArticleFetchLimit = 20;
         BookmarkedArticles = new();
     }
 
@@ -43,28 +47,17 @@ public class PreferencesModel
     /// </summary>
     public static void Save()
     {
-        //WARNING: THE BELOW CODE DOES NOT WORK ON UNPACKAGED WINDOWS BUILDS.
-
-        //Serialise PreferenceModel 
-        string Result;
-        using (MemoryStream MemoryStream = new())
+        try
         {
-            using (StreamWriter StreamWriter = new(MemoryStream))
-            {
-                JsonSerializer.Serialize(MemoryStream, Glob.Model);
-                StreamWriter.Flush();  // Ensure all data is written to the MemoryStream
-                MemoryStream.Position = 0;  // Reset the position to read from the beginning
-
-                // Read the stream into a string
-                using (StreamReader Reader = new(MemoryStream))
-                {
-                    Result = Reader.ReadToEnd();
-                }
-            }
+            //Serialise PreferenceModel 
+            string Result = JsonSerializer.Serialize(Glob.Model);
+            File.WriteAllText(SavePath, Result);
+        }
+        catch (Exception Ex)
+        {
+            Glob.Log(Glob.LogLevel.Wrn, Ex.Message);
         }
 
-        //Write model to settings value.
-        ApplicationData.Current.LocalSettings.Values["Pref"] = Result;
     }
 
     /// <summary>
@@ -72,23 +65,16 @@ public class PreferencesModel
     /// </summary>
     public static void Load() 
     {
-        //WARNING: THE BELOW CODE DOES NOT WORK ON UNPACKAGED WINDOWS BUILDS.
-
         try
         {
-            // Assuming the XML string is saved in the application's local settings.
-            string XmlData = (string)ApplicationData.Current.LocalSettings.Values["Pref"];
-            if (XmlData == null)
+            if (File.Exists(SavePath) == false)
             {
                 Glob.Model = new();
                 return;
             }
 
-            //Write model back into memory
-            using (MemoryStream MemoryStream = new(Encoding.UTF8.GetBytes(XmlData)))
-            {
-                Glob.Model = ((PreferencesModel)JsonSerializer.Deserialize(MemoryStream, typeof(PreferencesModel))!);
-            }
+            var content = File.ReadAllText(SavePath);
+            Glob.Model = (PreferencesModel)JsonSerializer.Deserialize(content, typeof(PreferencesModel))!;
 
             if (Glob.Model.ArticleFetchLimit <= 5)
             {

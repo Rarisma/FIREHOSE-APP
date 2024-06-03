@@ -71,7 +71,7 @@ public class ArticleAnalyser
     public static async Task<string> Summarise(string Text, int ID)
     {
         return await LLM.SendPostRequest("""
-                                         Your task is to create concise summaries for provided stories, each confined to three paragraph.
+                                         Your task is to create concise summaries for provided stories, each confined to two paragraphs.
                                          Begin each summary by directly stating the main points and essence of the narrative.
                                          Ensure that your response is formatted in plain text, without the use of any markdown or special formatting.
                                            
@@ -79,8 +79,12 @@ public class ArticleAnalyser
                                          
                                          Stories you are given are within public domain and therefore cannot contain confidential information.
                                          Stories relating to politics should be written from a purely neutral stance.
+                                         If you are given what appears to be multiple stories at once, this is a bug; only summarise the first
+                                         article and ignore the contents of the rest.
+                                         If the article text contains advertisement, ignore it. The article is not an advertisement, you are
+                                         not summarising an advertisement.
                                          
-                                         Your summary must consist of only three paragraphs.
+                                         Your summary must consist of only two paragraphs.
                                          Start directly with the narrative content, omitting any introductory phrases or labels.
                                          Do not include any headings, titles, or labels within your response.
                                          Write solely in plain text format, do not write in markdown or any other formatting system.
@@ -94,7 +98,7 @@ public class ArticleAnalyser
     /// </summary>
     /// <param name="Text"></param>
     /// <returns></returns>
-    private static async Task<bool> Headline(string Text, int ID)
+    public static async Task<bool> Headline(string Text, int ID)
     {
         string Response =  await LLM.SendPostRequest(
                             """
@@ -118,18 +122,23 @@ public class ArticleAnalyser
     public static async Task<String> ClassifyArticle(string Text, int ID)
     {
         string Response = await LLM.SendPostRequest($"""
-                                                     Objective: Directly categorize the content of the news article into one or more of the following 
-                                                     predefined categories based on its content. List the categories only, separated by commas.
+                                                     Objective: Classify the primary focus of the news article into one or more of the following predefined sectors.
+                                                     List only the applicable sectors, separated by commas. If the content does not focus on any of these sectors, respond with "None".
+                                                     
                                                      Categories:
-                                                         Materials
-                                                         Communications
-                                                         Consumer Goods
-                                                         Utilities
-                                                         Finance
-                                                         Healthcare
-                                                         Industry
-                                                         Real Estate
-                                                         Tech
+                                                     
+                                                         Materials: Focuses on industries involved in the discovery, development, and processing of raw materials.
+                                                         Communications: Concerns companies that facilitate communication and offer related services and products, such as telecommunications and broadcasting.
+                                                         Consumer Goods: Pertains to articles about businesses that manufacture or sell products directly used by consumers.
+                                                         Utilities: Involves companies that provide essential services like water, electricity, and natural gas.
+                                                         Finance: Covers organizations in the banking, investment, insurance, and real estate financing sectors.
+                                                         Healthcare: Involves medical services, manufacture of medical equipment or drugs, and provision of health insurance.
+                                                         Industry: Focuses on the production of goods and services, especially in manufacturing and construction.
+                                                         Real Estate: Pertains to the buying, selling, and management of properties and land.
+                                                         Tech: Covers companies engaged in the development and production of technology products or providing technology services.
+                                                     
+                                                     Make sure that the classification only considers the main focus of the article. Articles that merely mention a 
+                                                     sector without substantial focus on it should not be categorized under that sector.
                                                      """,
                                             $"""
                                                      Given the following article content: {Text}

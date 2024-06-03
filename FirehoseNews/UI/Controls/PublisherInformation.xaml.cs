@@ -59,22 +59,33 @@ public sealed partial class PublisherInformation : UserControl
         {
             try
             {
+                // Convert the Firehose timezone (GMT) to local time
+                DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(
+                    ((Article)GetValue(ItemSourceProperty)).PublishDate,
+                    TimeZoneInfo.Local);
+
                 //Calculate how long it's been since the article was published.
-                TimeSpan Diff = DateTime.Now - ((Article)GetValue(ItemSourceProperty)).PublishDate;
+                TimeSpan Diff = DateTime.Now - localDateTime;
 
                 //If it's been published for less than an hour, show the article in Minutes
+                if (Diff.TotalMinutes < 5)
+                {
+                    return "Now";
+                }
                 if (Diff.TotalMinutes < 60)
                 {
                     return Math.Round(Diff.TotalMinutes) + " Minutes ago";
-                }
-
-                //If it's older than 2 days, show the article in hours
-                if (Diff.TotalHours <= 48)
+                } //If it's older than 2 days, show the article in hours
+                else if (Diff.TotalHours <= 48)
                 {
                     int difference = (int)Math.Round(Diff.TotalHours);
                     return difference + (difference == 1 ? " Hour ago" : " Hours ago");
                 }
-                return Math.Round(Diff.TotalDays) + " Days ago";
+                else
+                {
+                    return Math.Round(Diff.TotalDays) + " Days ago";
+
+                }
             }
             catch
             {

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace HYDRANT.Definitions;
 
@@ -29,7 +29,7 @@ public class Company
     /// <summary>
     /// Source of the ticker, FTSE, NASDAQ etc.
     /// </summary>
-    public TickerSource Source;
+    public string Source;
 
     /// <summary>
     /// locates companies within text
@@ -37,8 +37,22 @@ public class Company
     /// <returns></returns>
     public static string FindCompaniesInText(string text, List<Company> companies)
     {
+        List<Company> Companies = new();
+
+        foreach (var comp in companies)
+        {
+            if (comp.Name.Length > 3) // Company name must be over 3 chars
+            {
+                if (text.Contains(comp.Name)) { Companies.Add(comp); }
+            }
+            
+            if (comp.Ticker.Length >= 2) // Check ticker is at least 2 char
+            {
+                if (text.Contains(comp.Ticker)) { Companies.Add(comp); }
+            }
+        }
+        
         //Scan text
-        var Companies = companies.Where(company => text.Contains(company.Name) || text.Contains(company.Ticker));
         string Found = "";
 
         //return results

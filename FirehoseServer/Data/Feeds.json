@@ -19,24 +19,24 @@
 		"Feeds": [ "http://rss.cnn.com/rss/cnn_latest.rss" ]
 	},
 
-	{
-		"ID": 2,
-		"Paywall": false,
-		"Name": "BBC",
-		"Favicon": "https://static.files.bbci.co.uk/core/website/assets/static/icons/favicon/news/favicon-16.8a240ceacc28296a851d.png",
-		"Weighting": 50,
-		"AlwaysJakeFlag": false,
-		"Feeds": [
-			"https://feeds.bbci.co.uk/news/business/rss.xml",
-			"https://feeds.bbci.co.uk/news/education/rss.xml",
-			"https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
-			"https://feeds.bbci.co.uk/news/health/rss.xml",
-			"https://feeds.bbci.co.uk/news/politics/rss.xml",
-			"https://feeds.bbci.co.uk/news/rss.xml",
-			"https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
-			"https://feeds.bbci.co.uk/news/technology/rss.xml"
-		]
-	},
+  {
+    "ID": 2,
+    "Paywall": false,
+    "Name": "BBC",
+    "Favicon": "https://static.files.bbci.co.uk/core/website/assets/static/icons/favicon/bbc/favicon-32.d0dcfb7dcc9c19f549e9.png",
+    "Weighting": 50,
+    "AlwaysJakeFlag": false,
+    "Feeds": [
+      "https://feeds.bbci.co.uk/news/business/rss.xml",
+      "https://feeds.bbci.co.uk/news/education/rss.xml",
+      "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+      "https://feeds.bbci.co.uk/news/health/rss.xml",
+      "https://feeds.bbci.co.uk/news/politics/rss.xml",
+      "https://feeds.bbci.co.uk/news/rss.xml",
+      "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+      "https://feeds.bbci.co.uk/news/technology/rss.xml"
+    ]
+  },
 
   {
     "ID": 3,
@@ -296,15 +296,15 @@
 		"Feeds": [ "https://aljazeera.com/xml/rss/all.xml" ]
 	},
 
-	{
-		"ID": 18,
-		"Paywall": false,
-		"Name": "Tech Crunch",
-		"Favicon": "https://techcrunch.com/favicon.ico",
-		"Weighting": 50,
-		"AlwaysJakeFlag": true,
-		"Feeds": [ "https://techcrunch.com/feed/" ]
-	},
+  {
+    "ID": 18,
+    "Paywall": false,
+    "Name": "Tech Crunch",
+    "Favicon": "https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png?w=192",
+    "Weighting": 50,
+    "AlwaysJakeFlag": true,
+    "Feeds": [ "https://techcrunch.com/feed/" ]
+  },
 
 	{
 		"ID": 19,

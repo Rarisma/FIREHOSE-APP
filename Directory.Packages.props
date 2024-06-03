@@ -9,11 +9,12 @@
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
     <PackageVersion Include="MySql.Data" Version="8.4.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageVersion Include="OpenGraph-Net" Version="4.0.1" />
     <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
     <PackageVersion Include="Svg.Skia" Version="1.0.0.18" />
+    <PackageVersion Include="System.Management" Version="8.0.0" />
     <PackageVersion Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
     <PackageVersion Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
     <PackageVersion Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />

@@ -1,3 +1,4 @@
+using System.Management;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using FirehoseServer.Summarisation;
@@ -5,7 +6,37 @@ using Hydrant;
 using Microsoft.OpenApi.Models;
 
 namespace FirehoseServer;
-/* WAFFLE
+/* FIREHOSE LATEST REQUIREMENTS
+ * FirehoseServer is an open source tool.
+ * I guarantee no compatibility with systems other than my own.
+ * I've tried to ensure at every point it can work on systems other than
+ * my own, but I cannot foresee every possible combination of hardware.
+ *
+ * As such, to get Firehose Server working on your own machine you may need
+ * to make modifications to it. You are encouraged to contribute these back to
+ * the Firehose Repo to help others summarise news.
+ *
+ * To help you roughly understand what's required, here's my dev machine
+ * AMD Ryzen 7 5800x
+ * NVIDIA RTX 3090
+ * 48GB DDR4 3200mhz
+ * 3TB NVME RAID
+ * Windows 11 24H1
+ *
+ * This is obviously overkill, I imagine you can get similar levels of
+ * performance with much less but obviously unless you are using the exact
+ * same config above I can't help you.
+ *
+ * You'll also need the following software
+ * MySQL, BigShorts/MarketInfo, LM Studio
+ * Currently we use Gemma 2b and Gemma 7b as they are about good enough for now
+ * as they are fast and make ok-ish summaries. The model can and will change
+ * on a whim as I aim to strike a balance between fast and accurate summaries.
+ * Mistral7B is good but slow, perhaps llama3 or the next ver of Gemma.
+ *
+ */
+/* Version History
+ * NOTE: Firehose versions pre 3.2 are NOT publicly available.
  * Firehose 2.0
  * Firehose is a News Data Aggregator, this is a complete rewrite from python.
  * Firehose's mission is to try and get every news article in real time.
@@ -40,20 +71,31 @@ namespace FirehoseServer;
  * May 2024 - Firehose 3.1
  * Start to locate all references to companies.
  * Undo Hallon API Server (Raspberrys are now free again)
-* unundo hallon api server merge (Raspberrys are now subjugated.)
+ * unundo hallon api server merge (Raspberrys are now subjugated.)
+ *
+ * June 2024 - Firehose 3.2
+ *  - Replace TNS implementation with TheBigShorts ver
+ *  - Fixed MySQL vulnerability
+ *  - Check and fix any potential issues with the setup.
  */
 public class Program
 {
 	/// <summary>
-	/// Summary used to access database.
+	/// Summary used with write-access database.
 	/// </summary>
 	internal static SQL MySQLAdmin = new("server=localhost;user=root;database=fhdb;port=3306;password=Mavik");
-	internal static SQL MySQLReadOnly = new("server=localhost;user=HALLON;database=fhdb;port=3306;password=HALLON");
+    
+    /// <summary>
+    /// Read Only SQL Access
+    /// </summary>
+    internal static SQL MySQLReadOnly = new("server=localhost;user=HALLON;database=fhdb;port=3306;password=HALLON");
 	public static List<HYDRANT.Definitions.Publication> Publications => HYDRANT.Definitions.Publication.LoadFromJSON();
 
 	public static void Main(string[] args)
-	{
-		Task.Run(() => { new Thread(AISummaryController.Start).Start(); });
+    {
+        Precheck();
+
+        Task.Run(() => { new Thread(AISummaryController.Start).Start(); });
 
 		Console.WriteLine("Firehose Initialised");
 
@@ -122,4 +164,30 @@ public class Program
 
 		app.Run();
 	}
+
+    /// <summary>
+    /// Before we launch firehose we want to
+    /// </summary>
+    public static void Precheck()
+    {
+        Console.WriteLine("Checking GPU...");
+        bool GPU;
+        try
+        {
+            using (ManagementObjectSearcher searcher = new("SELECT * FROM Win32_VideoController"))
+            {
+                GPU = searcher.Get()
+                    .Cast<ManagementObject>()
+                    .Select(obj => obj["Name"]?.ToString())
+                    .Where(name => name != null)
+                    .ToList().Any(name => name.Contains("NVIDIA") && name.Contains("RTX"));
+            }
+            Console.WriteLine($"GPU: {(GPU ? "RTX GPU Found" : "RTX GPU not found.")}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking GPU: {ex.Message}");
+        }
+    }
+
 }

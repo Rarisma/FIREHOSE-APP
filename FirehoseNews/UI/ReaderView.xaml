@@ -9,10 +9,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-  <StackPanel>
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="2*"/>
+      <RowDefinition Height="20*"/>
+    </Grid.RowDefinitions>
     <controls:CommonNavigationBar ItemSource="{x:Bind Article}"/>
 
-    <ScrollViewer Margin="10" HorizontalAlignment="Center">
+    <ScrollViewer Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalScrollBarVisibility="Visible">
       <StackPanel>
         <TextBlock Text="{x:Bind Article.Title}" TextDecorations="Underline"
                    FontSize="20" Margin="0,10"/>
@@ -24,6 +28,6 @@
                    MaxWidth="500" HorizontalAlignment="Left"/>
       </StackPanel>
     </ScrollViewer>
-  </StackPanel>
+  </Grid>
 
 </Page>

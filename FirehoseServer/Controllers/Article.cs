@@ -54,4 +54,15 @@ public class ArticlesController : ControllerBase
         System.IO.File.AppendAllText("ReportedURLs.txt", $"[{ReportReason}] - {ArticleURL}\n");
         return StatusCode(200);
     }
+
+    /// <summary>
+    /// Report an article as clickbait.
+    /// </summary>
+    /// <param name="URL">URL to report summary for</param>
+    [HttpGet("ReportAsClickbait")]
+    public IActionResult ReportClickbait(string URL)
+    {
+        Program.MySQLAdmin.IncrementClickbaitCounter(URL);
+        return StatusCode(200);
+    }
 }
