@@ -4,27 +4,17 @@ using System.Runtime.CompilerServices;
 //The voice someone calls (in the labyrinth)
 [assembly: InternalsVisibleTo("FirehoseServer")]
 namespace Hydrant;
-
-/// <summary>
-/// Hey I know what your doing.
-/// stop fucking decompiling this  there's nothing to find.
-///
-/// you don't have access to this because sql db is firewalled.
-///
-/// https://www.youtube.com/watch?v=7hpFYz45Odg
-/// </summary>
 internal class SQL
 {
-	private const string lmao = "Hi Callum, I knew you'd do this. Say hi!";
 	private string Connection;
 	/// <summary>
 	/// MySQL Connection String
 	/// </summary>
-	/// <param name="ConnectionString"></param>
-	public SQL(string ConnectionString)
+	/// <param name="connectionString"></param>
+	public SQL(string connectionString)
 	{
 		//Connect to the DB and open the connection
-		Connection = ConnectionString;
+		Connection = connectionString;
 	}
 
 
@@ -52,20 +42,20 @@ internal class SQL
 			//'deserialize' into article
 			var article = new Article
 			{
-				Url = reader["URL"].ToString(),
-				Title = reader["TITLE"].ToString(),
-				RSSSummary = reader["RSS_SUMMARY"].ToString(),
+				Url = reader["URL"].ToString() ?? string.Empty,
+				Title = reader["TITLE"].ToString() ?? "",
+				RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
 				PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
 				IsHeadline = Convert.ToBoolean(reader["HEADLINE"]),
 				IsPaywall = Convert.ToBoolean(reader["PAYWALL"]),
-				Summary = reader["SUMMARY"].ToString(),
+				Summary = reader["SUMMARY"].ToString()!,
 				ImageURL = reader["ImageURL"].ToString(),
-				Text = reader["ARTICLE_TEXT"].ToString(),
+				Text = reader["ARTICLE_TEXT"].ToString()!,
 				PublisherID = (int)reader["PUBLISHER_ID"],
 				Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
-				CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString(),
-				Author = reader["AUTHOR"].ToString(),
-				Sectors = reader["SECTORS"].ToString(),
+				CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
+				Author = reader["AUTHOR"].ToString()!,
+				Sectors = reader["SECTORS"].ToString()!,
 			};
 
 			//Add to collection
@@ -95,7 +85,7 @@ internal class SQL
 
 		//Get all URLs, then 
 		List<string> URLs = new();
-		while (reader.Read()) { URLs.Add(reader["URL"].ToString()); }
+		while (reader.Read()) { URLs.Add(reader["URL"].ToString() ?? string.Empty); }
 		DB.Close();
 		return URLs; //Return URL List
 	}

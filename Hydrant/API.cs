@@ -22,10 +22,10 @@ public class API
 	/// </summary>
 	public string Endpoint;
 
-	/// <summary>
-	/// Set to your API Key.
-	/// </summary>
-	public string API_KEY;
+	///// <summary>
+	///// Set to your API Key.
+	///// </summary>
+	//public string API_KEY;
 
 	/// <summary>
 	/// Gets Articles from API
@@ -38,7 +38,7 @@ public class API
 	{
 		var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}";
 		using HttpClient client = new();
-		client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+		//client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
 
 		//Make request and check it was successful
 		var response = await client.GetAsync(Endpoint + endpoint);
@@ -54,33 +54,30 @@ public class API
 	/// </summary>
 	public async Task<List<Publication>> GetPublications()
 	{
-		// Send a GET req
-        try
+        // Send a GET req
+        using HttpClient client = new();
+        //client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+        var response = await client.GetAsync($"{Endpoint}/Publication/GetPublicationData");
+        
+        if (response.IsSuccessStatusCode)
         {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
-            var response = await client.GetAsync($"{Endpoint}/Publication/GetPublicationData");
-            
-            if (response.IsSuccessStatusCode)
-            {
-                // Read the response content as a string (if needed)
-                string content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Publication>>(content)!;
-            }
-
-        }
-        catch (Exception e)
-        {
-
+            // Read the response content as a string (if needed)
+            string content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<Publication>>(content)!;
         }
 
-		//return new list if something went wrong.
-		return new();
+        //return new list if something went wrong.
+        return new();
 	}
+    /// <summary>
+    /// Report that an article is clickbait
+    /// </summary>
+    /// <param name="Article">Article to report</param>
+    /// <returns></returns>
     public async Task VoteClickbait(Article Article)
     {
         using HttpClient client = new();
-        client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+        //client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
         string url = $"{Endpoint}/Articles/ReportAsClickbait?URL={Uri.EscapeDataString(Article.Url)}";
         await client.GetAsync(url);
     }
@@ -93,7 +90,7 @@ public class API
     public async Task ReportArticle(Article Article, int Reason)
     {
         using HttpClient client = new();
-        client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
+        //client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
         string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}&ReportReason={Reason}";
         await client.GetAsync(url);
     }

@@ -1,12 +1,8 @@
-using System.Text.Json.Serialization;
-
 namespace HYDRANT.Definitions;
 
 /// <summary>
 /// Company information
 /// </summary>
-[JsonSerializable(typeof(List<Company>))]
-[JsonSerializable(typeof(Company))]
 public class Company
 {
     /// <summary>

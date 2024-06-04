@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 //Battle for everyone's source code.
 [assembly: InternalsVisibleTo("FirehoseServer")]
 namespace HYDRANT.Definitions;
@@ -7,15 +6,13 @@ namespace HYDRANT.Definitions;
 /// <summary>
 /// Article object, contains lots of information about articles.
 /// </summary>
-[JsonSerializable(typeof(List<Article>))]
-[JsonSerializable(typeof(Article))]
 public class Article
 {
     #region Fields
     /// <summary>
     /// Title of article
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// URL of article
@@ -57,7 +54,7 @@ public class Article
     /// <summary>
     /// Image associated with URL
     /// </summary>
-    public string ImageURL { get; set; }
+    public string? ImageURL { get; set; }
 
     /// <summary>
     /// Firehose Publication ID
@@ -101,6 +98,9 @@ public class Article
     /// </summary>
     public string Sectors { get; set; }
     
+    /// <summary>
+    /// Unused.
+    /// </summary>
     public int Weighting = 0;
     
     #endregion
