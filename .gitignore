@@ -399,8 +399,5 @@ FodyWeavers.xsd
 
 # Single Target Config
 solution-config.props
-# Windows Publish Profiles
-!**/*.Windows/Properties/PublishProfiles/*.pubxml
-FirehoseServer/Logs.txt
-TheOnceAndFinalKing/FirehoseServer/Logs.txt
-TheOnceAndFinalKing/FirehoseServer/Logs.txt
+# Publish Profiles
+!**/Properties/PublishProfiles/*.pubxml

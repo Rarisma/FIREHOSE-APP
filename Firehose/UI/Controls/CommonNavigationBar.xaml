@@ -1,0 +1,67 @@
+﻿<Grid
+    x:Class="Firehose.UI.Controls.CommonNavigationBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" MaxHeight="50" Loaded="CommonNavigationBar_OnLoaded">
+
+  <Grid.Resources>
+    <Style x:Key="AppButton" TargetType="Button">
+      <Setter Property="Padding" Value="20,10"/>
+      <Setter Property="Margin" Value="10,10"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+  </Grid.Resources>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+
+      <Button Style="{StaticResource NavigationBackButtonNormalStyle}"
+            VerticalAlignment="Center" Click="GoBack" HorizontalAlignment="Left"
+            Grid.Column="0" Margin="10,0"/>
+
+      <!-- AI Generated Summary area -->
+      <Button Grid.Row="0"  Content="✨" HorizontalAlignment="Right" Grid.Column="2"
+            Style="{StaticResource AppButton}">
+        <Button.Flyout>
+          <Flyout>
+            <StackPanel>
+              <TextBlock Text="{x:Bind ItemSource.Summary}" Width="300"  TextWrapping="Wrap"/>
+              <TextBlock Text="AI-generated summaries may be inaccurate." FontStyle="Italic"
+                         FontSize="12" VerticalAlignment="Bottom" Margin="0,10
+                         ,0,0" HorizontalAlignment="Center"/>
+              <HyperlinkButton Content="Report issue with this summary" FontSize="12" Click="ReportSummary"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
+            </StackPanel>
+          </Flyout>
+        </Button.Flyout>
+      </Button>
+
+      <Button Grid.Row="0" Grid.Column="3" Click="BookmarkClick" Style="{StaticResource AppButton}">
+        <FontIcon Name="Glyphy" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+      </Button>
+
+      <Button Grid.Row="0"  Content="· · ·" Grid.Column="4" Style="{StaticResource AppButton}">
+        <Button.Flyout>
+          <MenuFlyout>
+            <MenuFlyoutItem Text="Open in Browser" Click="OpenBrowser"/>
+            <MenuFlyoutItem Text="Reader Mode" Click="OpenReader"/>
+            <MenuFlyoutItem Text="Report Article as Clickbait" Click="ReportClickbait" Name="ClickbaitButton"/>
+            <MenuFlyoutItem Text="Reporter Information (unimplemented)" Visibility="Collapsed"/>
+            <MenuFlyoutItem Text="Company Information (unimplemented)" Visibility="Collapsed"/>
+          </MenuFlyout>
+        </Button.Flyout>
+      </Button>
+
+</Grid>

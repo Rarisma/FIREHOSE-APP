@@ -23,15 +23,27 @@ internal class SQL
 	/// </summary>
 	/// <returns>list of articles.</returns>
 	internal List<Article> GetArticles(int Limit = 0, int Offset = 0,
-	string Filter = "ORDER BY PUBLISH_DATE DESC")
-	{
-		string query = $@"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE,
-		PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
-		COMPANIES_MENTIONED, AUTHOR, SECTORS FROM ARTICLES {Filter} LIMIT {Limit}
-		OFFSET {Offset};";
+	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true)
+    {
+        string query;
+        //Select queries, minimal mode is much quicker for large queries.
+        if (Minimal)
+        {
+            query = @"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE,
+		    SUMMARY, ImageURL, PUBLISHER_ID, AUTHOR";
+        }
+        else
+        {
+            query = @"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE,
+		    PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
+		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
+        }
+        
+        //Add common filtering stuff
+        query += $" FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};";
 
-		//Run command
-		MySqlConnection DB = new() { ConnectionString = Connection };
+        //Run command
+        MySqlConnection DB = new() { ConnectionString = Connection };
 		DB.Open();
 
 		MySqlCommand cmd = new MySqlCommand(query, DB);
@@ -39,24 +51,45 @@ internal class SQL
 		List<Article> articles = new();
 		while (reader.Read())
 		{
-			//'deserialize' into article
-			var article = new Article
-			{
-				Url = reader["URL"].ToString() ?? string.Empty,
-				Title = reader["TITLE"].ToString() ?? "",
-				RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
-				PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-				IsHeadline = Convert.ToBoolean(reader["HEADLINE"]),
-				IsPaywall = Convert.ToBoolean(reader["PAYWALL"]),
-				Summary = reader["SUMMARY"].ToString()!,
-				ImageURL = reader["ImageURL"].ToString(),
-				Text = reader["ARTICLE_TEXT"].ToString()!,
-				PublisherID = (int)reader["PUBLISHER_ID"],
-				Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
-				CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
-				Author = reader["AUTHOR"].ToString()!,
-				Sectors = reader["SECTORS"].ToString()!,
-			};
+            //'deserialize' into article
+            Article article;
+            if (Minimal)
+            {
+                article = new()
+                {
+                    Url = reader["URL"].ToString() ?? string.Empty,
+                    Title = reader["TITLE"].ToString() ?? "",
+                    RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
+                    PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
+                    IsHeadline = Convert.ToBoolean(reader["HEADLINE"] ?? true),
+                    IsPaywall = false,
+                    Summary = reader["SUMMARY"].ToString()!,
+                    ImageURL = reader["ImageURL"].ToString(),
+                    PublisherID = (int)reader["PUBLISHER_ID"],
+                    Author = reader["AUTHOR"].ToString()!,
+                };
+            }
+            else
+            {
+                article = new()
+                {
+                    Url = reader["URL"].ToString() ?? string.Empty,
+                    Title = reader["TITLE"].ToString() ?? "",
+                    RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
+                    PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
+                    IsHeadline = Convert.ToBoolean(reader["HEADLINE"] ?? true),
+                    IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true),
+                    Summary = reader["SUMMARY"].ToString()!,
+                    ImageURL = reader["ImageURL"].ToString(),
+                    Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.",
+                    PublisherID = (int)reader["PUBLISHER_ID"],
+                    Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
+                    CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
+                    Author = reader["AUTHOR"].ToString()!,
+                    Sectors = reader["SECTORS"].ToString()!,
+                };
+            }
+
 
 			//Add to collection
 			articles.Add(article);

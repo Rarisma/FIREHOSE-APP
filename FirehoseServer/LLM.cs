@@ -18,7 +18,7 @@ public static class LLM
 
     public static string[] ModelNames =
     [
-        "lmstudio-community/gemma-1.1-2b-it-GGUF/gemma-1.1-2b-it-Q8_0.gguf",
+        "lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF",
         //"lmstudio-community/gemma-1.1-2b-it-GGUF/gemma-1.1-2b-it-Q8_0.gguf:2"
     ];
 
@@ -45,7 +45,7 @@ public static class LLM
                 new { role = "user", content = userMessage }
             },
             temperature = 0.2,
-            model = ModelNames[ID]
+            //model = ModelNames[ID]
         };
 
         try

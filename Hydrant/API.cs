@@ -33,10 +33,12 @@ public class API
 	/// <param name="Limit">How many articles you want to set</param>
 	/// <param name="Offset">Skip this amount of articles</param>
 	/// <param name="Filter">Filter articles via SQL</param>
+	/// <param name="Minimal">Minimal Mode</param>
 	/// <returns>List of articles if successful.</returns>
-	public async Task<List<Article>?> GetArticles(int Limit = 20, int Offset = 0, string Filter = "ORDER BY PUBLISH_DATE DESC")
+	public async Task<List<Article>?> GetArticles(int Limit = 20, int Offset = 0, 
+        string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal=true)
 	{
-		var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}";
+		var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}&minimal={Minimal}";
 		using HttpClient client = new();
 		//client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
 

@@ -10,18 +10,18 @@ public class ArticlesController : ControllerBase
 {
 
     [HttpGet("GetArticles")]
-    public IActionResult GetArticles(int limit = 200, int Offset = 0, string Filter = "")
+    public IActionResult GetArticles(int limit = 200, int Offset = 0, string Filter = "", bool Minimal = false)
     {
         try
         {
 			// ReSharper disable once RedundantTypeArgumentsOfMethod
 			if (Filter == "")
 			{
-				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQLReadOnly.GetArticles(limit, Offset)));
+				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQLReadOnly.GetArticles(limit, Offset, Minimal:Minimal)));
 			}
 			else
 			{
-				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQLReadOnly.GetArticles(limit, Offset, Filter: Filter)));
+				return Ok(JsonSerializer.Serialize<List<Article>>(Program.MySQLReadOnly.GetArticles(limit, Offset, Filter: Filter, Minimal)));
 			}
 		}
         catch (Exception ex)
