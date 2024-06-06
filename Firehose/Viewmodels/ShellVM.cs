@@ -87,15 +87,10 @@ class ShellVM : ObservableObject
 
     public async Task LoadPublicationData() => await Hallon.GetPublications();
 
-    public async void OpenArticle(Article article, bool IgnoreQuickView = false)
+    public async void OpenArticle(Article article)
     {
-        //Open the summary if the article has been tapped and the user
-        //has enabled tap opens summary
-        if (Glob.Model.ArticleTapOpensSummary && IgnoreQuickView == false) 
-        {
-            await OpenQuickView(article);
-        }
-        else if (Glob.Model.AlwaysOpenReader)
+        //Open article in reader mode if always open reader is enabled
+        if (Glob.Model.AlwaysOpenReader)
         {
             Glob.NaviStack.Push(new ReaderMode(article));
         }
@@ -106,25 +101,5 @@ class ShellVM : ObservableObject
         
         //Navigate to view
         Glob.DoNavi();
-    }
-    
-    public async Task OpenQuickView(Article article)
-    {
-        // Create content dialog
-        var res = await Glob.OpenContentDialog(new()
-        {
-            Content = new QuickView(article),
-            XamlRoot = Glob.XamlRoot,
-            Title = $"Summary for {article.Title}",
-            PrimaryButtonText = "Open Article",
-            SecondaryButtonText = "Close"
-        });
-
-        
-        // Perform actions based on dialog result
-        if (res == ContentDialogResult.Primary)
-        {
-            OpenArticle(article, true);
-        }
     }
 }

@@ -13,115 +13,124 @@
     Loaded="ArticleList_OnLoaded">
 
   <Page.Resources>
-    <Style x:Key="BorderTemplate" TargetType="Border">
-        <Setter Property="BorderBrush" Value="#555555"/>
-        <Setter Property="Opacity" Value="0.2"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="10"/>
+    <!-- Common Border Style -->
+    <ControlTemplate x:Key="CommonBorderTemplate">
+      <Border Background="Transparent" BorderBrush="Gray"
+              BorderThickness="1" Margin="20,10"/>
+    </ControlTemplate>
+
+    <DataTemplate x:Key="ExpanderContentTemplate" x:DataType="hydrant:Article">
+      <StackPanel>
+        <TextBlock Text="{x:Bind Summary}" TextWrapping="WrapWholeWords"/>
+        <Button Content="Read full article" HorizontalAlignment="Stretch"
+                Margin="20,20,20,5" Click="OpenArticle"/>
+      </StackPanel>
+    </DataTemplate>
+
+    <Style x:Key="ExpanderStyle" TargetType="Expander">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
-
-
-    <!-- Article Layout Views -->
 
     <!-- No Image - When the Article lacks an image, this will show the RSS Summary in its place.-->
     <DataTemplate x:Key="NoImageTemplate" x:DataType="hydrant:Article">
-        <StackPanel HorizontalAlignment="Stretch">
-          <!-- Spacing border -->
-          <Border Style="{StaticResource BorderTemplate}"/>
-          <SwipeControl Tag="{x:Bind Url}">
-            <SwipeControl.RightItems>
-              <SwipeItems Mode="Execute">
-              <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe"  Background="Transparent">
-                  <SwipeItem.IconSource>
-                    <FontIconSource />
-                  </SwipeItem.IconSource>
-                </SwipeItem>
-              </SwipeItems>
-            </SwipeControl.RightItems>
-            <StackPanel>
+      <StackPanel HorizontalAlignment="Stretch">
+        <!-- Spacing border -->
+        <ContentControl Template="{StaticResource CommonBorderTemplate}"/>
+        <Expander Background="Transparent" HorizontalAlignment="Stretch">
+          <Expander.Header >
+            <StackPanel Padding="0,20">
               <!-- Publication info, Title and Summary -->
               <controls:PublisherInformation ItemSource="{x:Bind}"/>
               <TextBlock Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap"
-                         MaxWidth="500" HorizontalAlignment="Left"/>
+                                   MaxWidth="500" HorizontalAlignment="Left"/>
               <TextBlock Text="{x:Bind RSSSummary}" MaxLines="3" FontSize="11"
-                         TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left"/>
+                                   TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left"/>
             </StackPanel>
-          </SwipeControl>
+          </Expander.Header>
+          <Expander.Content>
+            <StackPanel>
+              <TextBlock Text="{x:Bind Summary}" TextWrapping="WrapWholeWords"/>
+              <Button Content="Read full article" HorizontalAlignment="Stretch"
+                      Margin="20,20,20,5" Click="OpenArticle"
+                      Padding="0,15"/>
+            </StackPanel>
+          </Expander.Content>
+        </Expander>
       </StackPanel>
-		</DataTemplate>
+    </DataTemplate>
 
     <!-- Headline Template - These are the hard hitting stories, so they have large images. -->
-		<DataTemplate x:Key="HeadlineTemplate" x:DataType="hydrant:Article">
-        <StackPanel>
-          <!-- Spacing boarder -->
-          <Border Style="{StaticResource BorderTemplate}"/>
-          <SwipeControl Tag="{x:Bind Url}">
-            <SwipeControl.RightItems>
-              <SwipeItems Mode="Execute">
-              <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe"  Background="Transparent">
-                  <SwipeItem.IconSource>
-                    <FontIconSource />
-                  </SwipeItem.IconSource>
-                </SwipeItem>
-              </SwipeItems>
-            </SwipeControl.RightItems>
+    <DataTemplate x:Key="HeadlineTemplate" x:DataType="hydrant:Article">
+      <StackPanel HorizontalAlignment="Stretch" >
+        <!-- Spacing border -->
+        <ContentControl Template="{StaticResource CommonBorderTemplate}"/>
+        <Expander Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+          <Expander.Header>
+            <StackPanel  Background="Transparent" HorizontalAlignment="Center">
+              <!-- Show publication Info -->
+              <controls:PublisherInformation ItemSource="{x:Bind}"/>
 
-          <StackPanel>
-            <!-- Show publication Info -->
-            <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <!-- Image + Text -->
+              <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="200"
+                                BorderThickness="0" VerticalAlignment="Stretch">
+                <Image Source="{x:Bind ImageURL}" />
+              </Border>
 
-            <!-- Image + Text -->
-            <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="200"
-                    BorderThickness="0" VerticalAlignment="Stretch">
-              <Image Source="{x:Bind ImageURL}" />
-            </Border>
-
-            <TextBlock Text="{x:Bind Title}" Margin="0,10" FontSize="16" TextWrapping="Wrap"
-                       HorizontalAlignment="Left" VerticalAlignment="Center" />
-          </StackPanel>
-        </SwipeControl>
+              <TextBlock Text="{x:Bind Title}" Margin="0,10" FontSize="16" TextWrapping="Wrap"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </StackPanel>
+          </Expander.Header>
+          <Expander.Content>
+            <StackPanel>
+              <TextBlock Text="{x:Bind Summary}" TextWrapping="WrapWholeWords"/>
+              <Button Content="Read full article" HorizontalAlignment="Stretch"
+                      Margin="20,20,20,5" Click="OpenArticle"
+                      Padding="0,15"/>
+            </StackPanel>
+          </Expander.Content>
+        </Expander>
       </StackPanel>
-		</DataTemplate>
+    </DataTemplate>
 
     <!-- Minimal - When the Article isn't a major story, so it should take up less space. -->
-		<DataTemplate x:Key="MinimalTemplate" x:DataType="hydrant:Article">
-        <StackPanel>
-          <!-- Separating boarder -->
-          <Border Style="{StaticResource BorderTemplate}"/>
+    <DataTemplate x:Key="MinimalTemplate" x:DataType="hydrant:Article">
+      <StackPanel HorizontalAlignment="Stretch">
+        <!-- Separating border -->
+        <ContentControl Template="{StaticResource CommonBorderTemplate}"/>
+        <Expander Background="Transparent" HorizontalAlignment="Stretch">
+          <Expander.Header>
+            <StackPanel>
+              <controls:PublisherInformation ItemSource="{x:Bind}"/>
 
-          <SwipeControl Tag="{x:Bind Url}">
-            <SwipeControl.RightItems>
-              <SwipeItems Mode="Execute">
-                <SwipeItem BehaviorOnInvoked="Close" Invoked="OpenQuickViewSwipe" Background="Transparent">
-                  <SwipeItem.IconSource>
-                    <FontIconSource />
-                  </SwipeItem.IconSource>
-                </SwipeItem>
-              </SwipeItems>
-            </SwipeControl.RightItems>
-          <StackPanel>
-            <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <!-- Title - [Image] -->
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="3*"/>
+                  <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Title - [Image] -->
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="2*"/>
-              </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind Title}" FontSize="16"
+                                       TextWrapping="Wrap" VerticalAlignment="Center" Padding="0,0,10,10"/>
 
-              <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind Title}" FontSize="16"
-                         TextWrapping="Wrap" VerticalAlignment="Center" Padding="0,0,10,10"/>
-
-              <Border CornerRadius="4" HorizontalAlignment="Right" MaxHeight="100" MinWidth="100"
-                      BorderThickness="0" VerticalAlignment="Stretch" Grid.Column="1">
-                <Image Source="{x:Bind ImageURL}" MinWidth="100"/>
-              </Border>
-            </Grid>
-          </StackPanel>
-        </SwipeControl>
+                <Border CornerRadius="4" HorizontalAlignment="Right" MaxHeight="100" MinWidth="100"
+                                    BorderThickness="0" VerticalAlignment="Stretch" Grid.Column="1">
+                  <Image Source="{x:Bind ImageURL}" MinWidth="100"/>
+                </Border>
+              </Grid>
+            </StackPanel>
+          </Expander.Header>
+          <Expander.Content>
+            <StackPanel>
+              <TextBlock Text="{x:Bind Summary}" TextWrapping="WrapWholeWords"/>
+              <Button Content="Read full article" HorizontalAlignment="Stretch"
+                      Margin="20,20,20,5" Click="OpenArticle"
+                      Padding="0,15"/>
+            </StackPanel>
+          </Expander.Content>
+        </Expander>
       </StackPanel>
-		</DataTemplate>
+    </DataTemplate>
 
     <!-- Article Selector Decides which article type should be used -->
 		<controls:ArticleSelector x:Key="ArticleSelector"
@@ -168,9 +177,8 @@
           </ScrollViewer>
 
             <StackPanel>
-              <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}" Tapped="ArticleTapped"
-                            ItemTemplateSelector="{StaticResource ArticleSelector}"
-                            RightTapped="OpenQuickViewHold"/>
+            <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
+                            ItemTemplateSelector="{StaticResource ArticleSelector}"/>
 
               <TextBlock Text="You have no bookmarked stories." Name="NoBookmarks" VerticalAlignment="Center"
                          HorizontalAlignment="Center" Margin="10"/>

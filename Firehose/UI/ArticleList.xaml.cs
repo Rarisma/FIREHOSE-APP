@@ -3,7 +3,6 @@ using Firehose.UI.Controls;
 using Firehose.Viewmodels;
 using HYDRANT.Definitions;
 using Microsoft.UI;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Uno.Extensions;
 
@@ -53,18 +52,6 @@ public sealed partial class ArticleList : Page
         InitializeComponent();
         ChangeFilter(ShellVM.Filters[0], new());
     }
-
-
-    /// <summary>
-    /// Opens a tapped article object.
-    /// </summary>
-    private void ArticleTapped(object sender, TappedRoutedEventArgs e)
-    {
-        //Get article object
-        Article Data = (Article)((FrameworkElement)e.OriginalSource).DataContext;
-        ShellVM.OpenArticle(Data); //Open article.
-    }
-
 
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
@@ -134,46 +121,6 @@ public sealed partial class ArticleList : Page
         ShellVM.LoadArticleDataCommand.Execute(null);
     }
 
-    #region QuickView
-
-    /// <summary>
-    /// Opens a quick view of an article showing the title,
-    /// image and the AI Summary of the article.
-    /// </summary>
-    private async Task QuickViewMenu(Article Article)
-    {
-        // Save scroll position
-        double previousScrollPosition = ArticleScroller.VerticalOffset;
-        
-        await ShellVM.OpenQuickView(Article);
-
-        // Restore scroll position
-        ArticleScroller.ChangeView(null, previousScrollPosition, null);
-    }
-
-
-    /// <summary>
-    /// Opens article quick view menu when held
-    /// </summary>
-    private async void OpenQuickViewHold(object sender, RightTappedRoutedEventArgs e)
-    {
-        //Get article object
-        Article article = ((e.OriginalSource as FrameworkElement)?.DataContext as Article)!;
-        
-        //Open article
-        await QuickViewMenu(article);
-    }
-
-    /// <summary>
-    /// Opens article quick view menu when swiped.
-    /// </summary>
-    private async void OpenQuickViewSwipe(object sender, SwipeItemInvokedEventArgs args)
-    {
-        //Open menu with appropriate article found via tag.
-        await QuickViewMenu(ShellVM.Articles.First(x => x.Url == args.SwipeControl.Tag.ToString()));
-    }
-    #endregion
-    
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = this.XamlRoot;
     
     private void ShowBookmarks(object sender, RoutedEventArgs e)
@@ -192,4 +139,6 @@ public sealed partial class ArticleList : Page
     }
     
     private async void FilterSource(object sender, RoutedEventArgs e) => await SetPublisherFilter();
+    
+    private void OpenArticle(object sender, RoutedEventArgs e) => ShellVM.OpenArticle(((sender as Button)!.DataContext) as Article);
 }

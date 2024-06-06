@@ -65,4 +65,18 @@ public class ArticlesController : ControllerBase
         Program.MySQLAdmin.IncrementClickbaitCounter(URL);
         return StatusCode(200);
     }
+    
+    [HttpGet("GetArticleText")]
+    public IActionResult GetArticleText(string URL)
+    {
+        try
+        {
+            return Ok();
+            //return Ok(JsonSerializer.Serialize<Article>(Program.MySQLReadOnly.GetArticles(URL,1,)));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

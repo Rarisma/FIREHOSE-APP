@@ -6,12 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-  <!-- Header bar -->
-  <StackPanel Margin="0,0,0,50" Padding="50,10">
+<Grid>
+  <Grid.RowDefinitions>
+    <RowDefinition Height="*"/>
+    <RowDefinition Height="Auto"/>
+  </Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,50" Padding="50,10" Grid.Row="0">
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
       <Button Style="{StaticResource NavigationBackButtonNormalStyle}" Margin="0,0,50,0"
               Click="Back" HorizontalAlignment="Left" Background="transparent" CornerRadius="4"/>
-        <TextBlock Text="Preferences" HorizontalAlignment="Center" Height="30" FontSize="203"/>
+      <TextBlock Text="Preferences" HorizontalAlignment="Center" Height="30" FontSize="203"/>
     </StackPanel>
 
     <TextBox Header="Web Proxy" PlaceholderText="Proxy" MinWidth="200" HorizontalAlignment="Center"
@@ -20,19 +24,19 @@
     <NumberBox Header="Articles to fetch" Minimum="20" ValidationMode="InvalidInputOverwritten"
                Maximum="200" Margin="10" Value="{x:Bind Model.ArticleFetchLimit, Mode=TwoWay}" MaxWidth="200"/>
 
-
     <ToggleSwitch Header="Always open in Reader Mode" Margin="10" HorizontalAlignment="Center"
                   IsOn="{x:Bind Model.AlwaysOpenReader, Mode=TwoWay}"/>
+</StackPanel>
 
-    <ToggleSwitch Header="Article tap opens summary instead" Margin="10" MinWidth="200" HorizontalAlignment="Center"
-                  IsOn="{x:Bind Model.ArticleTapOpensSummary, Mode=TwoWay}" MaxWidth="400"/>
-
-    <!-- Info bar -->
+  <!-- Info bar -->
+  <StackPanel Grid.Row="1">
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
-    <StackPanel>
-      <TextBlock Text="Firehose News 1.0.2" HorizontalAlignment="Center"/>
-      <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center"/>
-      <TextBlock Text="The Galactic Quest for the Ten Mystic Bug Fixes." HorizontalAlignment="Center"/>
-    </StackPanel>
+    <TextBlock Text="{x:Bind AppVer}" HorizontalAlignment="Center" Foreground="Gray"/>
+      <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center" Foreground="Gray"/>
+      <TextBlock Text="The Galactic Quest for the Ten Mystic Bug Fixes."
+                 Foreground="Gray" HorizontalAlignment="Center"/>
   </StackPanel>
+  </Grid>
+
+
 </Page> 

@@ -8,8 +8,8 @@
 
   <Grid.Resources>
     <Style x:Key="AppButton" TargetType="Button">
-      <Setter Property="Padding" Value="20,10"/>
-      <Setter Property="Margin" Value="10,10"/>
+      <Setter Property="Padding" Value="15"/>
+      <Setter Property="Margin" Value="10,0"/>
       <Setter Property="BorderBrush" Value="Transparent"/>
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="CornerRadius" Value="4"/>
@@ -29,7 +29,7 @@
 
       <Button Style="{StaticResource NavigationBackButtonNormalStyle}"
             VerticalAlignment="Center" Click="GoBack" HorizontalAlignment="Left"
-            Grid.Column="0" Margin="10,0"/>
+            Grid.Column="0" Margin="20,0" Padding="30" CornerRadius="4"/>
 
       <!-- AI Generated Summary area -->
       <Button Grid.Row="0"  Content="✨" HorizontalAlignment="Right" Grid.Column="2"

@@ -8,6 +8,12 @@ public sealed partial class Preferences : Page
 {
     private PreferencesModel Model;
 
+
+    public string AppVer
+    {
+        get => $"{Package.Current.DisplayName} Version {Package.Current.Id.Version.Major}." +
+               $"{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
+    }
     public Preferences()
     {
         InitializeComponent();

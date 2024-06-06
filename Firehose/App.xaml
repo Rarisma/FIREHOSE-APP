@@ -1,10 +1,10 @@
-<Application x:Class="Firehose.App"
-       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       xmlns:wasm="http://platform.uno/wasm"
-       xmlns:utum="using:Uno.Toolkit.UI.Material"
-       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       mc:Ignorable="wasm">
+﻿<Application x:Class="Firehose.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wasm="http://platform.uno/wasm"
+             xmlns:utum="using:Uno.Toolkit.UI.Material"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="wasm">
 
   <Application.Resources>
     <ResourceDictionary>
@@ -14,6 +14,19 @@
         <!-- Load Uno.UI.Toolkit resources -->
         <ToolkitResources xmlns="using:Uno.Toolkit.UI" />
       </ResourceDictionary.MergedDictionaries>
+
+      <!-- Define the transparent brush -->
+      <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
+
+      <!-- Override the ExpanderHeaderBackground resource -->
+      <StaticResource x:Key="ExpanderHeaderBackground" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderHeaderBorderBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderHeaderBorderPointerOverBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderChevronBorderBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderChevronForeground" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderContentBackground" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="TransparentBrush" />
+      <x:Double x:Key="ExpanderChevronButtonSize">0</x:Double>
     </ResourceDictionary>
   </Application.Resources>
 

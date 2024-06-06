@@ -7,9 +7,9 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="Firehose"
+    Name="FirehoseNews"
     Publisher="CN=RARI"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>Firehose</DisplayName>
@@ -33,6 +33,7 @@
         DisplayName="Firehose"
         Description="Firehose">
         <uap:SplashScreen />
+        <uap:DefaultTile/>
       </uap:VisualElements>
     </Application>
   </Applications>
