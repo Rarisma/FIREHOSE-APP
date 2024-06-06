@@ -25,7 +25,7 @@
     <PackageReference Include="HtmlAgilityPack" VersionOverride="1.11.61" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="OpenGraph-Net" VersionOverride="4.0.1" />
-    <PackageReference Include="SmartReader" VersionOverride="0.9.4" />
+    <PackageReference Include="SmartReader" VersionOverride="0.9.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" VersionOverride="6.5.0" />
     <PackageReference Include="System.Management" />
     <PackageReference Include="System.ServiceModel.Syndication" VersionOverride="8.0.0" />
