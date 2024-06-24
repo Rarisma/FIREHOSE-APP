@@ -29,7 +29,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" VersionOverride="6.5.0" />
     <PackageReference Include="System.Management" />
     <PackageReference Include="System.ServiceModel.Syndication" VersionOverride="8.0.0" />
-	<PackageReference Include="Microsoft.OpenApi" VersionOverride="1.6.14" />
+	<PackageReference Include="Microsoft.OpenApi" VersionOverride="1.6.15" />
 
   </ItemGroup>
 
