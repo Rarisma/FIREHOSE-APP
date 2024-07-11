@@ -17,10 +17,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>True</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" VersionOverride="8.4.0" />
+    <PackageReference Include="MySqlConnector" />
   </ItemGroup>
 
   <ItemGroup>

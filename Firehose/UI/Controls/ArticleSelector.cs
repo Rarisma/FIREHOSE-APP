@@ -16,9 +16,9 @@ public class ArticleSelector : DataTemplateSelector
     {
         if (item is Article Article)
         {
-            if (Article.IsHeadline) { return HeadlineTemplate!; }
-            if (Article.ImageURL == "?" & !Article.IsHeadline) { return NoImageTemplate!; }
-            if (Article.IsHeadline == false) { return MinimalTemplate!; }
+            if (Article.ImageURL == "?") { return NoImageTemplate!; }
+            if (Article.Impact >= 70) { return HeadlineTemplate!; }
+            else{ return MinimalTemplate!; }
 
         }
         return base.SelectTemplateCore(item, container);

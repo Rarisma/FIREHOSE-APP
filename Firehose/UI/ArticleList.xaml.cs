@@ -31,7 +31,6 @@ public sealed partial class ArticleList : Page
         {
             ShellVM.PublisherID = ((CD.Content as PublisherFilter).Content as ListView)!.SelectedIndex + 1;
             ShellVM.FilterExtension = $"PUBLISHER_ID = {ShellVM.PublisherID}";
-
         }
         else
         {
@@ -47,7 +46,7 @@ public sealed partial class ArticleList : Page
 
     public ArticleList()
     {
-        ShellVM.UpdateButtonsDelegate = new(UpdateButtons);
+        ShellVM.UpdateButtonsDelegate = UpdateButtons;
         ShellVM.Articles = new();
         InitializeComponent();
         ChangeFilter(ShellVM.Filters[0], new());
@@ -66,10 +65,10 @@ public sealed partial class ArticleList : Page
     public void UpdateButtons(Button Button)
     {
         //Hide no bookmarks message.
-        NoBookmarks.Text = " ";
+        ShellVM.NoBookmarksText = " ";
 
         //Show load more button
-        LoadMoreButton.Visibility = Visibility.Visible;
+        ShellVM.LoadMoreVisibility = Visibility.Visible;
 
         //Clear filter buttons
         foreach (var FilterButton in ShellVM.Filters)
@@ -78,8 +77,8 @@ public sealed partial class ArticleList : Page
             FilterButton.Foreground = Themer.SecondaryBrush;
         }
         //Bookmarks button isn't in the filters stack panel so clear them manually.
-        BookmarksButton.Background = new SolidColorBrush(Colors.Transparent);
-        BookmarksButton.Foreground = Themer.SecondaryBrush;
+        ShellVM.BookmarksButtonBackground = new SolidColorBrush(Colors.Transparent);
+        ShellVM.BookmarksButtonForeground = Themer.SecondaryBrush;
         
         //Set filter by button.
         if (ShellVM.PublisherID != -1)
@@ -114,31 +113,35 @@ public sealed partial class ArticleList : Page
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
         ShellVM.Offset = 0;
-        LoadMoreButton.Visibility = Visibility.Visible;
+        ShellVM.LoadMoreVisibility = Visibility.Visible;
         UpdateButtons((Button)sender);
 
         //Set correct filter
         ShellVM.LoadArticleDataCommand.Execute(null);
     }
 
-    private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = this.XamlRoot;
+    private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;
     
     private void ShowBookmarks(object sender, RoutedEventArgs e)
     {
-        UpdateButtons(sender as Button);
+        if (sender is not Button Button) {return;}
+        UpdateButtons(Button);
         ShellVM.Articles.Clear();
         ShellVM.Offset = 0;
-        LoadMoreButton.Visibility = Visibility.Collapsed;
+        ShellVM.LoadMoreVisibility= Visibility.Collapsed;
         ShellVM.Articles.AddRange(Glob.Model.BookmarkedArticles);
 
         //Show no bookmarks text, so it's not a blank screen
         if (Glob.Model.BookmarkedArticles.Count == 0)
         {
-            NoBookmarks.Text = "You have no bookmarked articles.";
+            ShellVM.NoBookmarksText = "You have no bookmarked articles.";
         }
     }
     
     private async void FilterSource(object sender, RoutedEventArgs e) => await SetPublisherFilter();
     
-    private void OpenArticle(object sender, RoutedEventArgs e) => ShellVM.OpenArticle(((sender as Button)!.DataContext) as Article);
+    private void OpenArticle(object sender, RoutedEventArgs e)
+    {
+        ShellVM.OpenArticle((((sender as Button)!.DataContext) as Article)!);
+    }
 }

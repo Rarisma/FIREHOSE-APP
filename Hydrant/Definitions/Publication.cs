@@ -1,6 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
-[assembly: InternalsVisibleTo("FirehoseServer")]
+using HYDRANT.Serializers;
+
 namespace HYDRANT.Definitions;
 
 /// <summary>
@@ -51,10 +52,10 @@ public class Publication
     /// </summary>
     /// <param name="File">Filepath</param>
     /// <returns>List of publications</returns>
-    internal static List<Publication>? LoadFromJSON(string File = "Data\\Feeds.json")
+    public static List<Publication>? LoadFromJSON(string File = "Data/Feeds.json")
     {
         //read file then deserialize
         string content = System.IO.File.ReadAllText(File);
-        return JsonSerializer.Deserialize<List<Publication>>(content);
+        return JsonSerializer.Deserialize(content, PublicationSerialiser.Default.ListPublication);
     }
 }

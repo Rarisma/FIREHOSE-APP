@@ -1,15 +1,13 @@
 using Windows.UI.Core;
 using Firehose.Preferences;
 using HYDRANT.Definitions;
-
 //I'VE GOT A RECKLESS TONGUE
 namespace Firehose;
 public static class Glob
 {
     public static Stack<object> NaviStack = new();
-    public static Frame Frame = new();
     public static PreferencesModel Model;
-    public static XamlRoot XamlRoot;
+    public static XamlRoot? XamlRoot;
 
     /// <summary>
     /// List of publications from firehose
@@ -24,7 +22,6 @@ public static class Glob
     public static void DoNavi()
     {
         App.MainWindow.Content = (UIElement)NaviStack.First();
-        //Frame.Content = NaviStack.First();
     }
     
     public static void DoNavi(object PageSource)

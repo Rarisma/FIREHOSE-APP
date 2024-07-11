@@ -4,6 +4,8 @@
       net8.0-android;
       net8.0-ios;
       net8.0-maccatalyst;
+      net8.0-windows10.0.19041;
+      net8.0-desktop;
     </TargetFrameworks>
 
     <OutputType>Exe</OutputType>
@@ -34,6 +36,13 @@
     -->
     <UnoFeatures>
     </UnoFeatures>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+    <JavaMaximumHeapSize>3G</JavaMaximumHeapSize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+    <JavaMaximumHeapSize>3G</JavaMaximumHeapSize>
+    <AndroidLinkTool>r8</AndroidLinkTool>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Icons\icon_foreground.svg" />

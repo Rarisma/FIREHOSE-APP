@@ -10,42 +10,24 @@ public class Article
 {
     #region Fields
     /// <summary>
-    /// Title of article
-    /// </summary>
-    public string? Title { get; set; }
-
-    /// <summary>
     /// URL of article
     /// </summary>
     public string Url { get; set; }
 
     /// <summary>
-    /// Content of the article.
+    /// Title of article
     /// </summary>
-    public string Text { get; set; }
-
-    /// <summary>
-    /// The RSS Summary as provided by the author.
-    /// This is stored for analytical purposes.
-    /// </summary>
-    public string RSSSummary { get; set; }
-
+    public string? Title { get; set; }
+    
     /// <summary>
     /// DateTime object of the article was made public
     /// </summary>
     public DateTime PublishDate { get; set; }
-
-    /// <summary>
-    /// Is this a major story, i.e. something major is going on
-    /// or is the article not a major event
-    /// </summary>
-    public bool IsHeadline { get; set; }
-
+    
     /// <summary>
     /// is the article behind a paywall?
     /// </summary>
     public bool IsPaywall { get; set; }
-
     /// <summary>
     /// AI-Generated summary of the article
     /// </summary>
@@ -55,16 +37,27 @@ public class Article
     /// Image associated with URL
     /// </summary>
     public string? ImageURL { get; set; }
-
+    
+    /// <summary>
+    /// Content of the article.
+    /// </summary>
+    public string Text { get; set; }
+    
     /// <summary>
     /// Firehose Publication ID
     /// </summary>
     public int PublisherID { get; set; }
-
+    
     /// <summary>
     /// Does the article relate to business?
     /// </summary>
     public bool Business { get; set; }
+
+    /// <summary>
+    /// Is this a major story, i.e. something major is going on
+    /// or is the article not a major event
+    /// </summary>
+    public bool Breaking { get; set; }
 
     /// <summary>
     /// Company names/tickers mentioned within the article.
@@ -99,9 +92,20 @@ public class Article
     public string Sectors { get; set; }
     
     /// <summary>
-    /// Unused.
+    /// Overall impact of the article on the Country/Economy/World
     /// </summary>
-    public int Weighting = 0;
+    public int Impact {get; set;}
     
+    /// <summary>
+    /// Only used in User Submitted Queries if we don't have the
+    /// Article already summarised.
+    /// </summary>
+    public string? PublicationName { get; set; }
+
+    /// <summary>
+    /// Only used in User Submitted Queries if we don't have the
+    /// Article already summarised.
+    /// </summary>
+    public int? TimeToRead { get; set; }
     #endregion
 }

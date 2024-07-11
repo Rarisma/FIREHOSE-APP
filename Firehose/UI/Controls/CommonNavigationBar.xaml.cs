@@ -46,7 +46,7 @@ public sealed partial class CommonNavigationBar : Grid
         if (Res == ContentDialogResult.Primary) //Send feedback clicked
         {
             int reason = (((d.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex;
-            new API().ReportArticle(ItemSource, reason);
+            await new API().ReportArticle(ItemSource, reason);
             
         }
     }

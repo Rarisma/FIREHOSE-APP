@@ -14,22 +14,22 @@ public class ThemeVM : ObservableObject
     /// for things like the background
     /// (Black on Dark Theme and White on Light Theme)
     /// </summary>
-    public SolidColorBrush MainBrush { get; set; }
-
+    public SolidColorBrush MainBrush { get; set; } = null!;
+    
     /// <summary>
     /// This is the secondary color used in the UI
     /// for things like selected buttons and text
     /// (white on dark theme and Black on light theme)
     /// </summary>
-    public SolidColorBrush SecondaryBrush { get; set; }
+    public SolidColorBrush SecondaryBrush { get; set; } = null!;
     
     /// <summary>
     /// This is the accent color used in the UI
     /// for distinguishing backgrounds on the main brush
     /// (Lighter gray on light theme or Lighter black on dark theme)
     /// </summary>
-    public SolidColorBrush TertiaryBrush { get; set; }
-
+    public SolidColorBrush TertiaryBrush { get; set; } = null!;
+    
     /// <summary>
     /// Current app theme
     /// </summary>

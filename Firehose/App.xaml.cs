@@ -17,11 +17,12 @@ public partial class App : Application
         this.InitializeComponent();
     }
 
-    public static Window MainWindow { get; private set; }
-
+    public static Window MainWindow { get; private set; } = null!;
+    
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        MainWindow = new Window();
+        MainWindow = new();
+
 #if DEBUG
         MainWindow.EnableHotReload();
 #endif
@@ -30,22 +31,19 @@ public partial class App : Application
         configureIOC();
         App.Current.UnhandledException += Current_UnhandledException;
 
-        if (MainWindow.Content is not ArticleList)
+        if (MainWindow.Content is not MainPage)
         {
             // Place the frame in the current Window
-            Glob.Frame.NavigationFailed += OnNavigationFailed;
         }
         
         Glob.Publications = await new API().GetPublications();
         
-        if (Glob.Frame.Content == null)
+        if (MainWindow.Content == null)
         {
             // When the navigation stack isn't restored navigate to the first page,
             // configuring the new page by passing required information as a navigation
             // parameter
             
-
-            //Glob.Frame.Navigate(typeof(ArticleList));
             Glob.DoNavi(new ArticleList());
         }
         

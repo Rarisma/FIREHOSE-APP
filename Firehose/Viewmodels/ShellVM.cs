@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Firehose.UI;
 using Firehose.UI.Controls;
-using Firehose.UI.Dialogs;
 using HYDRANT;
 using HYDRANT.Definitions;
 using Uno.Extensions;
@@ -11,17 +10,24 @@ namespace Firehose.Viewmodels;
 
 class ShellVM : ObservableObject
 {
+    public object Content { get; set; }
+
     public delegate void UpdateButtons(Button Button);
     
     public UpdateButtons UpdateButtonsDelegate;
     public ObservableCollection<Article> Articles { get; set; }
     public AsyncCommand LoadPublicationDataCommand { get; set; }
     public AsyncCommand LoadArticleDataCommand { get; set; }
-    
+
+    public string NoBookmarksText { get; set; }
+    public Visibility LoadMoreVisibility { get; set; }
+    public SolidColorBrush BookmarksButtonForeground { get; set; }
+    public SolidColorBrush BookmarksButtonBackground { get; set; }
+
     public ObservableCollection<Filters> Filters =
     [
         new("Latest", ""),
-        new("Headlines", "HEADLINE = 1"),
+        new("Headlines", "IMPACT > 70"),
         new("Today", "DATE(Publish_Date) = CURDATE()"),
         new("Business", "SECTORS NOT LIKE ''"),
         new("Elections", "title LIKE '%election%'\r\nOR ARTICLE_TEXT LIKE '%election%'")
@@ -34,6 +40,10 @@ class ShellVM : ObservableObject
     {
         LoadPublicationDataCommand = new AsyncCommand(LoadPublicationData);
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
+        NoBookmarksText = "You have no bookmarked stories.";
+        Articles = new();
+        LoadMoreVisibility = Visibility.Visible;
+        Content = new Frame();
     }
     
     /// <summary>
@@ -76,7 +86,7 @@ class ShellVM : ObservableObject
             Articles.Add(new()
             {
                 Title = "Failed to load articles!",
-                RSSSummary = ex.Message,
+                Summary = ex.Message,
                 PublisherID = 0,
                 ImageURL = "?",
                 PublishDate = new DateTime(1911, 11, 19),
@@ -87,7 +97,7 @@ class ShellVM : ObservableObject
 
     public async Task LoadPublicationData() => await Hallon.GetPublications();
 
-    public async void OpenArticle(Article article)
+    public void OpenArticle(Article article)
     {
         //Open article in reader mode if always open reader is enabled
         if (Glob.Model.AlwaysOpenReader)

@@ -46,7 +46,7 @@ public sealed partial class PublisherInformation : UserControl
         get
         {
             try { return PublicationData.Name; }
-            catch { return "Unknown Publisher"; }
+            catch { return "UNKNOWN"; }
         }
     }
 
@@ -60,13 +60,14 @@ public sealed partial class PublisherInformation : UserControl
         {
             try
             {
+                //TODO: try and fix this as it seems to be returning the wrong times after FHN updated it's timestamping
                 // Convert the Firehose timezone (GMT) to local time
-                DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(
-                    ((Article)GetValue(ItemSourceProperty)).PublishDate,
-                    TimeZoneInfo.Local);
+                //DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(
+                //    ((Article)GetValue(ItemSourceProperty)).PublishDate,
+                //    TimeZoneInfo.Local);
 
                 //Calculate how long it's been since the article was published.
-                TimeSpan Diff = DateTime.Now - localDateTime;
+                TimeSpan Diff = DateTime.Now - ItemSource.PublishDate;
 
                 //If it's been published for less than an hour, show the article in Minutes
                 if (Diff.TotalMinutes < 5)
@@ -123,7 +124,8 @@ public sealed partial class PublisherInformation : UserControl
     {
         get
         {
-            if (ItemSource.Author != "UNKNOWN AUTHOR")
+            if (!string.IsNullOrEmpty(ItemSource.Author)
+                & ItemSource.Author != "UNKNOWN")
             {
                 AuthorVisibility = Visibility.Visible;
                 return ItemSource.Author.Split(",")[0];

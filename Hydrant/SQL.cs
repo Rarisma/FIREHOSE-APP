@@ -1,10 +1,12 @@
 using HYDRANT.Definitions;
-using MySql.Data.MySqlClient;
-using System.Runtime.CompilerServices;
+using MySqlConnector;
 //The voice someone calls (in the labyrinth)
-[assembly: InternalsVisibleTo("FirehoseServer")]
 namespace Hydrant;
-internal class SQL
+
+/// <summary>
+/// Access API via MySQL
+/// </summary>
+public class SQL
 {
 	private string Connection;
 	/// <summary>
@@ -16,37 +18,83 @@ internal class SQL
 		//Connect to the DB and open the connection
 		Connection = connectionString;
 	}
+    
+    /// <summary>
+    /// Gets article via it's URL.
+    /// </summary>
+    /// <param name="URL">URL to get Article from</param>
+    /// <returns>Article Object if found, null if not.</returns>
+    public Article? GetArticleFromURL(string URL)
+    {
+        //Run command
+        MySqlConnection DB = new() { ConnectionString = Connection };
+        DB.Open();
+        
+        MySqlCommand cmd = new($"SELECT * FROM ARTICLES WHERE URL=@URL;", DB);
+        cmd.Parameters.AddWithValue("@URL", URL);
+        MySqlDataReader reader = cmd.ExecuteReader();
+        
+        while (reader.Read())
+        {
+            //'deserialize' into article
+            Article article = new()
+            {
+                Url = reader["URL"].ToString() ?? string.Empty,
+                Title = reader["TITLE"].ToString() ?? "",
+                PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
+                IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true),
+                Summary = reader["SUMMARY"].ToString()!,
+                ImageURL = reader["ImageURL"].ToString(),
+                Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.",
+                PublisherID = (int)reader["PUBLISHER_ID"],
+                Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
+                CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
+                Author = reader["AUTHOR"].ToString()!,
+                Sectors = reader["SECTORS"].ToString()!,
+                TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
+                Impact = Convert.ToInt32(reader["IMPACT"]),
+            };
+            return article;
+        }
+        
+        //No article found.
+        return null;
+    }
 
 
 	/// <summary>
 	/// Gets articles from database.
 	/// </summary>
 	/// <returns>list of articles.</returns>
-	internal List<Article> GetArticles(int Limit = 0, int Offset = 0,
-	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true)
+	public List<Article> GetArticles(int Limit = 0, int Offset = 0,
+	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true,
+    bool AllowUserSubmittedArticles = false)
     {
         string query;
         //Select queries, minimal mode is much quicker for large queries.
         if (Minimal)
         {
-            query = @"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE,
-		    SUMMARY, ImageURL, PUBLISHER_ID, AUTHOR";
+            query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
+		    SUMMARY, ImageURL, PUBLISHER_ID, AUTHOR,TimeToRead";
         }
         else
         {
-            query = @"SELECT URL, TITLE, RSS_SUMMARY, PUBLISH_DATE, HEADLINE,
+            query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
 		    PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
 		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
         }
+
+        if (string.IsNullOrWhiteSpace(Filter)) { Filter = "WHERE UserGeneratedArticle = 0"; }
+        else { Filter += " AND UserGeneratedArticle = 0"; }
         
         //Add common filtering stuff
         query += $" FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};";
-
+            
         //Run command
         MySqlConnection DB = new() { ConnectionString = Connection };
 		DB.Open();
 
-		MySqlCommand cmd = new MySqlCommand(query, DB);
+		MySqlCommand cmd = new(query, DB);
 		MySqlDataReader reader = cmd.ExecuteReader();
 		List<Article> articles = new();
 		while (reader.Read())
@@ -59,14 +107,14 @@ internal class SQL
                 {
                     Url = reader["URL"].ToString() ?? string.Empty,
                     Title = reader["TITLE"].ToString() ?? "",
-                    RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
                     PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                    IsHeadline = Convert.ToBoolean(reader["HEADLINE"] ?? true),
                     IsPaywall = false,
+                    Impact = Convert.ToInt32(reader["Impact"]),
                     Summary = reader["SUMMARY"].ToString()!,
                     ImageURL = reader["ImageURL"].ToString(),
                     PublisherID = (int)reader["PUBLISHER_ID"],
                     Author = reader["AUTHOR"].ToString()!,
+                    TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
                 };
             }
             else
@@ -75,9 +123,8 @@ internal class SQL
                 {
                     Url = reader["URL"].ToString() ?? string.Empty,
                     Title = reader["TITLE"].ToString() ?? "",
-                    RSSSummary = reader["RSS_SUMMARY"].ToString() ?? "",
+                    Impact = Convert.ToInt32(reader["Impact"]),
                     PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                    IsHeadline = Convert.ToBoolean(reader["HEADLINE"] ?? true),
                     IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true),
                     Summary = reader["SUMMARY"].ToString()!,
                     ImageURL = reader["ImageURL"].ToString(),
@@ -87,6 +134,8 @@ internal class SQL
                     CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
                     Author = reader["AUTHOR"].ToString()!,
                     Sectors = reader["SECTORS"].ToString()!,
+                    TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
+
                 };
             }
 
@@ -105,7 +154,7 @@ internal class SQL
 	/// Get urls from database.
 	/// </summary>
 	/// <returns>List of URLs</returns>
-	internal List<string> GetURLs()
+	public List<string> GetURLs()
 	{
 		//Create connection object
 		MySqlConnection DB = new();
@@ -123,11 +172,12 @@ internal class SQL
 		return URLs; //Return URL List
 	}
 
-	/// <summary>
-	/// Uploads Article to DB
-	/// </summary>
-	/// <param name="Article">Article to post</param>
-	internal void UploadArticle(Article Article)
+    /// <summary>
+    /// Uploads Article to DB
+    /// </summary>
+    /// <param name="Article">Article to post</param>
+    /// <param name="UserGenerated">Flag article as user submitted</param>
+    public void UploadArticle(Article Article, bool UserGenerated = false)
 	{
 		try
 		{
@@ -139,21 +189,21 @@ internal class SQL
 					command.Connection = connection;
 					command.CommandText = @"
                 INSERT INTO ARTICLES 
-                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, RSS_SUMMARY, SUMMARY, WEIGHTING,
-				HEADLINE, BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, 
-				EXECUTIVES_MENTIONED, ImageURL, PUBLISHER_ID, AUTHOR, SECTORS) 
+                (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, SUMMARY, IMPACT,
+				BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, 
+				EXECUTIVES_MENTIONED, ImageURL, PUBLISHER_ID, AUTHOR, SECTORS,
+                UserGeneratedArticle, pubname, TimeToRead) 
                 VALUES 
-                (@Title, @Url, @Content, @PublishDate, @RssSummary, @Summary, @Weighting,
-				@Headline, @BusinessRelated, @Paywall, @CompaniesMentioned, 
-				@ExecutivesMentioned, @ImageURL, @PUBLISHER_ID, @AUTHOR, @SECTORS)";
+                (@Title, @Url, @Content, @PublishDate, @Summary, @IMPACT,
+				@BusinessRelated, @Paywall, @CompaniesMentioned, 
+				@ExecutivesMentioned, @ImageURL, @PUBLISHER_ID, @AUTHOR, @SECTORS,
+                @UserGeneratedArticle, @pubname, @TimeToRead)";
 					command.Parameters.AddWithValue("@Title", Article.Title);
 					command.Parameters.AddWithValue("@Url", Article.Url);
 					command.Parameters.AddWithValue("@Content", Article.Text);
 					command.Parameters.AddWithValue("@PublishDate", Article.PublishDate);
-					command.Parameters.AddWithValue("@RssSummary", Article.RSSSummary);
 					command.Parameters.AddWithValue("@Summary", Article.Summary);
-					command.Parameters.AddWithValue("@Weighting", 0);
-					command.Parameters.AddWithValue("@Headline", Article.IsHeadline);
+					command.Parameters.AddWithValue("@IMPACT", Article.Impact);
 					command.Parameters.AddWithValue("@BusinessRelated", Article.Business);
 					command.Parameters.AddWithValue("@Paywall", Article.IsPaywall);
 					command.Parameters.AddWithValue("@CompaniesMentioned", Article.CompaniesMentioned);
@@ -162,6 +212,9 @@ internal class SQL
 					command.Parameters.AddWithValue("@PUBLISHER_ID", Article.PublisherID);
 					command.Parameters.AddWithValue("@AUTHOR", Article.Author);
 					command.Parameters.AddWithValue("@SECTORS", Article.Sectors);
+					command.Parameters.AddWithValue("@UserGeneratedArticle", UserGenerated);
+					command.Parameters.AddWithValue("@pubname", Article.PublicationName ?? "Unknown Publication");
+					command.Parameters.AddWithValue("@TimeToRead", Article.TimeToRead ?? 0);
 					command.ExecuteNonQuery();
 				}
 				connection.Close();
@@ -177,7 +230,7 @@ internal class SQL
     /// Updates an existing article in the DB.
     /// </summary>
     /// <param name="article">Article to update</param>
-    internal void UpdateArticle(Article article)
+    public void UpdateArticle(Article article)
     {
         try
         {
@@ -193,32 +246,29 @@ internal class SQL
                 URL = @Url, 
                 ARTICLE_TEXT = @Content, 
                 PUBLISH_DATE = @PublishDate, 
-                RSS_SUMMARY = @RssSummary, 
                 SUMMARY = @Summary, 
-                WEIGHTING = @Weighting,
+                Impact = @Impact,
                 HEADLINE = @Headline, 
                 BUSINESS_RELATED = @BusinessRelated, 
                 PAYWALL = @Paywall, 
-                COMPANIES_MENTIONED = @CompaniesMentioned, 
-                EXECUTIVES_MENTIONED = @ExecutivesMentioned, 
+                COMPANIES_MENTIONED = @Companies, 
+                EXECUTIVES_MENTIONED = @Execs, 
                 ImageURL = @ImageURL, 
                 PUBLISHER_ID = @PUBLISHER_ID, 
                 AUTHOR = @AUTHOR, 
-                SECTORS = @SECTORS 
+                SECTORS = @SECTORS,
                 WHERE URL = @Url";
 
                     command.Parameters.AddWithValue("@Title", article.Title);
                     command.Parameters.AddWithValue("@Url", article.Url);
                     command.Parameters.AddWithValue("@Content", article.Text);
                     command.Parameters.AddWithValue("@PublishDate", article.PublishDate);
-                    command.Parameters.AddWithValue("@RssSummary", article.RSSSummary);
                     command.Parameters.AddWithValue("@Summary", article.Summary);
-                    command.Parameters.AddWithValue("@Weighting", article.Weighting);
-                    command.Parameters.AddWithValue("@Headline", article.IsHeadline);
+                    command.Parameters.AddWithValue("@Weighting", article.Impact);
                     command.Parameters.AddWithValue("@BusinessRelated", article.Business);
                     command.Parameters.AddWithValue("@Paywall", article.IsPaywall);
-                    command.Parameters.AddWithValue("@CompaniesMentioned", article.CompaniesMentioned);
-                    command.Parameters.AddWithValue("@ExecutivesMentioned", article.ExecsMentioned);
+                    command.Parameters.AddWithValue("@Companies", article.CompaniesMentioned);
+                    command.Parameters.AddWithValue("@Execs", article.ExecsMentioned);
                     command.Parameters.AddWithValue("@ImageURL", article.ImageURL);
                     command.Parameters.AddWithValue("@PUBLISHER_ID", article.PublisherID);
                     command.Parameters.AddWithValue("@AUTHOR", article.Author);
@@ -234,18 +284,23 @@ internal class SQL
             Console.WriteLine(e.Message);
         }
     }
-    
-    public void IncrementClickbaitCounter(string article)
+
+    /// <summary>
+    /// Flags article as clickbait.
+    /// </summary>
+    /// <param name="URL">URL of article that's clickbait.</param>
+    public void IncrementClickbaitCounter(string URL)
     {
         using (var connection = new MySqlConnection(Connection))
         {
             connection.Open();
             // Create the SQL command to increment the value for the specific row
-            string sql = "UPDATE ARTICLES SET TimesReportedAsClickbait = TimesReportedAsClickbait + 1 WHERE URL = @id";
+            string sql = "UPDATE ARTICLES SET TimesReportedAsClickbait =" +
+                         " TimesReportedAsClickbait + 1 WHERE URL = @id";
             
             using (var command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@id", article);
+                command.Parameters.AddWithValue("@id", URL);
                 
                 // Execute the command
                 if (command.ExecuteNonQuery() == 0)
