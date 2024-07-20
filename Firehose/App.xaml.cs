@@ -1,4 +1,3 @@
-using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Firehose.Preferences;
 using Firehose.UI;

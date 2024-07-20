@@ -107,5 +107,58 @@ public class Article
     /// Article already summarised.
     /// </summary>
     public int? TimeToRead { get; set; }
+    
+
+    /// <summary>
+    /// Types of articles.
+    /// </summary>
+    public ArticleType Type
+    {
+        get
+        {
+            if (Url.Contains(".youtube.") || Url.Contains(".youtu.be"))
+            {
+                return ArticleType.Video;
+            }
+            else if (Url.Contains("http"))
+            {
+                return ArticleType.Article;
+            }
+            else if (Url.Contains(@"C:\"))
+            {
+                return ArticleType.File;
+            }
+            else
+            {
+                return ArticleType.Unknown;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Used for different kinds of articles
+    /// </summary>
+    public enum ArticleType
+    {
+        /// <summary>
+        /// Article is a web article
+        /// </summary>
+        Article,
+
+        /// <summary>
+        /// Article is a video
+        /// </summary>
+        Video,
+
+        /// <summary>
+        /// Article is a PDF/DOCX/DOC file
+        /// </summary>
+        File,
+
+        /// <summary>
+        /// Type is unknown
+        /// </summary>
+        Unknown
+    }
     #endregion
 }

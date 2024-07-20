@@ -88,12 +88,10 @@ public class API
     /// Reports an article summary as incorrect.
     /// </summary>
     /// <param name="Article">Article to report</param>
-    /// <param name="Reason">Reason to report.</param>
-    public async Task ReportArticle(Article Article, int Reason)
+    public async Task ReportArticle(Article Article)
     {
         using HttpClient client = new();
-        //client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
-        string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}&ReportReason={Reason}";
+        string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}";
         await client.GetAsync(url);
     }
 }

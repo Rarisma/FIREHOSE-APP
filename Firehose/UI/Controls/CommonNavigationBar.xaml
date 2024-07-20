@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" MaxHeight="50" Loaded="CommonNavigationBar_OnLoaded">
+    mc:Ignorable="d" MaxHeight="50" Loaded="SetBookmarkIcon">
 
   <Grid.Resources>
     <Style x:Key="AppButton" TargetType="Button">
@@ -21,6 +21,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="Auto"/>
@@ -48,11 +49,17 @@
         </Button.Flyout>
       </Button>
 
+      <!-- Bookmarks -->
       <Button Grid.Row="0" Grid.Column="3" Click="BookmarkClick" Style="{StaticResource AppButton}">
         <FontIcon Name="Glyphy" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
       </Button>
 
-      <Button Grid.Row="0"  Content="· · ·" Grid.Column="4" Style="{StaticResource AppButton}">
+      <!-- Share button -->
+      <Button Grid.Column="4" Click="Share" Style="{StaticResource AppButton}">
+        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+      </Button>
+
+      <Button Grid.Row="0"  Content="· · ·" Grid.Column="5" Style="{StaticResource AppButton}">
         <Button.Flyout>
           <MenuFlyout>
             <MenuFlyoutItem Text="Open in Browser" Click="OpenBrowser"/>

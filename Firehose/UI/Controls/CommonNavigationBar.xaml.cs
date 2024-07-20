@@ -2,6 +2,8 @@ using Firehose.Preferences;
 using Firehose.UI.Dialogs;
 using HYDRANT;
 using HYDRANT.Definitions;
+using Windows.ApplicationModel.DataTransfer;
+using WinRT.Interop;
 
 namespace Firehose.UI.Controls;
 public sealed partial class CommonNavigationBar : Grid
@@ -30,26 +32,9 @@ public sealed partial class CommonNavigationBar : Grid
     {
         InitializeComponent();
     }
-
-    private async void ReportSummary(object sender, RoutedEventArgs e)
-    {
-        ContentDialog d = new()
-        {
-            Title = "Report issue with summary for " + ItemSource.Title,
-            XamlRoot = XamlRoot,
-            Content = new AIFeedbackDialog(ItemSource),
-            PrimaryButtonText = "Send Feedback",
-            SecondaryButtonText = "Close"
-        };
-        var Res = await Glob.OpenContentDialog(d);
-        
-        if (Res == ContentDialogResult.Primary) //Send feedback clicked
-        {
-            int reason = (((d.Content as AIFeedbackDialog)!.Content as Grid)!.Children[3] as ComboBox)!.SelectedIndex;
-            await new API().ReportArticle(ItemSource, reason);
-            
-        }
-    }
+    
+    private void ReportSummary(object sender, RoutedEventArgs e) =>
+        AIFeedbackDialog.ReportSummary(ItemSource);
     
     /// <summary>
     /// Opens article in the users browser
@@ -68,14 +53,17 @@ public sealed partial class CommonNavigationBar : Grid
     /// </summary>
     private void GoBack(object sender, RoutedEventArgs e) { Glob.GoBack(); }
     
-    public void SetBookmarkIcon()
+    /// <summary>
+    /// Ran when loaded, checks the users bookmarks for if the Article is bookmarked.
+    /// </summary>
+    public void SetBookmarkIcon(object? sender = null, RoutedEventArgs? e = null)
     {
         //Handle bookmarked status
         if (Glob.Model.BookmarkedArticles.Count(article => article.Url == ItemSource.Url) != 0)
         {
-            Glyphy.Glyph = "\xE735";
+            Glyphy.Glyph = "\xE735"; // Filled Star
         }
-        else { Glyphy.Glyph = "\xE734"; }
+        else { Glyphy.Glyph = "\xE734"; } // Empty star
     }
     
     private void BookmarkClick(object sender, RoutedEventArgs e)
@@ -104,9 +92,67 @@ public sealed partial class CommonNavigationBar : Grid
         ClickbaitButton.IsEnabled = false; //Prevent multiple reports.
     }
     
-    private void CommonNavigationBar_OnLoaded(object sender, RoutedEventArgs e)
+    private async void Share(object sender, RoutedEventArgs e)
     {
-        SetBookmarkIcon();
-        
+        if (DataTransferManager.IsSupported())
+        {
+#if WINDOWS //Sharing workarounds
+            // Retrieve the window handle (HWND) of the current WinUI 3 window.
+            var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
+
+            //Do Interop magic
+            IDataTransferManagerInterop interop = DataTransferManager.As<IDataTransferManagerInterop>();
+            IntPtr result = interop.GetForWindow(hWnd, _dtm_iid);
+
+            //Create DataManager and show UI
+            var dataTransferManager = WinRT.MarshalInterface<DataTransferManager>.FromAbi(result);
+            dataTransferManager.DataRequested += ShareStarted;
+            interop.ShowShareUIForWindow(hWnd);
+#else //Non-windows platforms.
+            var dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += ShareStarted;
+            DataTransferManager.ShowShareUI();
+#endif
+        }
+        else
+        {
+            //This shouldn't happen.
+            await Glob.OpenContentDialog(new()
+            {
+               Title = "Your system doesn't support sharing.",
+               Content = "Sorry, but your system somehow doesn't support sharing." +
+                         "\nThis shouldn't happen but if you see this, let us know",
+               PrimaryButtonText = "Close"
+            });
+        }
     }
+    
+    /// <summary>
+    /// This event is called when the device sharing menu is opened
+    /// </summary>
+    private void ShareStarted(DataTransferManager manager, DataRequestedEventArgs args)
+    {
+        args.Request.Data.Properties.Title = $"Sharing {ItemSource.Title}";
+        args.Request.Data.Properties.Description = "Summary Text";
+        args.Request.Data.SetText(ItemSource.Summary);
+        args.Request.Data.SetWebLink(new Uri(ItemSource.Url));
+    }
+    
+    //Required windows workarounds.
+#if WINDOWS
+    [System.Runtime.InteropServices.ComImport]
+    [System.Runtime.InteropServices.Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
+    [System.Runtime.InteropServices.InterfaceType(
+        System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIUnknown)]
+    interface IDataTransferManagerInterop
+    {
+        IntPtr GetForWindow([System.Runtime.InteropServices.In] IntPtr appWindow,
+            [System.Runtime.InteropServices.In] ref Guid riid);
+        void ShowShareUIForWindow(IntPtr appWindow);
+    }
+    
+    static readonly Guid _dtm_iid =
+        new Guid(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+
+#endif
 }

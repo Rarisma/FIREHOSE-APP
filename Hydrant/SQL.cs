@@ -69,7 +69,7 @@ public class SQL
 	public List<Article> GetArticles(int Limit = 0, int Offset = 0,
 	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true,
     bool AllowUserSubmittedArticles = false)
-    {
+     {
         string query;
         //Select queries, minimal mode is much quicker for large queries.
         if (Minimal)
@@ -84,7 +84,7 @@ public class SQL
 		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
         }
 
-        if (string.IsNullOrWhiteSpace(Filter)) { Filter = "WHERE UserGeneratedArticle = 0"; }
+        if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER") { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
         else { Filter += " AND UserGeneratedArticle = 0"; }
         
         //Add common filtering stuff
@@ -291,23 +291,88 @@ public class SQL
     /// <param name="URL">URL of article that's clickbait.</param>
     public void IncrementClickbaitCounter(string URL)
     {
-        using (var connection = new MySqlConnection(Connection))
+        try
         {
-            connection.Open();
-            // Create the SQL command to increment the value for the specific row
-            string sql = "UPDATE ARTICLES SET TimesReportedAsClickbait =" +
-                         " TimesReportedAsClickbait + 1 WHERE URL = @id";
-            
-            using (var command = new MySqlCommand(sql, connection))
+            using (MySqlConnection connection = new(Connection))
             {
-                command.Parameters.AddWithValue("@id", URL);
+                connection.Open();
                 
-                // Execute the command
-                if (command.ExecuteNonQuery() == 0)
+                using (MySqlCommand cmd = new("IncrementClickbaitCount", connection))
                 {
-                    throw new Exception("No rows were updated for a clickbait report.");
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("p_url", URL);
+                    
+                    cmd.ExecuteNonQuery();
                 }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+    
+    /// <summary>
+    /// Flags article summary as bad.
+    /// </summary>
+    /// <param name="URL">URL of article that's bad.</param>
+    public void IncrementSummaryReportCounter(string URL)
+    {
+        try
+        {
+            using (MySqlConnection connection = new(Connection))
+            {
+                connection.Open();
+                
+                using (MySqlCommand cmd = new("IncrementSummaryReportCount", connection))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("p_url", URL);
+                    
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+    
+    public String GetArticleText(string URL)
+    {
+        try
+        {
+            using (MySqlConnection connection = new(Connection))
+            {
+                connection.Open();
+                
+                using (MySqlCommand cmd = new("SELECT ARTICLE_TEXT, PAYWALL FROM ARTICLES WHERE URL = @url",
+                           connection))
+                {
+                    cmd.Parameters.AddWithValue("@url", URL);
+                    var r = cmd.ExecuteReader();
+                    string ArticleText = "Article Text Unavailable";
+                    while (r.Read())
+                    {
+                        if (!bool.Parse(r["PAYWALL"].ToString() ?? "False"))
+                        {
+                            ArticleText = r["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
+                        }
+                        else
+                        {
+                            ArticleText = "Article Text isn't available for this article";
+                        }
+                    }
+                    
+                    return ArticleText;
+                    
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            return "Failed to fetch article text\n" + e.Message ;
         }
     }
 }

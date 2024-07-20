@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Firehose.Viewmodels;
+using HYDRANT;
 using HYDRANT.Definitions;
-
-//Let it ride
+//Whatever keeps you warm at night.
 namespace Firehose.UI.Dialogs;
 
 public sealed partial class AIFeedbackDialog : Page
@@ -14,6 +14,28 @@ public sealed partial class AIFeedbackDialog : Page
         this.InitializeComponent();
         ItemSource = Article;
     }
-
+    
+    /// <summary>
+    /// Spawns a dialog showing this page
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public static async void ReportSummary(Article Item)
+    {
+        ContentDialog d = new()
+        {
+            Title = "Report issue with summary for " + Item.Title,
+            Content = new AIFeedbackDialog(Item),
+            PrimaryButtonText = "Send Feedback",
+            SecondaryButtonText = "Close"
+        };
+        var Res = await Glob.OpenContentDialog(d);
+        
+        if (Res == ContentDialogResult.Primary) //Send feedback clicked
+        {
+            await new API().ReportArticle(Item);
+            
+        }
+    }
 
 }

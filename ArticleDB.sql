@@ -25,4 +25,24 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     EXECUTIVES_MENTIONED LONGTEXT           		-- List of executives
 );
 
-select * from ARTICLES;
+DELIMITER //
+CREATE PROCEDURE IncrementClickbaitCount(IN p_url VARCHAR(255))
+BEGIN
+    UPDATE Articles
+    SET TimesReportedAsClickbait = TimesReportedAsClickbait + 1
+    WHERE URL = p_url;	
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE IncrementSummaryReportCount(IN p_url VARCHAR(255))
+BEGIN
+    UPDATE Articles
+    SET TimesReportedAsSummaryReported = TimesReportedAsSummaryReported + 1
+    WHERE URL = p_url;	
+END //
+DELIMITER ;
+
+select * from Articles;
+SELECT ARTICLE_TEXT FROM ARTICLES WHERE URL = 
+
