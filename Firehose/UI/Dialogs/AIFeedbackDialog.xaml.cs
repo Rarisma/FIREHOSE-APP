@@ -1,9 +1,10 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.Viewmodels;
+using FirehoseApp.Viewmodels;
 using HYDRANT;
 using HYDRANT.Definitions;
+
 //Whatever keeps you warm at night.
-namespace Firehose.UI.Dialogs;
+namespace FirehoseApp.UI.Dialogs;
 
 public sealed partial class AIFeedbackDialog : Page
 {

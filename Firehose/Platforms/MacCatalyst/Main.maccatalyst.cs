@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace Firehose.MacCatalyst;
+namespace FirehoseApp.MacCatalyst;
 public class EntryPoint
 {
     // This is the main entry point of the application.

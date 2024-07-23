@@ -44,7 +44,7 @@ public class API
 
 		//Make request and check it was successful
 		var response = await client.GetAsync(Endpoint + endpoint);
-		response.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
 
 		//Deserialize JSON content
 		var content = await response.Content.ReadAsStringAsync();
@@ -93,5 +93,17 @@ public class API
         using HttpClient client = new();
         string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}";
         await client.GetAsync(url);
+    }
+    
+    /// <summary>
+    /// Gets article text
+    /// </summary>
+    /// <param name="URL">Article to report</param>
+    public async Task<string> GetArticleText(string URL)
+    {
+        using HttpClient client = new();
+        string url = $"{Endpoint}/Articles/GetArticleText?URL={Uri.EscapeDataString(URL)}";
+        HttpResponseMessage Response = await client.GetAsync(url);
+        return await Response.Content.ReadAsStringAsync();
     }
 }

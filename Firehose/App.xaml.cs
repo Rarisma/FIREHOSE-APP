@@ -1,10 +1,12 @@
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.Preferences;
-using Firehose.UI;
-using Firehose.Viewmodels;
+using FirehoseApp.Preferences;
+using FirehoseApp.UI;
+using FirehoseApp.Viewmodels;
 using HYDRANT;
+using Uno.Resizetizer;
 
-namespace Firehose;
+namespace FirehoseApp;
 public partial class App : Application
 {
     /// <summary>
@@ -28,12 +30,7 @@ public partial class App : Application
         PreferencesModel.Load();
         
         configureIOC();
-        App.Current.UnhandledException += Current_UnhandledException;
-
-        if (MainWindow.Content is not MainPage)
-        {
-            // Place the frame in the current Window
-        }
+        Current.UnhandledException += Current_UnhandledException;
         
         Glob.Publications = await new API().GetPublications();
         
@@ -46,8 +43,15 @@ public partial class App : Application
             Glob.DoNavi(new ArticleList());
         }
         
+        //Set window info and show it.
+        MainWindow.SetWindowIcon();
+        MainWindow.Title = $"Firehose News {Package.Current.Id.Version.Major}." +
+               $"{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
         
-        // Ensure the current window is active
+        if (Debugger.IsAttached)
+        {
+            MainWindow.Title += " (DEV)";
+        }
         MainWindow.Activate();
     }
     

@@ -1,9 +1,9 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.Viewmodels;
+using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
 
 //NO MORE FREESTYLE
-namespace Firehose.UI.Controls;
+namespace FirehoseApp.UI.Controls;
 public sealed partial class PublisherInformation : UserControl
 {
     ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();

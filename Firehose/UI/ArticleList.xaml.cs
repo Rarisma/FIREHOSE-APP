@@ -1,12 +1,12 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.UI.Controls;
-using Firehose.Viewmodels;
+using FirehoseApp.UI.Controls;
+using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Uno.Extensions;
 
-namespace Firehose.UI;
+namespace FirehoseApp.UI;
 
 public sealed partial class ArticleList : Page
 {
@@ -54,8 +54,7 @@ public sealed partial class ArticleList : Page
 
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
-        Glob.NaviStack.Push(new Preferences());
-        Glob.DoNavi();
+        Glob.DoNavi(new Preferences());
     }
     
     /// <summary>

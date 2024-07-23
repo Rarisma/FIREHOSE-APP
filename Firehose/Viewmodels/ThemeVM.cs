@@ -2,7 +2,7 @@ using Windows.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI;
 
-namespace Firehose.Viewmodels;
+namespace FirehoseApp.Viewmodels;
 
 /// <summary>
 /// Controls application color and theming

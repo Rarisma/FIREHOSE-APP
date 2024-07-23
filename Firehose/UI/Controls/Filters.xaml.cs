@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.Viewmodels;
+using FirehoseApp.Viewmodels;
 using Microsoft.UI;
 
-namespace Firehose.UI.Controls;
+namespace FirehoseApp.UI.Controls;
 public sealed partial class Filters : AppBarButton
 {
     ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();

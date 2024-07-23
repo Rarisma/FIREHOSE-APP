@@ -1,12 +1,24 @@
 using Windows.UI.Core;
-using Firehose.Preferences;
+using FirehoseApp.Preferences;
 using HYDRANT.Definitions;
+
 //I'VE GOT A RECKLESS TONGUE
-namespace Firehose;
+namespace FirehoseApp;
 public static class Glob
 {
+    /// <summary>
+    /// Is the user part of the test group
+    /// </summary>
+    public static bool TestGroup = true;
+
+    /// <summary>
+    /// Does the user have a FHN+ subscription?
+    /// (Not implemented, does nothing if set to true)
+    /// </summary>
+    public static bool FNHPlus = false;
+    
     public static Stack<object> NaviStack = new();
-    public static PreferencesModel Model;
+    public static PreferencesModel? Model;
     public static XamlRoot? XamlRoot;
 
     /// <summary>
@@ -19,7 +31,7 @@ public static class Glob
     /// The built-in navigation within Frames doesn't work
     /// like I want it to work, so we persist the page items properly.
     /// </summary>
-    public static void DoNavi()
+    private static void DoNavi()
     {
         App.MainWindow.Content = (UIElement)NaviStack.First();
     }

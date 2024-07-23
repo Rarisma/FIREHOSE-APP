@@ -43,6 +43,7 @@ BEGIN
 END //
 DELIMITER ;
 
-select * from Articles;
-SELECT ARTICLE_TEXT FROM ARTICLES WHERE URL = 
-
+SELECT *
+FROM ARTICLES
+WHERE created_at >= NOW() - INTERVAL 2 DAY 
+  AND created_at < NOW() - INTERVAL 1 DAY;

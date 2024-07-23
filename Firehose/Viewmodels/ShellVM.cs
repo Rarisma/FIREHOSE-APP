@@ -1,12 +1,12 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Firehose.UI;
-using Firehose.UI.Controls;
+using FirehoseApp.UI;
+using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
 using Uno.Extensions;
 
-namespace Firehose.Viewmodels;
+namespace FirehoseApp.Viewmodels;
 
 class ShellVM : ObservableObject
 {
@@ -14,7 +14,7 @@ class ShellVM : ObservableObject
 
     public delegate void UpdateButtons(Button Button);
     
-    public UpdateButtons UpdateButtonsDelegate;
+    public UpdateButtons? UpdateButtonsDelegate;
     public ObservableCollection<Article> Articles { get; set; }
     public AsyncCommand LoadPublicationDataCommand { get; set; }
     public AsyncCommand LoadArticleDataCommand { get; set; }
@@ -27,10 +27,11 @@ class ShellVM : ObservableObject
     public ObservableCollection<Filters> Filters =
     [
         new("Latest", ""),
-        new("Headlines", "IMPACT > 70"),
-        new("Today", "DATE(Publish_Date) = CURDATE()"),
-        new("Business", "SECTORS NOT LIKE ''"),
-        new("Elections", "title LIKE '%election%'\r\nOR ARTICLE_TEXT LIKE '%election%'")
+        new("Headlines", "IMPACT > 70 AND DATE(Publish_Date) >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)","ORDER BY IMPACT DESC"),
+        new("Today", "DATE(Publish_Date) = CURDATE()","ORDER BY IMPACT DESC"),
+        new("Business", "SECTORS NOT LIKE '' AND DATE(Publish_Date) = CURDATE()","ORDER BY IMPACT DESC"),
+        new("Elections", "title LIKE '%election%'\r\nOR ARTICLE_TEXT LIKE '%election%' " +
+                         " AND DATE(Publish_Date) >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)","ORDER BY IMPACT DESC")
     ];
 
     //Access to the hallon API server
@@ -97,19 +98,23 @@ class ShellVM : ObservableObject
 
     public async Task LoadPublicationData() => await Hallon.GetPublications();
 
-    public void OpenArticle(Article article)
+    public async void OpenArticle(Article article)
     {
-        //Open article in reader mode if always open reader is enabled
-        if (Glob.Model.AlwaysOpenReader)
+        switch (Glob.Model.OpenInMode)
         {
-            Glob.NaviStack.Push(new ReaderMode(article));
+            case 0: //Open in Article WebView
+                Glob.DoNavi(new ArticleView(article));
+                break;
+            case 1: //Open in reader mode
+                if (string.IsNullOrEmpty(article.Text))
+                {
+                    article.Text = await new API().GetArticleText(article.Url);
+                }
+                Glob.DoNavi(new ReaderMode(article));
+                break;
+            case 2: //Open in Web Browser
+                Windows.System.Launcher.LaunchUriAsync(new Uri(article.Url));
+                break;
         }
-        else
-        {
-            Glob.NaviStack.Push(new ArticleView(article));
-        }
-        
-        //Navigate to view
-        Glob.DoNavi();
     }
 }

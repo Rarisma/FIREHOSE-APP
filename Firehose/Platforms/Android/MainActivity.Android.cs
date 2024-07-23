@@ -5,7 +5,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 
-namespace Firehose.Droid;
+namespace FirehoseApp.Droid;
 [Activity(
     MainLauncher = true,
     ConfigurationChanges = global::Uno.UI.ActivityHelper.AllConfigChanges,

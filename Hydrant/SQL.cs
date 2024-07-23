@@ -12,7 +12,7 @@ public class SQL
 	/// <summary>
 	/// MySQL Connection String
 	/// </summary>
-	/// <param name="connectionString"></param>
+	/// <param name="connectionString">SQL Connection String</param>
 	public SQL(string connectionString)
 	{
 		//Connect to the DB and open the connection
@@ -84,7 +84,12 @@ public class SQL
 		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
         }
 
-        if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER") { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
+        if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER") 
+        { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
+        else if (Filter.Contains("ORDER"))
+        {
+            Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
+        }
         else { Filter += " AND UserGeneratedArticle = 0"; }
         
         //Add common filtering stuff
@@ -339,36 +344,36 @@ public class SQL
         }
     }
     
-    public String GetArticleText(string URL)
+    /// <summary>
+    /// Gets article text for provided URL
+    /// </summary>
+    /// <param name="URL">URL for article text</param>
+    /// <returns>Article Text</returns>
+    public string GetArticleText(string URL)
     {
         try
         {
-            using (MySqlConnection connection = new(Connection))
+            using MySqlConnection connection = new(Connection);
+            connection.Open();
+            
+            using MySqlCommand cmd = new("SELECT ARTICLE_TEXT, PAYWALL FROM ARTICLES WHERE URL = @url",
+                connection);
+            cmd.Parameters.AddWithValue("@url", URL);
+            var r = cmd.ExecuteReader();
+            string ArticleText = "Article Text Unavailable";
+            while (r.Read())
             {
-                connection.Open();
-                
-                using (MySqlCommand cmd = new("SELECT ARTICLE_TEXT, PAYWALL FROM ARTICLES WHERE URL = @url",
-                           connection))
+                if (!bool.Parse(r["PAYWALL"].ToString() ?? "False"))
                 {
-                    cmd.Parameters.AddWithValue("@url", URL);
-                    var r = cmd.ExecuteReader();
-                    string ArticleText = "Article Text Unavailable";
-                    while (r.Read())
-                    {
-                        if (!bool.Parse(r["PAYWALL"].ToString() ?? "False"))
-                        {
-                            ArticleText = r["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
-                        }
-                        else
-                        {
-                            ArticleText = "Article Text isn't available for this article";
-                        }
-                    }
-                    
-                    return ArticleText;
-                    
+                    ArticleText = r["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
+                }
+                else
+                {
+                    ArticleText = "Article Text isn't available for this article";
                 }
             }
+            
+            return ArticleText;
         }
         catch (Exception e)
         {

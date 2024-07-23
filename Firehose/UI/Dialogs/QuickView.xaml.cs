@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Firehose.Viewmodels;
+using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
 
-namespace Firehose.UI.Dialogs;
+namespace FirehoseApp.UI.Dialogs;
 
 public sealed partial class QuickView : Page
 {

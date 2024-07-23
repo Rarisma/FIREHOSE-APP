@@ -1,5 +1,5 @@
 ﻿<Page
-		x:Class="Firehose.UI.ArticleList"
+		x:Class="FirehoseApp.UI.ArticleList"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,6 +8,7 @@
 		xmlns:hydrant="using:HYDRANT.Definitions"
     xmlns:utu="using:Uno.Toolkit.UI"
     xmlns:controls="using:Firehose.UI.Controls"
+    xmlns:controls1="using:FirehoseApp.UI.Controls"
     utu:StatusBar.Foreground="{x:Bind Themer.StatusBar}"
     utu:StatusBar.Background="{x:Bind Themer.MainBrush}"
     Loaded="ArticleList_OnLoaded">
@@ -35,7 +36,7 @@
           <Expander.Header >
             <StackPanel Padding="0,20">
               <!-- Publication info, Title and Summary -->
-              <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <controls1:PublisherInformation ItemSource="{x:Bind}"/>
               <TextBlock Text="{x:Bind Title}" FontSize="16"  TextWrapping="Wrap"
                                    MaxWidth="500" HorizontalAlignment="Left"/>
             </StackPanel>
@@ -61,7 +62,7 @@
           <Expander.Header>
             <StackPanel  Background="Transparent" HorizontalAlignment="Center">
               <!-- Show publication Info -->
-              <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <controls1:PublisherInformation ItemSource="{x:Bind}"/>
 
               <!-- Image + Text -->
               <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="200"
@@ -93,7 +94,7 @@
         <Expander Background="Transparent" HorizontalAlignment="Stretch">
           <Expander.Header>
             <StackPanel>
-              <controls:PublisherInformation ItemSource="{x:Bind}"/>
+              <controls1:PublisherInformation ItemSource="{x:Bind}"/>
 
               <!-- Title - [Image] -->
               <Grid>
@@ -125,7 +126,7 @@
     </DataTemplate>
 
     <!-- Article Selector Decides which article type should be used -->
-		<controls:ArticleSelector x:Key="ArticleSelector"
+		<controls1:ArticleSelector x:Key="ArticleSelector"
 																 NoImageTemplate="{StaticResource NoImageTemplate}"
 																 MinimalTemplate="{StaticResource MinimalTemplate}"
 																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>

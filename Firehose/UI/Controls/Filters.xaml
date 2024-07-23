@@ -1,5 +1,5 @@
 ﻿<AppBarButton
-    x:Class="Firehose.UI.Controls.Filters"
+    x:Class="FirehoseApp.UI.Controls.Filters"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FirehoseNews.UI.Controls"

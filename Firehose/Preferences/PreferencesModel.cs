@@ -1,17 +1,25 @@
 using System.Text.Json;
 using HYDRANT.Definitions;
 
-namespace Firehose.Preferences;
+namespace FirehoseApp.Preferences;
 public class PreferencesModel
 {
-    
+    /// <summary>
+    /// the folder where the preferences are saved to
+    /// </summary>
     static StorageFolder SaveFolder = ApplicationData.Current.LocalFolder;
+
+    /// <summary>
+    /// The file path to prefs.json
+    /// </summary>
     static string SavePath = Path.Combine(SaveFolder.Path, "prefs.json");
     public PreferencesModel()
     {
         Proxy = string.Empty;
-        ArticleFetchLimit = 20;
+        ArticleFetchLimit = 50;
         BookmarkedArticles = new();
+        OpenInMode = 0;
+        UserGeneratedContent = false;
     }
 
     /// <summary>
@@ -20,29 +28,31 @@ public class PreferencesModel
     public string Proxy { get; set; }
 
     /// <summary>
-    /// Don't use web view, jump to reader mode.
+    /// Controls what articles are opened in
+    /// 0 - Article WebView
+    /// 1 - Reader Mode
+    /// 2 - Default Web Browser
     /// </summary>
-    public bool AlwaysOpenReader { get; set; }
+    public int OpenInMode { get; set; }
 
     /// <summary>
     /// Article fetch limit
     /// </summary>
     public int ArticleFetchLimit { get; set; }
+    
+    /// <summary>
+    /// Article fetch limit
+    /// </summary>
+    public bool UserGeneratedContent { get; set; }
 
     /// <summary>
     /// Article Objects that the user has bookmarked
     /// </summary>
     public List<Article> BookmarkedArticles { get; set; }
 
-    /// <summary>
-    /// Tapping/clicking an article will open the summary
-    /// instead of opening the article itself.
-    /// </summary>
-    public bool ArticleTapOpensSummary { get; set; }
-
 
     /// <summary>
-    /// write prefs model
+    /// write this model
     /// </summary>
     public static void Save()
     {
@@ -60,7 +70,7 @@ public class PreferencesModel
     }
 
     /// <summary>
-    /// Load prefs model.
+    /// Load this model.
     /// </summary>
     public static void Load() 
     {

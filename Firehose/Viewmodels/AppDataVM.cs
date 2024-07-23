@@ -1,4 +1,4 @@
-namespace Firehose.Viewmodels;
+namespace FirehoseApp.Viewmodels;
 internal class AppDataVM
 {
     /// <summary>

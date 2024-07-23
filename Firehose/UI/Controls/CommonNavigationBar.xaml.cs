@@ -1,11 +1,11 @@
-using Firehose.Preferences;
-using Firehose.UI.Dialogs;
+using Windows.ApplicationModel.DataTransfer;
+using FirehoseApp.Preferences;
+using FirehoseApp.UI.Dialogs;
 using HYDRANT;
 using HYDRANT.Definitions;
-using Windows.ApplicationModel.DataTransfer;
 using WinRT.Interop;
 
-namespace Firehose.UI.Controls;
+namespace FirehoseApp.UI.Controls;
 public sealed partial class CommonNavigationBar : Grid
 {
 

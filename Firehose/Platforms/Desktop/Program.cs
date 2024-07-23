@@ -1,6 +1,7 @@
+using Uno.Resizetizer;
 using Uno.UI.Runtime.Skia;
 
-namespace Firehose;
+namespace FirehoseApp;
 public class Program
 {
     [STAThread]
@@ -17,5 +18,6 @@ public class Program
             .Build();
 
         host.Run();
+
     }
 }

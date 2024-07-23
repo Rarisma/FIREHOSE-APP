@@ -1,6 +1,9 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
+using FirehoseApp.Viewmodels;
+using HYDRANT;
 using HYDRANT.Definitions;
 
-namespace Firehose.UI;
+namespace FirehoseApp.UI;
 
 public sealed partial class ReaderMode : Page
 {
@@ -11,6 +14,4 @@ public sealed partial class ReaderMode : Page
         Article = Data;
         InitializeComponent();
     }
-
-    private void GoBack(object sender, RoutedEventArgs e) => Glob.GoBack();
 }

@@ -1,5 +1,5 @@
 //Copied from UNO UI Loadable page
-namespace Firehose.UI.Controls;
+namespace FirehoseApp.UI.Controls;
 public class AsyncCommand : ICommand, ILoadable
 {
     public event EventHandler? CanExecuteChanged;

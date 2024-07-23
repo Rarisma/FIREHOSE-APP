@@ -1,7 +1,7 @@
 using HYDRANT.Definitions;
 
 //LIVING WITH DETERMINATION
-namespace Firehose.UI.Controls;
+namespace FirehoseApp.UI.Controls;
 
 /// <summary>
 /// This determines how an article is displayed in article view.
