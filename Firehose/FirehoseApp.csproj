@@ -1,11 +1,9 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <TargetFrameworks>
       net8.0-android;
       net8.0-ios;
       net8.0-maccatalyst;
-      net8.0-windows10.0.19041;
-      net8.0-desktop;
     </TargetFrameworks>
 
     <OutputType>Exe</OutputType>
@@ -16,8 +14,8 @@
     <!-- App Identifier -->
     <ApplicationId>net.rarisma.REMNANT</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
     <!--
       If you encounter this error message:
 
@@ -39,14 +37,23 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
     <JavaMaximumHeapSize>3G</JavaMaximumHeapSize>
+    <AndroidKeyStore>False</AndroidKeyStore>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
     <JavaMaximumHeapSize>3G</JavaMaximumHeapSize>
     <AndroidLinkTool>r8</AndroidLinkTool>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidKeyStore>False</AndroidKeyStore>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Icons\icon_foreground.svg" />
     <None Remove="Assets\splash.svg" />
+    <None Remove="UI\Dialogs\LoginFlow.xaml" />
   </ItemGroup>
 
 
@@ -115,6 +122,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="UI\Dialogs\LoginFlow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\LoginFlow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

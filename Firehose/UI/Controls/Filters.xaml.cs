@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Viewmodels;
+using HYDRANT.Definitions;
 using Microsoft.UI;
 
 namespace FirehoseApp.UI.Controls;
@@ -11,14 +12,6 @@ public sealed partial class Filters : AppBarButton
     /// Visible display name
     /// </summary>
     public string DisplayName { get; set; }
-    /// <summary>
-    /// MySQL filter that will be used to filter articles
-    /// </summary>
-    public string SQLFilter { get; set; }
-    /// <summary>
-    /// Order by
-    /// </summary>
-    public string FilterOrder { get; set; }
     
     /// <summary>
     /// UI button for filters
@@ -26,14 +19,13 @@ public sealed partial class Filters : AppBarButton
     /// <param name="name"> Visible name to the user</param>
     /// <param name="filter">MySQL filtering rule</param>
     /// <param name="order">Order by, defaults to descending</param>
-    public Filters(string name, string filter, string order = "ORDER BY PUBLISH_DATE DESC")
+    public Filters(Filter filter)
     {
-        DisplayName = name;
-        SQLFilter = filter;
-        FilterOrder = order;
+        DisplayName = filter.Name;
+        //FilterOrder = order;
         this.InitializeComponent();
     }
-    
+
     private void Clicked(object sender, RoutedEventArgs e)
     {
         ShellVM ShellVM = Ioc.Default.GetRequiredService<ShellVM>();
@@ -49,16 +41,15 @@ public sealed partial class Filters : AppBarButton
         Foreground = Themer.SecondaryBrush;
         
         Filters f = ShellVM.Filters.First(f => f.DisplayName == DisplayName);
-        if (ShellVM.FilterBy == f.SQLFilter)
+        if (ShellVM.CurrentFilter == f.DisplayName)
         {
             //If the same button has been clicked on load older articles
             ShellVM.Offset += Glob.Model.ArticleFetchLimit;
         }
         else
         {
-            ShellVM.FilterBy = f.SQLFilter;
-            ShellVM.FilterOrder = f.FilterOrder;
             ShellVM.Offset = 0;
+            ShellVM.CurrentFilter = DisplayName;
         }
 
         ShellVM.UpdateButtonsDelegate.Invoke(this);

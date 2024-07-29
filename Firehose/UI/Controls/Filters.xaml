@@ -7,8 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="Transparent" BorderBrush="Transparent"
-    MinHeight="45" MaxHeight="45" CornerRadius="4"
-    VerticalContentAlignment="Top" Padding="10,0" Margin="10,5"
-    Click="Clicked" FontSize="12">
-  <TextBlock Text="{x:Bind DisplayName}" FontSize="10"/>
-</AppBarButton>
+    MinHeight="60" MaxHeight="60" CornerRadius="4"
+    VerticalContentAlignment="Bottom" Padding="10" Margin="10,0"
+    Click="Clicked" FontSize="20" Width="100" Content="{x:Bind DisplayName}"/>

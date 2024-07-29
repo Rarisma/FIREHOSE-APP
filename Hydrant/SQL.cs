@@ -1,7 +1,8 @@
 using HYDRANT.Definitions;
 using MySqlConnector;
+
 //The voice someone calls (in the labyrinth)
-namespace Hydrant;
+namespace HYDRANT;
 
 /// <summary>
 /// Access API via MySQL
@@ -68,7 +69,7 @@ public class SQL
 	/// <returns>list of articles.</returns>
 	public List<Article> GetArticles(int Limit = 0, int Offset = 0,
 	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true,
-    bool AllowUserSubmittedArticles = false)
+    bool AllowUserSubmittedArticles = false, int PublisherID = -1)
      {
         string query;
         //Select queries, minimal mode is much quicker for large queries.
@@ -83,15 +84,31 @@ public class SQL
 		    PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
 		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
         }
-
-        if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER") 
-        { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
-        else if (Filter.Contains("ORDER"))
-        {
-            Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
-        }
-        else { Filter += " AND UserGeneratedArticle = 0"; }
         
+        //Disable UGC
+        if (!AllowUserSubmittedArticles)
+        {
+            if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
+            { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
+            else if (Filter.Contains("ORDER"))
+            {
+                Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
+            }
+            else { Filter += " AND UserGeneratedArticle = 0"; }
+        }
+        
+        //Filter by publisher if enabled
+        if (PublisherID != -1)
+        {
+            if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
+            { Filter = "WHERE PUBLISHER_ID = 0 " + Filter; }
+            else if (Filter.Contains("ORDER"))
+            {
+                Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
+            }
+            else { Filter += " AND UserGeneratedArticle = 0"; }
+        }
+
         //Add common filtering stuff
         query += $" FROM ARTICLES {Filter} LIMIT {Limit} OFFSET {Offset};";
             

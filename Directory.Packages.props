@@ -26,7 +26,7 @@
     <PackageVersion Include="Microsoft.OpenApi" Version="1.6.15" />
     <PackageVersion Include="Microsoft.Windows.Compatibility" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
     <PackageVersion Include="MySql.Data" Version="8.4.0" />
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
@@ -37,26 +37,26 @@
     <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
     <PackageVersion Include="SmartReader" Version="0.9.5" />
-    <PackageVersion Include="Svg.Skia" Version="1.0.0.18" />
-    <PackageVersion Include="System.Drawing.Common" Version="4.7.3" />
+    <PackageVersion Include="Svg.Skia" Version="2.0.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.7" />
     <PackageVersion Include="System.Management" Version="8.0.0" />
     <PackageVersion Include="Terminal.Gui" Version="2.0.0-prealpha.1829" />
     <PackageVersion Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
     <PackageVersion Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
     <PackageVersion Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
-    <PackageVersion Include="Uno.Fonts.Fluent" Version="2.3.1" />
-    <PackageVersion Include="Uno.Resizetizer" Version="1.4.10" />
-    <PackageVersion Include="Uno.Toolkit.WinUI" Version="6.0.24" />
+    <PackageVersion Include="Uno.Fonts.Fluent" Version="2.4.0" />
+    <PackageVersion Include="Uno.Resizetizer" Version="1.5.2" />
+    <PackageVersion Include="Uno.Toolkit.WinUI" Version="6.1.8" />
     <PackageVersion Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.2.139" />
     <PackageVersion Include="Uno.UniversalImageLoader" Version="1.9.36" />
     <PackageVersion Include="Uno.Wasm.Bootstrap" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.0-dev.35" />
     <PackageVersion Include="Uno.Wasm.Bootstrap.Server" Version="9.0.0-dev.35" />
-    <PackageVersion Include="Uno.WinUI" Version="5.2.161" />
-    <PackageVersion Include="Uno.WinUI.Lottie" Version="5.2.161" />
-    <PackageVersion Include="Uno.WinUI.DevServer" Version="5.2.161" />
+    <PackageVersion Include="Uno.WinUI" Version="5.3.90" />
+    <PackageVersion Include="Uno.WinUI.Lottie" Version="5.3.90" />
+    <PackageVersion Include="Uno.WinUI.DevServer" Version="5.3.90" />
     <PackageVersion Include="Uno.WinUI.Skia.Gtk" Version="5.2.139" />
-    <PackageVersion Include="Uno.WinUI.Svg" Version="5.2.161" />
+    <PackageVersion Include="Uno.WinUI.Svg" Version="5.3.90" />
     <PackageVersion Include="Uno.WinUI.WebAssembly" Version="5.2.139" />
     <PackageVersion Include="Xamarin.Google.Android.Material" Version="1.10.0.4" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />

@@ -7,10 +7,9 @@
 		mc:Ignorable="d"
 		xmlns:hydrant="using:HYDRANT.Definitions"
     xmlns:utu="using:Uno.Toolkit.UI"
-    xmlns:controls="using:Firehose.UI.Controls"
     xmlns:controls1="using:FirehoseApp.UI.Controls"
-    utu:StatusBar.Foreground="{x:Bind Themer.StatusBar}"
-    utu:StatusBar.Background="{x:Bind Themer.MainBrush}"
+    utu:StatusBar.Foreground="{x:Bind Themer.StatusBar, Mode=TwoWay}"
+    utu:StatusBar.Background="{x:Bind Themer.MainBrush, Mode=TwoWay}"
     Loaded="ArticleList_OnLoaded">
   <Page.Resources>
     <!-- Common Border Style -->
@@ -132,45 +131,60 @@
 																 HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
 
   </Page.Resources>
-  <utu:LoadingView Source="{x:Bind ShellVM.LoadArticleDataCommand, Mode=TwoWay}">
+  <utu:LoadingView>
+    <utu:LoadingView.Source>
+      <utu:CompositeLoadableSource>
+        <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand, Mode=TwoWay}" />
+        <utu:LoadableSource  Source="{x:Bind ShellVM.LoadAllDataCommand, Mode=TwoWay}" />
+      </utu:CompositeLoadableSource>
+    </utu:LoadingView.Source>
     <utu:LoadingView.LoadingContent>
       <StackPanel Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
         <ProgressRing IsActive="True"/>
         <TextBlock Text="Loading more articles..."/>
       </StackPanel>
     </utu:LoadingView.LoadingContent>
-      <Grid>
+    <Grid Padding="10,0" Margin="10" MaxWidth="700">
         <Grid.RowDefinitions>
           <RowDefinition Height="auto"/>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" Padding="10,0"
-                      Margin="10" MaxWidth="600">
+        <!-- Top bar UI -->
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"
+                      HorizontalAlignment="Center">
+          <StackPanel Orientation="Horizontal" MinHeight="40">
+            <AppBarButton Icon="Setting" Click="OpenSettings" LabelPosition="Collapsed"
+                          VerticalContentAlignment="Center" MaxHeight="200" HorizontalAlignment="Center"
+                          Width="60" Margin="0,10,0,0" Height="50"/>
+
+            <!-- Bookmarks button -->
+          <AppBarButton Click="ShowBookmarks" Content="Bookmarks" VerticalContentAlignment="Center"
+                          MaxHeight="200" HorizontalAlignment="Center"
+                          Width="120" Margin="0,10,0,0" Height="50"
+                          Foreground="{x:Bind Themer.SecondaryBrush, Mode=TwoWay}"
+                          Background="{x:Bind ShellVM.BookmarksButtonForeground, Mode=TwoWay}"/>
+
+            <AppBarButton Name="SourcesButton" Click="FilterSource" Content="Filter publisher"
+                          VerticalContentAlignment="Center" MaxHeight="200" HorizontalAlignment="Center"
+                          Width="120" Margin="0,10,0,0" Height="50"/>
+            <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                    BorderBrush="Gray" Margin="5"/>
+
+            <!-- Filter buttons -->
+            <ItemsRepeater ItemsSource="{x:Bind ShellVM.Filters}"
+                           VerticalAlignment="Center" Margin="0,10,0,0">
+              <ItemsRepeater.Layout>
+                <StackLayout Orientation="Horizontal" />
+              </ItemsRepeater.Layout>
+            </ItemsRepeater>
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- Article Content UI -->
+        <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
 
           <StackPanel Orientation="Vertical">
-            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-              <StackPanel Orientation="Horizontal" MinHeight="40">
-                <AppBarButton Icon="Setting" Click="OpenSettings" VerticalAlignment="Center" LabelPosition="Collapsed"
-                            Margin="0,10,0,0"/>
-                <AppBarButton Content="Bookmarked" Height="50"  Click="ShowBookmarks" Margin="0,10,0,0"
-                            Width="90" Foreground="{x:Bind ShellVM.BookmarksButtonForeground, Mode=TwoWay}"
-                            Background="{x:Bind ShellVM.BookmarksButtonBackground, Mode=TwoWay}"/>
-              <AppBarButton Name="SourcesButton" Height="50" Click="FilterSource" Content="Filter publisher"
-                            MaxHeight="200" HorizontalAlignment="Center" Width="120" Margin="0,10,0,0"/>
-                <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                      BorderBrush="Gray" Margin="5"/>
-
-                <!-- Filter buttons -->
-                <ItemsRepeater ItemsSource="{x:Bind ShellVM.Filters}"
-                             VerticalAlignment="Center" Margin="0,10,0,0">
-                  <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Horizontal" />
-                  </ItemsRepeater.Layout>
-                </ItemsRepeater>
-              </StackPanel>
-            </ScrollViewer>
-
             <StackPanel>
               <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
                             ItemTemplateSelector="{StaticResource ArticleSelector}"/>

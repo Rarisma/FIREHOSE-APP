@@ -31,9 +31,7 @@ public partial class App : Application
         
         configureIOC();
         Current.UnhandledException += Current_UnhandledException;
-        
-        Glob.Publications = await new API().GetPublications();
-        
+
         if (MainWindow.Content == null)
         {
             // When the navigation stack isn't restored navigate to the first page,

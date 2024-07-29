@@ -22,25 +22,29 @@ public class API
 	/// </summary>
 	public string Endpoint;
 
-	///// <summary>
-	///// Set to your API Key.
-	///// </summary>
-	//public string API_KEY;
-
-	/// <summary>
-	/// Gets Articles from API
-	/// </summary>
-	/// <param name="Limit">How many articles you want to set</param>
-	/// <param name="Offset">Skip this amount of articles</param>
-	/// <param name="Filter">Filter articles via SQL</param>
-	/// <param name="Minimal">Minimal Mode</param>
-	/// <returns>List of articles if successful.</returns>
-	public async Task<List<Article>?> GetArticles(int Limit = 20, int Offset = 0, 
-        string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal=true)
+    ///// <summary>
+    ///// Set to your API Key.
+    ///// </summary>
+    //public string API_KEY;
+    
+    /// <summary>
+    /// Gets Articles from API
+    /// </summary>
+    /// <param name="limit">How many articles you want to set</param>
+    /// <param name="Offset">Skip this amount of articles</param>
+    /// <param name="token">Used to access certain content</param>
+    /// <param name="FilterName">Name of the filter</param>
+    /// <param name="Minimal">Minimal Mode (less data is returned)</param>
+    /// <param name="PublisherID">Only return filters from these publisher IDs</param>
+    /// <returns>List of articles if successful.</returns>
+    public async Task<List<Article>?> GetArticles(int limit = 20, int Offset = 0, 
+        string? token = null, string FilterName = "Latest", bool Minimal = false,
+        int PublisherID = -1)
 	{
-		var endpoint = $"/Articles/GetArticles?limit={Limit}&offset={Offset}&filter={Filter}&minimal={Minimal}";
+		var endpoint = $"/Articles/GetArticles?limit={limit}&offset={Offset}&" +
+                       $"FilterName={FilterName}&minimal={Minimal}" +
+                       $"&token={token}&publisherid={PublisherID}";
 		using HttpClient client = new();
-		//client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
 
 		//Make request and check it was successful
 		var response = await client.GetAsync(Endpoint + endpoint);
@@ -105,5 +109,32 @@ public class API
         string url = $"{Endpoint}/Articles/GetArticleText?URL={Uri.EscapeDataString(URL)}";
         HttpResponseMessage Response = await client.GetAsync(url);
         return await Response.Content.ReadAsStringAsync();
+    }
+    
+    /// <summary>
+    /// Gets all filters available for a user
+    /// </summary>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    public async Task<List<Filter>> GetFilters(string token = null)
+    {
+        string url = Endpoint + "/Filter/GetFilters";
+        using (HttpClient client = new HttpClient())
+        {
+            var requestUrl = string.IsNullOrEmpty(token) ? url : $"{url}?Token={token}";
+            
+            HttpResponseMessage response = await client.GetAsync(requestUrl);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                
+                string content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Filter>>(content)!;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -49,6 +49,11 @@ public class PreferencesModel
     /// Article Objects that the user has bookmarked
     /// </summary>
     public List<Article> BookmarkedArticles { get; set; }
+    
+    /// <summary>
+    /// Allows users access to features.
+    /// </summary>
+    public string AccountToken { get; set; }
 
 
     /// <summary>

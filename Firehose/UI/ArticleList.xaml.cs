@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.UI.Controls;
 using FirehoseApp.Viewmodels;
+using HYDRANT;
 using HYDRANT.Definitions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -30,15 +31,12 @@ public sealed partial class ArticleList : Page
         if (await Glob.OpenContentDialog(CD) == ContentDialogResult.Primary)
         {
             ShellVM.PublisherID = ((CD.Content as PublisherFilter).Content as ListView)!.SelectedIndex + 1;
-            ShellVM.FilterExtension = $"PUBLISHER_ID = {ShellVM.PublisherID}";
         }
         else
         {
             ShellVM.PublisherID = -1;
             SourcesButton.Content = "Filter Publisher";
-            ShellVM.FilterExtension = "";
         }
-        ShellVM.FilterOrder = ShellVM.Filters[0].FilterOrder;
         ShellVM.Offset = 0;
         UpdateButtons(ShellVM.Filters[0]);
         ShellVM.LoadArticleDataCommand.Execute(null);
@@ -46,10 +44,14 @@ public sealed partial class ArticleList : Page
 
     public ArticleList()
     {
+        ShellVM.LoadAllDataCommand.Execute(null);
         ShellVM.UpdateButtonsDelegate = UpdateButtons;
         ShellVM.Articles = new();
+        ShellVM.Offset = 0;
+        ShellVM.LoadMoreVisibility = Visibility.Visible;
+
+        //Set correct filter
         InitializeComponent();
-        ChangeFilter(ShellVM.Filters[0], new());
     }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
@@ -78,7 +80,7 @@ public sealed partial class ArticleList : Page
         //Bookmarks button isn't in the filters stack panel so clear them manually.
         ShellVM.BookmarksButtonBackground = new SolidColorBrush(Colors.Transparent);
         ShellVM.BookmarksButtonForeground = Themer.SecondaryBrush;
-        
+
         //Set filter by button.
         if (ShellVM.PublisherID != -1)
         {
@@ -107,16 +109,6 @@ public sealed partial class ArticleList : Page
         //Set filter button background and foreground.
         Button.Background = Themer.SecondaryBrush;
         Button.Foreground = Themer.MainBrush;
-    }
-
-    private void ChangeFilter(object sender, RoutedEventArgs e)
-    {
-        ShellVM.Offset = 0;
-        ShellVM.LoadMoreVisibility = Visibility.Visible;
-        UpdateButtons((Button)sender);
-
-        //Set correct filter
-        ShellVM.LoadArticleDataCommand.Execute(null);
     }
 
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;

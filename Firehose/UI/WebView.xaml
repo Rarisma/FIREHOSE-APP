@@ -17,6 +17,6 @@
     <controls1:CommonNavigationBar ItemSource="{x:Bind Article}"/>
 
     <WebView2 Source="{x:Bind Article.Url}" HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch" Grid.Row="1" Name="WV2" Loaded="WV2_OnLoaded"/>
+              VerticalAlignment="Stretch" Grid.Row="1" />
   </Grid>
 </Page>
