@@ -39,7 +39,7 @@
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock Text="{x:Bind AppVer}" HorizontalAlignment="Center" Foreground="Gray"/>
       <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center" Foreground="Gray"/>
-      <HyperlinkButton Content="HEARTFUL CRY" Click="DevMenu"
+      <HyperlinkButton Content="FAHRENHEIT" Click="DevMenu"
                  Foreground="Gray" HorizontalAlignment="Center"/>
   </StackPanel>
   </Grid>

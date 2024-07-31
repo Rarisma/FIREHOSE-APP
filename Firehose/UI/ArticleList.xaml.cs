@@ -34,8 +34,12 @@ public sealed partial class ArticleList : Page
         }
         else
         {
+            //Set back to Filter button
             ShellVM.PublisherID = -1;
-            SourcesButton.Content = "Filter Publisher";
+            SourcesButton.Content = new FontIcon
+            {
+                Glyph = "\xE71C"
+            };
         }
         ShellVM.Offset = 0;
         UpdateButtons(ShellVM.Filters[0]);
@@ -66,7 +70,7 @@ public sealed partial class ArticleList : Page
     public void UpdateButtons(Button Button)
     {
         //Hide no bookmarks message.
-        ShellVM.NoBookmarksText = " ";
+        ShellVM.NoBookmarksText = "";
 
         //Show load more button
         ShellVM.LoadMoreVisibility = Visibility.Visible;
@@ -78,27 +82,19 @@ public sealed partial class ArticleList : Page
             FilterButton.Foreground = Themer.SecondaryBrush;
         }
         //Bookmarks button isn't in the filters stack panel so clear them manually.
-        ShellVM.BookmarksButtonBackground = new SolidColorBrush(Colors.Transparent);
-        ShellVM.BookmarksButtonForeground = Themer.SecondaryBrush;
+        BookmarkButton.Background = Themer.MainBrush;
+        BookmarkButton.Foreground = Themer.SecondaryBrush;
 
         //Set filter by button.
         if (ShellVM.PublisherID != -1)
         {
             SourcesButton.Background = Themer.SecondaryBrush;
             SourcesButton.Foreground = Themer.MainBrush;
-            SourcesButton.Content = new StackPanel
+            SourcesButton.Content = new Image
             {
-                Orientation = Orientation.Horizontal,
-                Children =
-                {
-                    new Image
-                    {
-                        Height = 16, Width = 16,
-                        Margin = new(0, 0, 10, 0),
-                        Source = new BitmapImage(new Uri(Glob.Publications[ShellVM.PublisherID].Favicon))
-                    },
-                    new TextBlock { Text = Glob.Publications[ShellVM.PublisherID].Name, FontSize = 10}
-                }
+                Height = 16,
+                Width = 16,
+                Source = new BitmapImage(new Uri(Glob.Publications[ShellVM.PublisherID].Favicon))
             };
         }
         else
@@ -113,6 +109,11 @@ public sealed partial class ArticleList : Page
 
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;
     
+    /// <summary>
+    /// Ran when bookmarks star is clicked.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void ShowBookmarks(object sender, RoutedEventArgs e)
     {
         if (sender is not Button Button) {return;}

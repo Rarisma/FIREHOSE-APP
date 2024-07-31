@@ -82,7 +82,7 @@ public class SQL
         {
             query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
 		    PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
-		    COMPANIES_MENTIONED, AUTHOR, SECTORS";
+		    COMPANIES_MENTIONED, AUTHOR, SECTORS,TimeToRead";
         }
         
         //Disable UGC
@@ -104,9 +104,9 @@ public class SQL
             { Filter = "WHERE PUBLISHER_ID = 0 " + Filter; }
             else if (Filter.Contains("ORDER"))
             {
-                Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
+                Filter = Filter.Replace("ORDER", $" AND PUBLISHER_ID = {PublisherID} ORDER");
             }
-            else { Filter += " AND UserGeneratedArticle = 0"; }
+            else { Filter += $" AND PUBLISHER_ID = {PublisherID}"; }
         }
 
         //Add common filtering stuff

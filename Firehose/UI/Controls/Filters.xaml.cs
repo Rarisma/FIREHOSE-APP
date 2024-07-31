@@ -4,7 +4,7 @@ using HYDRANT.Definitions;
 using Microsoft.UI;
 
 namespace FirehoseApp.UI.Controls;
-public sealed partial class Filters : AppBarButton
+public sealed partial class Filters : Button
 {
     ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
 
@@ -36,6 +36,7 @@ public sealed partial class Filters : AppBarButton
             FilterButton.Background = new SolidColorBrush(Colors.Transparent);
             FilterButton.Foreground = Themer.SecondaryBrush;
         }
+
         
         Background = Themer.MainBrush;
         Foreground = Themer.SecondaryBrush;

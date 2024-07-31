@@ -27,6 +27,10 @@
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="TransparentBrush" />
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="TransparentBrush" />
       <x:Double x:Key="ExpanderChevronButtonSize">0</x:Double>
+      <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="TransparentBrush" />
     </ResourceDictionary>
   </Application.Resources>
 

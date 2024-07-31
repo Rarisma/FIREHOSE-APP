@@ -8,25 +8,17 @@
 		xmlns:hydrant="using:HYDRANT.Definitions"
     xmlns:utu="using:Uno.Toolkit.UI"
     xmlns:controls1="using:FirehoseApp.UI.Controls"
-    utu:StatusBar.Foreground="{x:Bind Themer.StatusBar, Mode=TwoWay}"
-    utu:StatusBar.Background="{x:Bind Themer.MainBrush, Mode=TwoWay}"
+    utu:StatusBar.Foreground="{x:Bind Themer.StatusBar, Mode=OneWay}"
+    utu:StatusBar.Background="{x:Bind Themer.MainBrush, Mode=OneWay}"
     Loaded="ArticleList_OnLoaded">
   <Page.Resources>
     <!-- Common Border Style -->
     <ControlTemplate x:Key="CommonBorderTemplate">
       <Border Background="Transparent" BorderBrush="Gray"
-              BorderThickness="1" Margin="20,10"/>
+              BorderThickness="1" Margin="10,10"/>
     </ControlTemplate>
 
-    <DataTemplate x:Key="ExpanderContentTemplate" x:DataType="hydrant:Article">
-      <StackPanel>
-        <TextBlock Text="{x:Bind Summary}" TextWrapping="WrapWholeWords"/>
-        <Button Content="Read full article" HorizontalAlignment="Stretch"
-                Margin="20,20,20,5" Click="OpenArticle"/>
-      </StackPanel>
-    </DataTemplate>
-
-    <!-- No Image - When the Article lacks an image, this will show the RSS Summary in its place.-->
+    <!-- No Image - When the Article lacks an image.-->
     <DataTemplate x:Key="NoImageTemplate" x:DataType="hydrant:Article">
       <StackPanel HorizontalAlignment="Stretch">
         <!-- Spacing border -->
@@ -64,7 +56,7 @@
               <controls1:PublisherInformation ItemSource="{x:Bind}"/>
 
               <!-- Image + Text -->
-              <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="200"
+              <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="400"
                                 BorderThickness="0" VerticalAlignment="Stretch">
                 <Image Source="{x:Bind ImageURL}" />
               </Border>
@@ -138,13 +130,16 @@
         <utu:LoadableSource  Source="{x:Bind ShellVM.LoadAllDataCommand, Mode=TwoWay}" />
       </utu:CompositeLoadableSource>
     </utu:LoadingView.Source>
+    <!-- Shown when loading-->
     <utu:LoadingView.LoadingContent>
       <StackPanel Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
         <ProgressRing IsActive="True"/>
         <TextBlock Text="Loading more articles..."/>
       </StackPanel>
     </utu:LoadingView.LoadingContent>
-    <Grid Padding="10,0" Margin="10" MaxWidth="700">
+
+    <!-- Shown after we've loaded -->
+    <Grid Padding="2,0" Margin="0,5" MaxWidth="800">
         <Grid.RowDefinitions>
           <RowDefinition Height="auto"/>
           <RowDefinition Height="*"/>
@@ -152,22 +147,30 @@
 
         <!-- Top bar UI -->
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"
-                      HorizontalAlignment="Center">
-          <StackPanel Orientation="Horizontal" MinHeight="40">
-            <AppBarButton Icon="Setting" Click="OpenSettings" LabelPosition="Collapsed"
-                          VerticalContentAlignment="Center" MaxHeight="200" HorizontalAlignment="Center"
-                          Width="60" Margin="0,10,0,0" Height="50"/>
+                      HorizontalAlignment="Center" Margin="0,10,0,0"
+                      HorizontalContentAlignment="Left">
 
-            <!-- Bookmarks button -->
-          <AppBarButton Click="ShowBookmarks" Content="Bookmarks" VerticalContentAlignment="Center"
-                          MaxHeight="200" HorizontalAlignment="Center"
-                          Width="120" Margin="0,10,0,0" Height="50"
-                          Foreground="{x:Bind Themer.SecondaryBrush, Mode=TwoWay}"
-                          Background="{x:Bind ShellVM.BookmarksButtonForeground, Mode=TwoWay}"/>
+          <StackPanel Orientation="Horizontal" MinHeight="40" Margin="0,0,0,10">
 
-            <AppBarButton Name="SourcesButton" Click="FilterSource" Content="Filter publisher"
-                          VerticalContentAlignment="Center" MaxHeight="200" HorizontalAlignment="Center"
-                          Width="120" Margin="0,10,0,0" Height="50"/>
+            <!-- Setting button -->
+          <AppBarButton Icon="Setting" Click="OpenSettings" LabelPosition="Collapsed"
+                        VerticalContentAlignment="Center" MaxHeight="200"
+                        HorizontalAlignment="Center" Width="50" Margin="0,10,0,0"
+                        Height="50"/>
+
+              <!-- Bookmarks button -->
+            <AppBarButton Click="ShowBookmarks" VerticalContentAlignment="Center"
+                            MaxHeight="200" HorizontalAlignment="Center" Name="BookmarkButton"
+                            Width="50" Margin="0,10,0,0" Height="50">
+              <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE735;"/>
+            </AppBarButton>
+
+            <!-- Filter by publication -->
+          <AppBarButton Click="FilterSource" HorizontalAlignment="Center" Name="SourcesButton"
+                          VerticalContentAlignment="Center" MaxHeight="200" 
+                          Width="50" Margin="0,10,0,0" Height="50">
+            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Name="SourcesGlyph" Glyph="&#xE71C;"/>
+            </AppBarButton>
             <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                     BorderBrush="Gray" Margin="5"/>
 
@@ -181,7 +184,7 @@
           </StackPanel>
         </ScrollViewer>
 
-        <!-- Article Content UI -->
+        <!-- Article Content -->
         <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
 
           <StackPanel Orientation="Vertical">
@@ -193,7 +196,7 @@
                          HorizontalAlignment="Center" Margin="10"/>
 
               <HyperlinkButton Content="Click to load more Articles"
-                               Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=TwoWay}"
+                               Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=OneWay}"
                                Command="{x:Bind ShellVM.LoadArticleDataCommand}"
                                HorizontalAlignment="Center" Margin="10"/>
             </StackPanel>

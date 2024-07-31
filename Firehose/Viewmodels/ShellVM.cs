@@ -12,21 +12,72 @@ namespace FirehoseApp.Viewmodels;
 
 class ShellVM : ObservableObject
 {
-    public object Content { get; set; }
-
-    public delegate void UpdateButtons(Button Button);
+    private object content;
     
-    public UpdateButtons? UpdateButtonsDelegate;
-    public ObservableCollection<Article> Articles { get; set; }
-    public AsyncCommand LoadAllDataCommand { get; set; }
-    public AsyncCommand LoadArticleDataCommand { get; set; }
+    public object Content
+    {
+        get => content;
+        set => SetProperty(ref content, value);
+    }
+    
+    public delegate void UpdateButtons(Button button);
+    
+    private UpdateButtons? updateButtonsDelegate;
+    
+    public UpdateButtons? UpdateButtonsDelegate
+    {
+        get => updateButtonsDelegate;
+        set => SetProperty(ref updateButtonsDelegate, value);
+    }
+    
+    private ObservableCollection<Article> articles;
+    
+    public ObservableCollection<Article> Articles
+    {
+        get => articles;
+        set => SetProperty(ref articles, value);
+    }
+    
+    private AsyncCommand loadAllDataCommand;
+    
+    public AsyncCommand LoadAllDataCommand
+    {
+        get => loadAllDataCommand;
+        set => SetProperty(ref loadAllDataCommand, value);
+    }
+    
+    private AsyncCommand loadArticleDataCommand;
+    
+    public AsyncCommand LoadArticleDataCommand
+    {
+        get => loadArticleDataCommand;
+        set => SetProperty(ref loadArticleDataCommand, value);
+    }
+    
+    private string noBookmarksText;
+    
+    public string NoBookmarksText
+    {
+        get => noBookmarksText;
+        set => SetProperty(ref noBookmarksText, value);
+    }
+    
+    private Visibility loadMoreVisibility;
+    
+    public Visibility LoadMoreVisibility
+    {
+        get => loadMoreVisibility;
+        set => SetProperty(ref loadMoreVisibility, value);
+    }
+    
+    private ObservableCollection<Filters> filters;
+    
+    public ObservableCollection<Filters> Filters
+    {
+        get => filters;
+        set => SetProperty(ref filters, value);
+    }
 
-    public string NoBookmarksText { get; set; }
-    public Visibility LoadMoreVisibility { get; set; }
-    public SolidColorBrush BookmarksButtonForeground { get; set; }
-    public SolidColorBrush BookmarksButtonBackground { get; set; }
-
-    public ObservableCollection<Filters> Filters;
 
     //Access to the hallon API server
     public API Hallon = new();
