@@ -16,8 +16,8 @@
     <!-- App Identifier -->
     <ApplicationId>net.rarisma.REMNANT</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-    <ApplicationVersion>3</ApplicationVersion>
+    <ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
+    <ApplicationVersion>4</ApplicationVersion>
     <!--
       If you encounter this error message:
 
@@ -51,6 +51,8 @@
   <ItemGroup>
     <None Remove="Assets\Icons\icon_foreground.svg" />
     <None Remove="Assets\splash.svg" />
+    <None Remove="UI\Dialogs\BlockedSources.xaml" />
+    <None Remove="UI\Dialogs\BlockKeyWords.xaml" />
     <None Remove="UI\Dialogs\LoginFlow.xaml" />
   </ItemGroup>
 
@@ -128,6 +130,22 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\LoginFlow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="UI\Dialogs\BlockKeyWords.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\BlockKeyWords.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="UI\Dialogs\BlockedSources.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\BlockedSources.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

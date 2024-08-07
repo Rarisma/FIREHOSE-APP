@@ -63,10 +63,17 @@ public class SQL
     }
 
 
-	/// <summary>
-	/// Gets articles from database.
-	/// </summary>
-	/// <returns>list of articles.</returns>
+    /// <summary>
+    /// Gets articles from database
+    /// </summary>
+    /// <param name="Limit">How many articles to fetch</param>
+    /// <param name="Offset">Skip this amount of articles first</param>
+    /// <param name="Filter">SQL filter</param>
+    /// <param name="Minimal">Only returns required stuff</param>
+    /// <param name="AllowUserSubmittedArticles">Disables user submitted articles
+    /// (overriden if UGC is mentioned)</param>
+    /// <param name="PublisherID">Filter by PublisherID</param>
+    /// <returns>JSON Formatted list of articles.</returns>
 	public List<Article> GetArticles(int Limit = 0, int Offset = 0,
 	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true,
     bool AllowUserSubmittedArticles = false, int PublisherID = -1)
@@ -85,8 +92,8 @@ public class SQL
 		    COMPANIES_MENTIONED, AUTHOR, SECTORS,TimeToRead";
         }
         
-        //Disable UGC
-        if (!AllowUserSubmittedArticles)
+        //Disable UGC (overriden if UGC is mentioned)
+        if (!AllowUserSubmittedArticles && !Filter.Contains("UserGeneratedArticle"))
         {
             if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
             { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }

@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
+using FirehoseApp.Preferences;
 using FirehoseApp.UI.Controls;
 using FirehoseApp.Viewmodels;
-using HYDRANT;
 using HYDRANT.Definitions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -13,6 +13,7 @@ public sealed partial class ArticleList : Page
 {
     private ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
     private ShellVM ShellVM = Ioc.Default.GetRequiredService<ShellVM>();
+    private PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
     /// <summary>
     /// Sets ex filter to filter via publications
     /// </summary>
@@ -121,10 +122,10 @@ public sealed partial class ArticleList : Page
         ShellVM.Articles.Clear();
         ShellVM.Offset = 0;
         ShellVM.LoadMoreVisibility= Visibility.Collapsed;
-        ShellVM.Articles.AddRange(Glob.Model.BookmarkedArticles);
+        ShellVM.Articles.AddRange(Pref.BookmarkedArticles);
 
         //Show no bookmarks text, so it's not a blank screen
-        if (Glob.Model.BookmarkedArticles.Count == 0)
+        if (Pref.BookmarkedArticles.Count == 0)
         {
             ShellVM.NoBookmarksText = "You have no bookmarked articles.";
         }

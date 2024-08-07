@@ -13,7 +13,7 @@
     <PackageVersion Include="DSharpPlus.Commands" Version="5.0.0-nightly-02298" />
     <PackageVersion Include="DSharpPlus.SlashCommands" Version="5.0.0-nightly-02298" />
     <PackageVersion Include="Google.Apis.YouTube.v3" Version="1.68.0.3421" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.62" />
     <PackageVersion Include="JetBrains.Annotations" Version="2024.2.0" />
     <PackageVersion Include="LLamaSharp" Version="0.11.2" />
     <PackageVersion Include="LLamaSharp.Backend.Cuda12" Version="0.11.2" />
@@ -31,9 +31,16 @@
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="OpenAI" Version="2.0.0-beta.7" />
+    <PackageVersion Include="OpenCvSharp4.runtime.win" Version="4.10.0.20240616" />
     <PackageVersion Include="OpenGraph-Net" Version="4.0.1" />
     <PackageVersion Include="PdfPig" Version="0.1.8" />
     <PackageVersion Include="PDFsharp" Version="6.1.1" />
+    <PackageVersion Include="Sdcb.PaddleInference.runtime.win64.cu120-sm86-89" Version="2.6.1" />
+    <PackageVersion Include="Sdcb.PaddleInference.runtime.win64.mkl" Version="2.6.1" />
+    <PackageVersion Include="Sdcb.PaddleOCR" Version="2.7.0.3" />
+    <PackageVersion Include="Sdcb.PaddleOCR.Models.Online" Version="2.7.0.1" />
+    <PackageVersion Include="Selenium.WebDriver" Version="4.23.0" />
+    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="127.0.6533.9900" />
     <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
     <PackageVersion Include="SmartReader" Version="0.9.5" />
@@ -59,7 +66,7 @@
     <PackageVersion Include="Uno.WinUI.Svg" Version="5.3.90" />
     <PackageVersion Include="Uno.WinUI.WebAssembly" Version="5.2.139" />
     <PackageVersion Include="Xamarin.Google.Android.Material" Version="1.10.0.4" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="8.0.0" />
     <PackageVersion Include="YahooFinanceApi" Version="2.3.3" />
     <PackageVersion Include="Xamarin.GooglePlayServices.Ads.Lite" Version="122.3.0.5" />

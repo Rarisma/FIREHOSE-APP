@@ -27,9 +27,8 @@ public partial class App : Application
 #if DEBUG
         MainWindow.EnableHotReload();
 #endif
-        PreferencesModel.Load();
-        
         configureIOC();
+
         Current.UnhandledException += Current_UnhandledException;
 
         if (MainWindow.Content == null)
@@ -58,6 +57,7 @@ public partial class App : Application
         var Services = new ServiceCollection()
             .AddSingleton<ShellVM>()
             .AddSingleton<ThemeVM>()
+            .AddSingleton(PreferencesModel.Load())
             .BuildServiceProvider();
         
         Ioc.Default.ConfigureServices(Services);

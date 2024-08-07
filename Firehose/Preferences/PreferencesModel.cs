@@ -1,8 +1,11 @@
+using System.Collections.ObjectModel;
 using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using HYDRANT.Definitions;
 
 namespace FirehoseApp.Preferences;
-public class PreferencesModel
+public class PreferencesModel : ObservableObject
 {
     /// <summary>
     /// the folder where the preferences are saved to
@@ -15,6 +18,7 @@ public class PreferencesModel
     static string SavePath = Path.Combine(SaveFolder.Path, "prefs.json");
     public PreferencesModel()
     {
+        BlockedKeywords = new();
         Proxy = string.Empty;
         ArticleFetchLimit = 50;
         BookmarkedArticles = new();
@@ -54,7 +58,16 @@ public class PreferencesModel
     /// Allows users access to features.
     /// </summary>
     public string AccountToken { get; set; }
-
+    
+    /// <summary>
+    /// Sources that contain these keywords will be blocked
+    /// </summary>
+    private ObservableCollection<string> blockedKeywords;
+    public ObservableCollection<string> BlockedKeywords
+    {
+        get => blockedKeywords;
+        set => SetProperty(ref blockedKeywords, value);
+    }
 
     /// <summary>
     /// write this model
@@ -63,8 +76,10 @@ public class PreferencesModel
     {
         try
         {
+            PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+
             //Serialise PreferenceModel 
-            string Result = JsonSerializer.Serialize(Glob.Model);
+            string Result = JsonSerializer.Serialize(Pref);
             File.WriteAllText(SavePath, Result);
         }
         catch (Exception Ex)
@@ -77,28 +92,31 @@ public class PreferencesModel
     /// <summary>
     /// Load this model.
     /// </summary>
-    public static void Load() 
+    public static PreferencesModel Load()
     {
+        PreferencesModel Pref = new();
         try
         {
+
             if (File.Exists(SavePath) == false)
             {
-                Glob.Model = new();
-                return;
+                Pref = new();
+                return Pref;
             }
 
             var content = File.ReadAllText(SavePath);
-            Glob.Model = (PreferencesModel)JsonSerializer.Deserialize(content, typeof(PreferencesModel))!;
+            Pref = (PreferencesModel)JsonSerializer.Deserialize(content, typeof(PreferencesModel))!;
 
-            if (Glob.Model.ArticleFetchLimit <= 5)
+            if (Pref.ArticleFetchLimit <= 5)
             {
-                Glob.Model.ArticleFetchLimit = 20;
+                Pref.ArticleFetchLimit = 20;
             }
         }
         catch (Exception Ex)
         {
             Glob.Log(Glob.LogLevel.Wrn, Ex.Message);
-            Glob.Model = new();
         }
+        
+        return Pref;
     }
 }

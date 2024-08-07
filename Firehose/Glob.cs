@@ -1,6 +1,7 @@
 using Windows.UI.Core;
 using FirehoseApp.Preferences;
 using HYDRANT.Definitions;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 //I'VE GOT A RECKLESS TONGUE
 namespace FirehoseApp;
@@ -18,7 +19,6 @@ public static class Glob
     public static bool FNHPlus = false;
     
     public static Stack<object> NaviStack = new();
-    public static PreferencesModel? Model;
     public static XamlRoot? XamlRoot;
 
     /// <summary>
@@ -73,22 +73,53 @@ public static class Glob
         Sev
     }
     
+    private static bool _IsContentDialogOpen { get; set; }
 
     public static bool IsDialogOpen { get; private set; }
-    public static async Task<ContentDialogResult> OpenContentDialog(ContentDialog dialog)
+    /// <summary>
+    /// Reference to currently open dialog.
+    /// </summary>
+    private static ContentDialog OpenDialog;
+
+    /// <summary>
+    /// This takes a ContentDialog and shows it to the user
+    /// It will handle XAMLRoot and showing the dialog.
+    /// </summary>
+    /// <param name="Dialog">Content dialog to show</param>
+    /// <param name="force">Force show content dialog, will close currently open dialog if one
+    /// is already open
+    /// </param>
+    /// <returns>A ContentDialogResult enum value.</returns>
+    public static async Task<ContentDialogResult> OpenContentDialog(ContentDialog Dialog,
+        bool force = false)
     {
-        if (!IsDialogOpen)
+        //force close any other dialog if one is open
+        //(if force is enabled)
+        if (force && _IsContentDialogOpen && OpenDialog != null)
         {
-            IsDialogOpen = true;    //Stop any other dialogs from opening
-            dialog.XamlRoot = App.MainWindow.Content.XamlRoot;   //Set XamlRoot
-            var res = await dialog.ShowAsync(); //Show the dialog
-            IsDialogOpen = false;    //Allow others Dialogs to show
-            return res;              // Return the result
+            OpenDialog.Hide();
+
+            //This will be unset eventually but because we have called
+            //Hide() already we can unset this early.
+            _IsContentDialogOpen = false;
         }
-        else
+
+        //Checks a content dialog isn't already open
+        if (!_IsContentDialogOpen)
         {
-            //We can't show a result as there's already a dialog open
-            return ContentDialogResult.None;
+            OpenDialog = Dialog;
+
+            //Set XAML root and correct theme.
+            OpenDialog.XamlRoot = XamlRoot;
+
+            _IsContentDialogOpen = true;
+
+            //Show and log result.
+            ContentDialogResult Result = await OpenDialog.ShowAsync();
+            _IsContentDialogOpen = false;
+            OpenDialog = null;
+            return Result;
         }
+        return ContentDialogResult.None;
     }
 }

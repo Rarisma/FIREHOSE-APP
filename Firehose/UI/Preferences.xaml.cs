@@ -1,6 +1,7 @@
 using Windows.UI.Text;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI.Dialogs;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace FirehoseApp.UI;
 /// <summary>
@@ -8,8 +9,9 @@ namespace FirehoseApp.UI;
 /// </summary>
 public sealed partial class Preferences : Page
 {
-    private PreferencesModel Model;
-    
+    PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+
+
     public string AppVer
     {
         get => $"{Package.Current.DisplayName} Version {Package.Current.Id.Version.Major}." +
@@ -18,12 +20,10 @@ public sealed partial class Preferences : Page
     public Preferences()
     {
         InitializeComponent();
-        Model = Glob.Model;
     }
 
     private void Back(object sender, RoutedEventArgs e)
     {
-        Glob.Model = Model;
         PreferencesModel.Save();
         Glob.GoBack();
     }
@@ -40,10 +40,10 @@ public sealed partial class Preferences : Page
         TextBox TokenBox = new()
         {
             Header = "Account Token",
-            Text = Model.AccountToken
+            Text = Pref.AccountToken
             
         };
-        TokenBox.TextChanged += (_, _) => { Model.AccountToken = TokenBox.Text; };
+        TokenBox.TextChanged += (_, _) => { Pref.AccountToken = TokenBox.Text; };
 
 
         Glob.OpenContentDialog(new()
@@ -70,5 +70,35 @@ public sealed partial class Preferences : Page
             PrimaryButtonText = "close"
 
         });
+    }
+    
+    private async void BlockSources(object sender, RoutedEventArgs e)
+    {
+        await Glob.OpenContentDialog(new()
+        {
+            Title = "Editing blocked sources...",
+            Content = new BlockedSources(),
+            PrimaryButtonText = "Close"
+        }, true);
+        
+        PreferencesModel.Save();
+    }
+    
+    /// <summary>
+    /// Brings up UI to block UI
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private async void BlockKeywords(object sender, RoutedEventArgs e)
+    {
+        await Glob.OpenContentDialog(new()
+        {
+            Title = "Editing blocked keywords...",
+            Content = new BlockKeyWords(),
+            PrimaryButtonText = "Close"
+        },true);
+        
+        PreferencesModel.Save();
     }
 }

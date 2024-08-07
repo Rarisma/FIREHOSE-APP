@@ -1,0 +1,41 @@
+﻿<Page
+    x:Class="FirehoseApp.UI.Dialogs.BlockKeyWords"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel>
+      <!-- Block limitation warning -->
+    <TextBlock TextWrapping="Wrap">
+      Articles that contain these words will be hidden,
+      due to limitations some articles containing these keywords
+      could still show.
+      <LineBreak/><LineBreak/>
+      Enabling Keyword filtering will slow down article loading considerably.
+    </TextBlock>
+
+      <ScrollViewer MaxHeight="300">
+      <ListBox ItemsSource="{x:Bind Pref.BlockedKeywords, Mode=TwoWay}">
+          <ListBox.ItemTemplate>
+            <!-- The x:String datatype is allowed, IDK why VS is complaining -->
+            <DataTemplate x:DataType="x:String">
+              <StackPanel Orientation="Horizontal" CornerRadius="4" HorizontalAlignment="Stretch">
+              <Button Click="RemoveKeyword" HorizontalAlignment="Right" Margin="0,0,10,0">
+                <Button.Content>
+                  <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE74D;"/>
+                </Button.Content>
+              </Button>
+                <TextBlock Text="{x:Bind}" VerticalAlignment="Center"/>
+
+            </StackPanel>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      </ScrollViewer>
+
+      <AutoSuggestBox PlaceholderText="Add a keyword here, like Elon Musk"
+                      QueryIcon="Accept" QuerySubmitted="AddKeyword"/>
+    </StackPanel>
+</Page>

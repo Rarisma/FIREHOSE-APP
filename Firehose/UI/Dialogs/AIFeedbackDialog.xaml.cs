@@ -34,7 +34,7 @@ public sealed partial class AIFeedbackDialog : Page
         
         if (Res == ContentDialogResult.Primary) //Send feedback clicked
         {
-            await new API().ReportArticle(Item);
+            Ioc.Default.GetRequiredService<ShellVM>().Hallon.ReportArticle(Item);
             
         }
     }

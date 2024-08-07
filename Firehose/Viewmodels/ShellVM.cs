@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using FirehoseApp.Preferences;
 using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
 using HtmlAgilityPack;
@@ -119,21 +120,34 @@ class ShellVM : ObservableObject
     /// <returns></returns>
     public async Task LoadFilterData()
     {
-        foreach (var filter in await new API().GetFilters(Glob.Model.AccountToken))
+        PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+
+        foreach (var filter in await Hallon.GetFilters(Pref.AccountToken))
         {
             Ioc.Default.GetRequiredService<ShellVM>().Filters.Add(new(filter));
         }
     }
     public async Task LoadArticleData()
     {
+        PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+
         try
         {
             Articles.Clear(); //Reset collection
+            
+            bool MinimalMode = Pref.BlockedKeywords.Count == 0;
+            //Load articles
+            List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit,
+                Offset, Pref.AccountToken, CurrentFilter, MinimalMode, PublisherID);
 
-            //Load articles and filter articles from the future.
-            List<Article> a = await Hallon.GetArticles(Glob.Model.ArticleFetchLimit,
-                Offset, Glob.Model.AccountToken, CurrentFilter, true, PublisherID);
-            Articles.AddRange(a.Where(x => DateTime.Now.AddHours(3) > x.PublishDate));
+            //filter articles from the future
+            //We do this because sometimes an article is published weeks in advanced (Economist worlds apart)
+            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.PublishDate);
+            Articles.AddRange(CurrentArticles.Where(article =>
+                    !Pref.BlockedKeywords.Any(keyword =>
+                        article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+                        article.Text.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                .ToList());
             Offset += Articles.Count;
         }
         catch (Exception ex)
@@ -154,7 +168,7 @@ class ShellVM : ObservableObject
 
     public async void OpenArticle(Article article)
     {
-        switch (Glob.Model.OpenInMode)
+        switch (Ioc.Default.GetRequiredService<PreferencesModel>().OpenInMode)
         {
             case 0: //Open in Article WebView
                 Glob.DoNavi(new ArticleView(article));
@@ -162,7 +176,8 @@ class ShellVM : ObservableObject
             case 1: //Open in reader mode
                 if (string.IsNullOrEmpty(article.Text))
                 {
-                    article.Text = await new API().GetArticleText(article.Url);
+                    article.Text = await  Ioc.Default.GetRequiredService<ShellVM>()
+                        .Hallon.GetArticleText(article.Url);
                 }
                 Glob.DoNavi(new ReaderMode(article));
                 break;

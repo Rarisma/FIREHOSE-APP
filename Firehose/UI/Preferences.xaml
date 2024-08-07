@@ -19,27 +19,34 @@
     </StackPanel>
 
     <TextBox Header="Web Proxy" PlaceholderText="Proxy" MinWidth="200" HorizontalAlignment="Center"
-             MaxWidth="400" Margin="10" Text="{x:Bind Model.Proxy, Mode=TwoWay}"/>
+             MaxWidth="400" Margin="10" Text="{x:Bind Pref.Proxy, Mode=TwoWay}"/>
 
     <NumberBox Header="Articles to fetch" Minimum="20" ValidationMode="InvalidInputOverwritten"
                Maximum="200" Margin="10" MaxWidth="200"
-               Value="{x:Bind Model.ArticleFetchLimit, Mode=TwoWay}"/>
+               Value="{x:Bind Pref.ArticleFetchLimit, Mode=TwoWay}"/>
 
     <!-- Open article settings -->
-    <ComboBox Header="Open articles in" SelectedIndex="{x:Bind Model.OpenInMode, Mode=TwoWay}"
+      <ComboBox Header="Open articles in" SelectedIndex="{x:Bind Pref.OpenInMode, Mode=TwoWay}"
               MaxWidth="200" Margin="10" HorizontalAlignment="Center">
         <ComboBoxItem>Article WebView</ComboBoxItem>
         <ComboBoxItem>Reader mode</ComboBoxItem>
         <ComboBoxItem>Default Browser</ComboBoxItem>
     </ComboBox>
+
+    <Button Content="Edit blocked keywords" Click="BlockKeywords" Margin="10" HorizontalAlignment="Center"/>
+
+    <!-- Blocked sources isn't implemented yet -->
+    <Button Content="Edit blocked sources"  Click="BlockSources" HorizontalAlignment="Center" Visibility="Collapsed"/>
+
 </StackPanel>
+
 
   <!-- Info bar -->
   <StackPanel Grid.Row="1">
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock Text="{x:Bind AppVer}" HorizontalAlignment="Center" Foreground="Gray"/>
       <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center" Foreground="Gray"/>
-      <HyperlinkButton Content="FAHRENHEIT" Click="DevMenu"
+      <HyperlinkButton Content="EYES CLOSED" Click="DevMenu"
                  Foreground="Gray" HorizontalAlignment="Center"/>
   </StackPanel>
   </Grid>

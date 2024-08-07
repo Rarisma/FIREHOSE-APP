@@ -1,6 +1,8 @@
 using Windows.ApplicationModel.DataTransfer;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI.Dialogs;
+using FirehoseApp.Viewmodels;
 using HYDRANT;
 using HYDRANT.Definitions;
 using WinRT.Interop;
@@ -8,6 +10,7 @@ using WinRT.Interop;
 namespace FirehoseApp.UI.Controls;
 public sealed partial class CommonNavigationBar : Grid
 {
+    PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
 
     /// <summary>
     /// Set this to the Article Object you want to display publisher information for
@@ -59,7 +62,7 @@ public sealed partial class CommonNavigationBar : Grid
     public void SetBookmarkIcon(object? sender = null, RoutedEventArgs? e = null)
     {
         //Handle bookmarked status
-        if (Glob.Model.BookmarkedArticles.Count(article => article.Url == ItemSource.Url) != 0)
+        if (Pref.BookmarkedArticles.Count(article => article.Url == ItemSource.Url) != 0)
         {
             Glyphy.Glyph = "\xE735"; // Filled Star
         }
@@ -68,14 +71,15 @@ public sealed partial class CommonNavigationBar : Grid
     
     private void BookmarkClick(object sender, RoutedEventArgs e)
     {
+        PreferencesModel M = Ioc.Default.GetRequiredService<PreferencesModel>();
         // Add or Remove article from bookmarked articles.
-        if (Glob.Model.BookmarkedArticles.Contains(ItemSource))
+        if (M.BookmarkedArticles.Contains(ItemSource))
         {
-            Glob.Model.BookmarkedArticles.Remove(ItemSource);
+            M.BookmarkedArticles.Remove(ItemSource);
         }
         else
         {
-            Glob.Model.BookmarkedArticles.Add(ItemSource);
+            M.BookmarkedArticles.Add(ItemSource);
         }
         
         // update icon state and save bookmarks
@@ -85,7 +89,7 @@ public sealed partial class CommonNavigationBar : Grid
     
     private void ReportClickbait(object sender, RoutedEventArgs e)
     {
-        new API().VoteClickbait(ItemSource);
+        Ioc.Default.GetRequiredService<ShellVM>().Hallon.VoteClickbait(ItemSource);
 
         //Show visual feedback
         ClickbaitButton.Text = "Already reported";

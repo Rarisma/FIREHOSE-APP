@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
+using FirehoseApp.Preferences;
 using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
 using Microsoft.UI;
@@ -45,7 +46,7 @@ public sealed partial class Filters : Button
         if (ShellVM.CurrentFilter == f.DisplayName)
         {
             //If the same button has been clicked on load older articles
-            ShellVM.Offset += Glob.Model.ArticleFetchLimit;
+            ShellVM.Offset += Ioc.Default.GetRequiredService<PreferencesModel>().ArticleFetchLimit;
         }
         else
         {
