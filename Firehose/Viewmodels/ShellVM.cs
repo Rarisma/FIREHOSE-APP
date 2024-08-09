@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
-using HtmlAgilityPack;
 using HYDRANT;
 using HYDRANT.Definitions;
 using Uno.Extensions;
@@ -87,18 +86,51 @@ class ShellVM : ObservableObject
     {
         CurrentFilter = "Latest";
         Filters = new();
-        LoadAllDataCommand = new AsyncCommand((async () =>
-        {
-            Glob.Publications = await LoadPublicationData();
-            await LoadFilterData();
-            await LoadArticleData();
-            UpdateButtonsDelegate.Invoke(Filters[0]);
-        }));
+        LoadAllDataCommand = new AsyncCommand(LoadAllData);
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
         NoBookmarksText = "You have no bookmarked stories.";
         Articles = new();
         LoadMoreVisibility = Visibility.Visible;
         Content = new Frame();
+    }
+    
+    /// <summary>
+    /// Loads filter and publication data.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    private async Task LoadAllData()
+    {
+        try
+        {
+            Glob.Publications = await LoadPublicationData();
+            await LoadFilterData();
+            await LoadArticleData();
+            UpdateButtonsDelegate.Invoke(Filters[0]);
+        }
+        catch (Exception ex)
+        {
+            App.MainWindow.Content = new StackPanel();
+            await Glob.OpenContentDialog(new ContentDialog
+            {
+                Title = "Firehose is unavailable",
+                Content = $"""
+                          Failed to connect to the firehose server.
+                          This might be due to a network issue or the server being down.
+                          
+                          Check your network connection and try again.
+                          
+                          Error: {ex.Message}
+                          """,
+                PrimaryButtonText = "Close Firehose",
+                //Close firehose
+                PrimaryButtonCommand = new AsyncCommand(() =>
+                {
+                    App.MainWindow.Close();
+                    return null;
+                }),
+            });
+        }
     }
     
     
@@ -176,8 +208,7 @@ class ShellVM : ObservableObject
             case 1: //Open in reader mode
                 if (string.IsNullOrEmpty(article.Text))
                 {
-                    article.Text = await  Ioc.Default.GetRequiredService<ShellVM>()
-                        .Hallon.GetArticleText(article.Url);
+                    article.Text = await Hallon.GetArticleText(article.Url);
                 }
                 Glob.DoNavi(new ReaderMode(article));
                 break;

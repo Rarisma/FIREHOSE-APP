@@ -142,11 +142,17 @@
     <Grid Padding="2,0" Margin="0,5" MaxWidth="800">
         <Grid.RowDefinitions>
           <RowDefinition Height="auto"/>
+          <RowDefinition Height="auto"/>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <AutoSuggestBox Grid.Row="0" HorizontalAlignment="Stretch" QueryIcon="Find" x:Name="SearchBox"
+                        PlaceholderText="Search for something..." Visibility="Collapsed"
+                        QuerySubmitted="Search" Margin="10,20,10,0"/>
+
         <!-- Top bar UI -->
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible"
+                      VerticalScrollBarVisibility="Disabled"
                       HorizontalAlignment="Center" Margin="0,10,0,0"
                       HorizontalContentAlignment="Left">
 
@@ -169,9 +175,19 @@
           <AppBarButton Click="FilterSource" HorizontalAlignment="Center" Name="SourcesButton"
                           VerticalContentAlignment="Center" MaxHeight="200" 
                           Width="50" Margin="0,10,0,0" Height="50">
-            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Name="SourcesGlyph" Glyph="&#xE71C;"/>
+            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                      Name="SourcesGlyph" Glyph="&#xE71C;"/>
             </AppBarButton>
-            <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+
+            <!-- Search -->
+            <AppBarButton Click="OpenSearch" HorizontalAlignment="Center"
+                          Name="SearchButton"
+                          VerticalContentAlignment="Center" MaxHeight="200" 
+                          Width="50" Margin="0,10,0,0" Height="50">
+              <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE721;"/>
+            </AppBarButton>
+
+          <Border Width="2" Height="40" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                     BorderBrush="Gray" Margin="5"/>
 
             <!-- Filter buttons -->
@@ -185,15 +201,15 @@
         </ScrollViewer>
 
         <!-- Article Content -->
-        <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
+        <ScrollViewer Grid.Row="2" HorizontalAlignment="Stretch">
 
           <StackPanel Orientation="Vertical">
             <StackPanel>
               <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
                             ItemTemplateSelector="{StaticResource ArticleSelector}"/>
 
-              <TextBlock Text="{x:Bind ShellVM.NoBookmarksText, Mode=TwoWay}" VerticalAlignment="Center"
-                         HorizontalAlignment="Center" Margin="10"/>
+              <TextBlock Text="{x:Bind ShellVM.NoBookmarksText, Mode=TwoWay}"
+                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
 
               <HyperlinkButton Content="Click to load more Articles"
                                Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=OneWay}"

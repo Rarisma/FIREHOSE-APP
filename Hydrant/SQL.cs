@@ -1,5 +1,6 @@
 using HYDRANT.Definitions;
 using MySqlConnector;
+using static System.Net.Mime.MediaTypeNames;
 
 //The voice someone calls (in the labyrinth)
 namespace HYDRANT;
@@ -128,49 +129,8 @@ public class SQL
 		List<Article> articles = new();
 		while (reader.Read())
 		{
-            //'deserialize' into article
-            Article article;
-            if (Minimal)
-            {
-                article = new()
-                {
-                    Url = reader["URL"].ToString() ?? string.Empty,
-                    Title = reader["TITLE"].ToString() ?? "",
-                    PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                    IsPaywall = false,
-                    Impact = Convert.ToInt32(reader["Impact"]),
-                    Summary = reader["SUMMARY"].ToString()!,
-                    ImageURL = reader["ImageURL"].ToString(),
-                    PublisherID = (int)reader["PUBLISHER_ID"],
-                    Author = reader["AUTHOR"].ToString()!,
-                    TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
-                };
-            }
-            else
-            {
-                article = new()
-                {
-                    Url = reader["URL"].ToString() ?? string.Empty,
-                    Title = reader["TITLE"].ToString() ?? "",
-                    Impact = Convert.ToInt32(reader["Impact"]),
-                    PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                    IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true),
-                    Summary = reader["SUMMARY"].ToString()!,
-                    ImageURL = reader["ImageURL"].ToString(),
-                    Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.",
-                    PublisherID = (int)reader["PUBLISHER_ID"],
-                    Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
-                    CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
-                    Author = reader["AUTHOR"].ToString()!,
-                    Sectors = reader["SECTORS"].ToString()!,
-                    TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
-
-                };
-            }
-
-
-			//Add to collection
-			articles.Add(article);
+            //'deserialize' into article and add to collection
+            articles.Add(DeserializeReader(reader));
 		}
 		
 		//Dispose reader and return articles.
@@ -387,7 +347,9 @@ public class SQL
             string ArticleText = "Article Text Unavailable";
             while (r.Read())
             {
-                if (!bool.Parse(r["PAYWALL"].ToString() ?? "False"))
+                //Can't return paywalled content, or base64 encoded content.
+                if (!bool.Parse(r["PAYWALL"].ToString() ?? "False")&&
+                    !r["ARTICLE_TEXT"].ToString().Contains("base64:"))
                 {
                     ArticleText = r["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
                 }
@@ -403,5 +365,89 @@ public class SQL
         {
             return "Failed to fetch article text\n" + e.Message ;
         }
+    }
+
+    /// <summary>
+    /// Turns a MySQLDataReader to an Article Object
+    /// </summary>
+    /// <param name="reader">MySQLDataReader</param>
+    /// <returns>Article Object</returns>
+    public Article DeserializeReader(MySqlDataReader reader)
+    {
+        Article article = new()
+        {
+            Url = reader["URL"].ToString() ?? string.Empty,
+            Title = reader["TITLE"].ToString() ?? "",
+            Impact = Convert.ToInt32(reader["Impact"]),
+            PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
+            Summary = reader["SUMMARY"].ToString()!,
+            ImageURL = reader["ImageURL"].ToString(),
+            PublisherID = (int)reader["PUBLISHER_ID"],
+            Author = reader["AUTHOR"].ToString()!,
+            TimeToRead = Convert.ToInt32(reader["TimeToRead"]),
+        };
+        
+        
+        if (reader.GetSchemaTable().Columns.Contains("PAYWALL"))
+        {
+            article.IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true);
+            article.Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.";
+            article.Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]);
+            article.CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!;
+            article.Sectors = reader["SECTORS"].ToString()!;
+            
+        }
+        return article;
+    }
+
+    /// <summary>
+    /// Searches every article in 
+    /// </summary>
+    /// <param name="SearchTerm"></param>
+    /// <returns></returns>
+    public List<Article> SearchArticles(string SearchTerm)
+    {
+        string query = @"
+            SELECT * FROM Articles
+            WHERE ARTICLE_TEXT LIKE @searchTerm OR
+                  TITLE LIKE @searchTerm OR
+                  URL LIKE @searchTerm OR
+                  SUMMARY LIKE @searchTerm LIMIT 50";
+        
+        List<Article> articles = new();
+        using (MySqlConnection connection = new(Connection))
+        {
+            using (MySqlCommand command = new(query, connection))
+            {
+                // Add the parameter and define its value
+                command.Parameters.AddWithValue("@searchTerm", "%" + SearchTerm + "%");
+                
+                try
+                {
+                    // Open the connection
+                    connection.Open();
+                    
+                    // Execute the query and get the results
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Loop through the results
+                        while (reader.Read())
+                        {
+                            // 'Deserialize' the reader into an article object
+                            Article article = DeserializeReader(reader);
+                            // Add the article to the list
+                            articles.Add(article);  
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle any errors
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
+        }
+        //return articles
+        return articles;
     }
 }

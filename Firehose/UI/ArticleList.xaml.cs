@@ -31,7 +31,8 @@ public sealed partial class ArticleList : Page
         
         if (await Glob.OpenContentDialog(CD) == ContentDialogResult.Primary)
         {
-            ShellVM.PublisherID = ((CD.Content as PublisherFilter).Content as ListView)!.SelectedIndex + 1;
+            ShellVM.PublisherID = ((CD.Content as PublisherFilter)
+                .Content as ListView)!.SelectedIndex + 1;
         }
         else
         {
@@ -136,5 +137,30 @@ public sealed partial class ArticleList : Page
     private void OpenArticle(object sender, RoutedEventArgs e)
     {
         ShellVM.OpenArticle((((sender as Button)!.DataContext) as Article)!);
+    }
+        
+    private void OpenSearch(object sender, RoutedEventArgs e)
+    {
+        //Toggle search box visibility
+        if (SearchBox.Visibility == Visibility.Collapsed)
+        {
+            SearchBox.Visibility = Visibility.Visible;
+            SearchButton.Foreground = Themer.MainBrush;
+            SearchButton.Background = Themer.SecondaryBrush;
+        }
+        else
+        {
+            SearchBox.Visibility = Visibility.Collapsed;
+            SearchButton.Foreground = Themer.SecondaryBrush;
+            SearchButton.Background = Themer.MainBrush;
+        }
+    }
+    
+    private async void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        ShellVM.Articles.Clear();
+        UpdateButtons(new());
+        var articles = await ShellVM.Hallon.Search(SearchBox.Text);
+        ShellVM.Articles.AddRange(articles);
     }
 }

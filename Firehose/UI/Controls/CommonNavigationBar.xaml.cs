@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI.Dialogs;
 using FirehoseApp.Viewmodels;
-using HYDRANT;
 using HYDRANT.Definitions;
 using WinRT.Interop;
 
@@ -49,7 +48,15 @@ public sealed partial class CommonNavigationBar : Grid
     /// Opens the reader mode UI, which should show the users 
     /// a no nonsense view of the articles text.
     /// </summary>
-    private void OpenReader(object sender, RoutedEventArgs e) => Glob.DoNavi(new ReaderMode(ItemSource));
+    private async void OpenReader(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(ItemSource.Text))
+        {
+            ItemSource.Text = await Ioc.Default.GetRequiredService<ShellVM>()
+                .Hallon.GetArticleText(ItemSource.Url);
+        }
+        Glob.DoNavi(new ReaderMode(ItemSource));
+    } 
     
     /// <summary>
     /// Return to article view.

@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Viewmodels;
-using HYDRANT;
 using HYDRANT.Definitions;
 
 //Whatever keeps you warm at night.

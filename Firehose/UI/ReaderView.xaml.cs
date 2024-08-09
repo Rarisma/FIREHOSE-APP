@@ -1,6 +1,3 @@
-using CommunityToolkit.Mvvm.DependencyInjection;
-using FirehoseApp.Viewmodels;
-using HYDRANT;
 using HYDRANT.Definitions;
 
 namespace FirehoseApp.UI;

@@ -1,4 +1,3 @@
-using Uno.Resizetizer;
 using Uno.UI.Runtime.Skia;
 
 namespace FirehoseApp;

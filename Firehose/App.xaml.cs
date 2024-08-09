@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI;
 using FirehoseApp.Viewmodels;
-using HYDRANT;
 using Uno.Resizetizer;
 
 namespace FirehoseApp;

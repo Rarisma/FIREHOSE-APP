@@ -1,5 +1,7 @@
 using HYDRANT.Definitions;
 using System.Text.Json;
+using HYDRANT.Serializers;
+
 //Welcome to the style you haven't seen in a while, It's lavish
 namespace HYDRANT;
 /// <summary>
@@ -21,11 +23,6 @@ public class API
 	/// API Endpoint to access server.
 	/// </summary>
 	public string Endpoint;
-
-    ///// <summary>
-    ///// Set to your API Key.
-    ///// </summary>
-    //public string API_KEY;
     
     /// <summary>
     /// Gets Articles from API
@@ -137,4 +134,25 @@ public class API
             }
         }
     }
+    
+    public async Task<List<Article>> Search(string SearchString)
+    {
+        string url = Endpoint + $"/Articles/Search?SearchString={SearchString}";
+        using (HttpClient client = new())
+        {
+            
+            HttpResponseMessage response = await client.GetAsync(url);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                var articles = JsonSerializer.Deserialize<List<Article>>(content,
+                    ArticleSerialiser.Default.ListArticle)!;
+                return articles;
+            }
+        }
+        
+        return new();
+    }
+
 }

@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     EXECUTIVES_MENTIONED LONGTEXT           		-- List of executives
 );
 
+# Clickbait Increment Stored Proc
 DELIMITER //
 CREATE PROCEDURE IncrementClickbaitCount(IN p_url VARCHAR(255))
 BEGIN
@@ -34,6 +35,7 @@ BEGIN
 END //
 DELIMITER ;
 
+# Summary Report Increment Stored Proc
 DELIMITER //
 CREATE PROCEDURE IncrementSummaryReportCount(IN p_url VARCHAR(255))
 BEGIN
@@ -44,5 +46,5 @@ END //
 DELIMITER ;
 
 #Broken publications
-#1,5,7,14,15,20,21,23,24,26,27
-SELECT * FROM ARTICLES WHERE PUBLISHER_ID = 27;
+#The ecconomist, Reuters, JP morgan and chase,
+SELECT * FROM ARTICLES;

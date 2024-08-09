@@ -1,7 +1,5 @@
 using Windows.UI.Core;
-using FirehoseApp.Preferences;
 using HYDRANT.Definitions;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 //I'VE GOT A RECKLESS TONGUE
 namespace FirehoseApp;
