@@ -178,7 +178,7 @@ class ShellVM : ObservableObject
             Articles.AddRange(CurrentArticles.Where(article =>
                     !Pref.BlockedKeywords.Any(keyword =>
                         article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                        article.Text.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                        (article.Text ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                 .ToList());
             Offset += Articles.Count;
         }

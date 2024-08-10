@@ -12,4 +12,9 @@ public sealed partial class LoginFlow : Page
     {
         this.InitializeComponent();
     }
+    
+    private void Login(object sender, RoutedEventArgs e)
+    {
+        
+    }
 }

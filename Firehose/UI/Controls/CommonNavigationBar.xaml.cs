@@ -166,4 +166,17 @@ public sealed partial class CommonNavigationBar : Grid
         new Guid(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
 
 #endif
+
+    /// <summary>
+    /// Opens about this source dialog
+    /// </summary>
+    private async void OpenSourceInfo(object sender, RoutedEventArgs e)
+    {
+        await Glob.OpenContentDialog(new ContentDialog
+        {
+            Title = "About " + Glob.Publications[ItemSource.PublisherID].Name,
+            PrimaryButtonText = "Close",
+            Content = new AboutSource(ItemSource.PublisherID)
+        });
+    }
 }

@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Text.Json;
 using HYDRANT.Serializers;
 
@@ -31,9 +32,9 @@ public class Publication
     public string Favicon { get; set; }
 
     /// <summary>
-    /// Are all articles from this source jake flagged
+    /// Information about the publication
     /// </summary>
-    public bool AlwaysJakeFlag { get; set; }
+    public string Information { get; set; }
 
     /// <summary>
     /// RSS feed URLs related to the publication
@@ -44,6 +45,13 @@ public class Publication
 	/// Does the publication have a paywall?
 	/// </summary>
 	public bool Paywall { get; set; }
+
+    /// <summary>
+    /// Optional background override for the publication
+    /// Some logos are hard to see as many are black or white,
+    /// meaning they are hard to see in either light/dark mode.
+    /// </summary>
+    public string? BackgroundOverride { get; set; }
     #endregion
 
     /// <summary>
@@ -56,5 +64,26 @@ public class Publication
         //read file then deserialize
         string content = System.IO.File.ReadAllText(File);
         return JsonSerializer.Deserialize(content, PublicationSerialiser.Default.ListPublication);
+    }
+    
+    public Color Background
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(BackgroundOverride))
+            {
+                return new Color();
+            }
+            
+            Color drawingColor = (Color)new ColorConverter().
+                ConvertFromString(BackgroundOverride);
+            
+            // Convert to Windows.UI.Color
+            Color uiColor = Color.FromArgb(drawingColor.A, drawingColor.R,
+                drawingColor.G, drawingColor.B);
+            
+            // Create and return a SolidColorBrush with the specified color
+            return uiColor;
+        }
     }
 }

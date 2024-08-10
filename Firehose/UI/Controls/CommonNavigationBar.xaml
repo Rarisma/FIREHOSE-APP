@@ -65,8 +65,8 @@
             <MenuFlyoutItem Text="Open in Browser" Click="OpenBrowser"/>
             <MenuFlyoutItem Text="Reader Mode" Click="OpenReader"/>
             <MenuFlyoutItem Text="Report Article as Clickbait" Click="ReportClickbait" Name="ClickbaitButton"/>
+            <MenuFlyoutItem Text="About this Source" Click="OpenSourceInfo"/>
             <MenuFlyoutItem Text="Reporter Information (unimplemented)" Visibility="Collapsed"/>
-            <MenuFlyoutItem Text="Company Information (unimplemented)" Visibility="Collapsed"/>
           </MenuFlyout>
         </Button.Flyout>
       </Button>

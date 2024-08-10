@@ -17,6 +17,4 @@ public sealed partial class PublisherFilter : Page
         publications.AddRange(Glob.Publications);
         publications.RemoveAt(0); //Don't display example news network.
     }
-
-
 }
