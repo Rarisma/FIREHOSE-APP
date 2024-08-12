@@ -135,6 +135,12 @@ public class API
         }
     }
     
+
+    /// <summary>
+    /// Searches an article for a SearchString
+    /// </summary>
+    /// <param name="SearchString">Text to search for</param>
+    /// <returns>List of articles.</returns>
     public async Task<List<Article>> Search(string SearchString)
     {
         string url = Endpoint + $"/Articles/Search?SearchString={SearchString}";
@@ -153,6 +159,20 @@ public class API
         }
         
         return new();
+    }
+
+    /// <summary>
+    /// Bumps the URL by one.
+    /// </summary>
+    /// <param name="URL">Text to search for</param>
+    /// <returns>List of articles.</returns>
+    public async Task AddView(string URL)
+    {
+        string url = Endpoint + $"/Articles/AddView?URL={URL}";
+        using (HttpClient client = new())
+        {
+            await client.GetAsync(url);
+        }
     }
 
 }

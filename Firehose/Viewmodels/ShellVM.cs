@@ -7,7 +7,7 @@ using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
 using Uno.Extensions;
-
+//WORLDS APART
 namespace FirehoseApp.Viewmodels;
 
 class ShellVM : ObservableObject
@@ -200,6 +200,7 @@ class ShellVM : ObservableObject
 
     public async void OpenArticle(Article article)
     {
+        await Hallon.AddView(article.Url);
         switch (Ioc.Default.GetRequiredService<PreferencesModel>().OpenInMode)
         {
             case 0: //Open in Article WebView

@@ -9,6 +9,8 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="UI/StyleSheet.xaml"/>
+
         <!-- Load WinUI resources -->
         <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
         <!-- Load Uno.UI.Toolkit resources -->
@@ -26,6 +28,7 @@
       <StaticResource x:Key="ExpanderChevronForeground" ResourceKey="TransparentBrush" />
       <StaticResource x:Key="ExpanderContentBackground" ResourceKey="TransparentBrush" />
       <StaticResource x:Key="ExpanderContentBorderBrush" ResourceKey="TransparentBrush" />
+      <StaticResource x:Key="ExpanderBackground" ResourceKey="TransparentBrush" />
       <x:Double x:Key="ExpanderChevronButtonSize">0</x:Double>
       <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="TransparentBrush" />
       <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="TransparentBrush" />

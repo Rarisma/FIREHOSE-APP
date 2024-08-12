@@ -41,9 +41,15 @@ public partial class App : Application
         
         //Set window info and show it.
         MainWindow.SetWindowIcon();
-        MainWindow.Title = $"Firehose News {Package.Current.Id.Version.Major}." +
+
+#if __ANDROID__ || __IOS__ || __MACCATALYST__ || __MACOS__
+                MainWindow.Title = $"Firehose News {Package.Current.Id.Version.Major}." +
                $"{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
-        
+#else
+        MainWindow.Title = "Firehose News";
+#endif
+
+
         if (Debugger.IsAttached)
         {
             MainWindow.Title += " (DEV)";

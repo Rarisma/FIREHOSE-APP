@@ -450,4 +450,33 @@ public class SQL
         //return articles
         return articles;
     }
+    
+    
+    /// <summary>
+    /// Adds a view to the article
+    /// </summary>
+    /// <param name="URL"></param>
+    public void AddView(string URL)
+    {
+        try
+        {
+            using (MySqlConnection connection = new(Connection))
+            {
+                connection.Open();
+                
+                using (MySqlCommand cmd = new("AddView", connection))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("article_url", URL);
+                    
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
 }

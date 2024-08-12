@@ -55,6 +55,7 @@
     <None Remove="UI\Dialogs\BlockedSources.xaml" />
     <None Remove="UI\Dialogs\BlockKeyWords.xaml" />
     <None Remove="UI\Dialogs\LoginFlow.xaml" />
+    <None Remove="UI\StyleSheet.xaml" />
   </ItemGroup>
 
 
@@ -160,6 +161,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\AboutSource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="UI\StyleSheet.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\StyleSheet.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
