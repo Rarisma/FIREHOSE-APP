@@ -12,7 +12,6 @@
 
 
   <StackPanel>
-
     <Border CornerRadius="4" Width="64" Height="64" Margin="0,0,0,20"
       Background="{x:Bind Publication.Background, Converter={StaticResource ColorConverter}}">
       <Image Source="{x:Bind Publication.Favicon, Mode=TwoWay}" HorizontalAlignment="Center"

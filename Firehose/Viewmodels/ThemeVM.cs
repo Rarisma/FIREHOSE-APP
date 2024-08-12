@@ -24,13 +24,6 @@ public class ThemeVM : ObservableObject
     public SolidColorBrush SecondaryBrush { get; set; } = null!;
     
     /// <summary>
-    /// This is the accent color used in the UI
-    /// for distinguishing backgrounds on the main brush
-    /// (Lighter gray on light theme or Lighter black on dark theme)
-    /// </summary>
-    public SolidColorBrush TertiaryBrush { get; set; } = null!;
-    
-    /// <summary>
     /// Current app theme
     /// </summary>
     public StatusBarForegroundTheme StatusBar { get; set; }
@@ -48,14 +41,12 @@ public class ThemeVM : ObservableObject
         {
             MainBrush = new SolidColorBrush(Colors.Black);
             SecondaryBrush = new SolidColorBrush(Colors.White);
-            TertiaryBrush = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
             StatusBar = StatusBarForegroundTheme.Light;
         }
         else
         {
             MainBrush = new SolidColorBrush(Colors.White);
             SecondaryBrush = new SolidColorBrush(Colors.Black);
-            TertiaryBrush = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
             StatusBar = StatusBarForegroundTheme.Dark;
         }
     }

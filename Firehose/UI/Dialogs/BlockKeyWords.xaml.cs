@@ -1,7 +1,5 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
-using Button = Microsoft.UI.Xaml.Controls.Button;
-
 namespace FirehoseApp.UI.Dialogs;
 
 /// <summary>

@@ -12,62 +12,43 @@ namespace FirehoseApp.Viewmodels;
 
 class ShellVM : ObservableObject
 {
-    private object content;
-    
-    public object Content
-    {
-        get => content;
-        set => SetProperty(ref content, value);
-    }
     
     public delegate void UpdateButtons(Button button);
+    public UpdateButtons UpdateButtonsDelegate;
+
     
-    private UpdateButtons? updateButtonsDelegate;
-    
-    public UpdateButtons? UpdateButtonsDelegate
-    {
-        get => updateButtonsDelegate;
-        set => SetProperty(ref updateButtonsDelegate, value);
-    }
-    
-    private ObservableCollection<Article> articles;
+    private ObservableCollection<Article> _articles;
     
     public ObservableCollection<Article> Articles
     {
-        get => articles;
-        set => SetProperty(ref articles, value);
+        get => _articles;
+        set => SetProperty(ref _articles, value);
     }
     
-    private AsyncCommand loadAllDataCommand;
-    
+    private AsyncCommand _loadAllDataCommand;
+    /// <summary>
+    /// Loads filter buttons and Publication data.
+    /// </summary>
     public AsyncCommand LoadAllDataCommand
     {
-        get => loadAllDataCommand;
-        set => SetProperty(ref loadAllDataCommand, value);
+        get => _loadAllDataCommand;
+        set => SetProperty(ref _loadAllDataCommand, value);
     }
     
-    private AsyncCommand loadArticleDataCommand;
-    
+    private AsyncCommand _loadArticleDataCommand;
+
     public AsyncCommand LoadArticleDataCommand
     {
-        get => loadArticleDataCommand;
-        set => SetProperty(ref loadArticleDataCommand, value);
+        get => _loadArticleDataCommand;
+        set => SetProperty(ref _loadArticleDataCommand, value);
     }
     
-    private string noBookmarksText;
-    
-    public string NoBookmarksText
-    {
-        get => noBookmarksText;
-        set => SetProperty(ref noBookmarksText, value);
-    }
-    
-    private Visibility loadMoreVisibility;
+    private Visibility _loadMoreVisibility;
     
     public Visibility LoadMoreVisibility
     {
-        get => loadMoreVisibility;
-        set => SetProperty(ref loadMoreVisibility, value);
+        get => _loadMoreVisibility;
+        set => SetProperty(ref _loadMoreVisibility, value);
     }
     
     private ObservableCollection<Filters> filters;
@@ -88,17 +69,15 @@ class ShellVM : ObservableObject
         Filters = new();
         LoadAllDataCommand = new AsyncCommand(LoadAllData);
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
-        NoBookmarksText = "You have no bookmarked stories.";
         Articles = new();
         LoadMoreVisibility = Visibility.Visible;
-        Content = new Frame();
+        PublisherID = -1;
+
     }
     
     /// <summary>
     /// Loads filter and publication data.
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
     private async Task LoadAllData()
     {
         try
@@ -110,41 +89,22 @@ class ShellVM : ObservableObject
         }
         catch (Exception ex)
         {
-            App.MainWindow.Content = new StackPanel();
-            await Glob.OpenContentDialog(new ContentDialog
-            {
-                Title = "Firehose is unavailable",
-                Content = $"""
-                          Failed to connect to the firehose server.
-                          This might be due to a network issue or the server being down.
-                          
-                          Check your network connection and try again.
-                          
-                          Error: {ex.Message}
-                          """,
-                PrimaryButtonText = "Close Firehose",
-                //Close firehose
-                PrimaryButtonCommand = new AsyncCommand(() =>
-                {
-                    App.MainWindow.Close();
-                    return null;
-                }),
-            });
+            ShowServerError(ex.Message);
         }
     }
     
     
-    public string CurrentFilter = "";
-
+    public string CurrentFilter;
+    
     /// <summary>
     /// ID of publisher filter to filter for
     /// </summary>
-    public int PublisherID = -1;
+    public int PublisherID;
     
     /// <summary>
     /// How far we are into the category
     /// </summary>
-    public int Offset = 0;
+    public int Offset;
     
     /// <summary>
     /// Loads all filter data.
@@ -184,15 +144,7 @@ class ShellVM : ObservableObject
         }
         catch (Exception ex)
         {
-            Articles.Add(new()
-            {
-                Title = "Failed to load articles!",
-                Summary = ex.Message,
-                PublisherID = 0,
-                ImageURL = "?",
-                PublishDate = new DateTime(1911, 11, 19),
-            });
-            Console.WriteLine(ex.ToString());
+            ShowServerError(ex.Message);
         }
     }
 
@@ -217,5 +169,29 @@ class ShellVM : ObservableObject
                 Windows.System.Launcher.LaunchUriAsync(new Uri(article.Url));
                 break;
         }
+    }
+    
+    /// <summary>
+    /// Shows that there's an issue with the server and gracefully closes FHN
+    /// </summary>
+    /// <param name="Error"></param>
+    public async void ShowServerError(string Error)
+    {
+        App.MainWindow.Content = new StackPanel();
+        await Glob.OpenContentDialog(new ContentDialog
+        {
+            Title = "Firehose is unavailable",
+            Content = $"""
+                       Failed to connect to the firehose server.
+                       This might be due to a network issue or the server being down.
+                       
+                       Check your network connection and try again.
+                       
+                       Error: {Error}
+                       """,
+            PrimaryButtonText = "Close Firehose",
+        });
+        
+        App.MainWindow.Close(); //Close firehose
     }
 }

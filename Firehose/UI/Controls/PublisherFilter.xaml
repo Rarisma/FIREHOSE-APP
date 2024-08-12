@@ -12,7 +12,7 @@
   </UserControl.Resources>
 
   <!-- List Articles -->
-  <ListView ItemsSource="{x:Bind publications}">
+  <ListView ItemsSource="{x:Bind publications}" SelectionMode="Multiple">
     <ListView.ItemTemplate>
       <DataTemplate x:DataType="hydrant:Publication">
 

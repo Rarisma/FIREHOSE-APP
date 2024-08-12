@@ -62,30 +62,23 @@ public sealed partial class PublisherInformation : UserControl
         {
             try
             {
-                //TODO: try and fix this as it seems to be returning the wrong times after FHN updated it's timestamping
-                // Convert the Firehose timezone (GMT) to local time
-                //DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(
-                //    ((Article)GetValue(ItemSourceProperty)).PublishDate,
-                //    TimeZoneInfo.Local);
-
                 //Calculate how long it's been since the article was published.
                 TimeSpan Diff = DateTime.Now - ItemSource.PublishDate;
 
-                //If it's been published for less than an hour, show the article in Minutes
-                if (Diff.TotalMinutes < 5)
+                if (Diff.TotalMinutes < 5) //Less than 5min show now
                 {
                     return "Now";
                 }
-                if (Diff.TotalMinutes < 60)
+                else if (Diff.TotalMinutes < 60) //More than 5m but less than 60 show x Mins ago
                 {
                     return Math.Round(Diff.TotalMinutes) + " Minutes ago";
                 } //If it's older than 2 days, show the article in hours
-                else if (Diff.TotalHours <= 48)
+                else if (Diff.TotalHours <= 48) //Over an hr ago but less than 2 days ago, show x Hours ago
                 {
                     int difference = (int)Math.Round(Diff.TotalHours);
                     return difference + (difference == 1 ? " Hour ago" : " Hours ago");
                 }
-                else
+                else // Show days ago.
                 {
                     return Math.Round(Diff.TotalDays) + " Days ago";
 

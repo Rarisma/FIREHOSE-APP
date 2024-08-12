@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using HYDRANT.Definitions;
 using Uno.Extensions;
-
+//WE AIN'T MAKING OUTTA HOKKAIDO WITH THIS ONE
 namespace FirehoseApp.UI.Controls;
 
 /// <summary>

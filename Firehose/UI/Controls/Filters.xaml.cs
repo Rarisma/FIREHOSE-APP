@@ -17,13 +17,10 @@ public sealed partial class Filters : Button
     /// <summary>
     /// UI button for filters
     /// </summary>
-    /// <param name="name"> Visible name to the user</param>
-    /// <param name="filter">MySQL filtering rule</param>
-    /// <param name="order">Order by, defaults to descending</param>
+    /// <param name="filter">Filtering rule</param>
     public Filters(Filter filter)
     {
         DisplayName = filter.Name;
-        //FilterOrder = order;
         this.InitializeComponent();
     }
 

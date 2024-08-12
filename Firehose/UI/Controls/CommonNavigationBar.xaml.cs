@@ -35,13 +35,19 @@ public sealed partial class CommonNavigationBar : Grid
         InitializeComponent();
     }
     
-    private void ReportSummary(object sender, RoutedEventArgs e) =>
+    private void ReportSummary(object sender, RoutedEventArgs e)
+    {
         AIFeedbackDialog.ReportSummary(ItemSource);
+    }
+
     
     /// <summary>
     /// Opens article in the users browser
     /// </summary>
-    private async void OpenBrowser(object sender, RoutedEventArgs e) => await Windows.System.Launcher.LaunchUriAsync(new Uri(ItemSource.Url));
+    private async void OpenBrowser(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(ItemSource.Url));
+    }
     
     
     /// <summary>
@@ -103,6 +109,9 @@ public sealed partial class CommonNavigationBar : Grid
         ClickbaitButton.IsEnabled = false; //Prevent multiple reports.
     }
     
+    /// <summary>
+    /// Opens device's sharing dialog.
+    /// </summary>
     private async void Share(object sender, RoutedEventArgs e)
     {
         if (DataTransferManager.IsSupported())

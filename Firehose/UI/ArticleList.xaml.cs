@@ -72,7 +72,7 @@ public sealed partial class ArticleList : Page
     public void UpdateButtons(Button Button)
     {
         //Hide no bookmarks message.
-        ShellVM.NoBookmarksText = "";
+        ShellVM.LoadMoreVisibility = Visibility.Collapsed;
 
         //Show load more button
         ShellVM.LoadMoreVisibility = Visibility.Visible;
@@ -124,12 +124,6 @@ public sealed partial class ArticleList : Page
         ShellVM.Offset = 0;
         ShellVM.LoadMoreVisibility= Visibility.Collapsed;
         ShellVM.Articles.AddRange(Pref.BookmarkedArticles);
-
-        //Show no bookmarks text, so it's not a blank screen
-        if (Pref.BookmarkedArticles.Count == 0)
-        {
-            ShellVM.NoBookmarksText = "You have no bookmarked articles.";
-        }
     }
     
     private async void FilterSource(object sender, RoutedEventArgs e) => await SetPublisherFilter();

@@ -174,7 +174,7 @@
               <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
                             ItemTemplateSelector="{StaticResource ArticleSelector}"/>
 
-              <TextBlock Text="{x:Bind ShellVM.NoBookmarksText, Mode=TwoWay}"
+              <TextBlock Text="You have no bookmarked stories..."
                          VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
 
               <HyperlinkButton Content="Click to load more Articles"
