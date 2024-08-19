@@ -21,6 +21,6 @@ public class MainActivity : Microsoft.UI.Xaml.ApplicationActivity
 {
     public override void OnBackPressed()
     {
-        Glob.GoBack();
+        App.UI.GoBack();
     }
 }

@@ -1,4 +1,3 @@
-using Windows.UI.Core;
 using HYDRANT.Definitions;
 
 //I'VE GOT A RECKLESS TONGUE
@@ -24,7 +23,7 @@ public static class Glob
     /// </summary>
     public static List<Publication> Publications = new();
 
-
+/*
     /// <summary>
     /// The built-in navigation within Frames doesn't work
     /// like I want it to work, so we persist the page items properly.
@@ -56,7 +55,7 @@ public static class Glob
     public static void OnBackRequested(object? sender, BackRequestedEventArgs e)
     {
         if (NaviStack.Count > 1) { GoBack(); }
-    }
+    }*/
 
     public static void Log(LogLevel Level, String Message)
     {

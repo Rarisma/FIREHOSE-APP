@@ -25,7 +25,7 @@ public sealed partial class Preferences : Page
     private void Back(object sender, RoutedEventArgs e)
     {
         PreferencesModel.Save();
-        Glob.GoBack();
+        App.UI.GoBack();
     }
     
     private void DevMenu(object sender, RoutedEventArgs e)
@@ -35,7 +35,7 @@ public sealed partial class Preferences : Page
         {
             Content = "Show Beta Login Flow"
         };
-        BetaLogin.Click += (_, _) => { Glob.DoNavi(new LoginFlow()); };
+        BetaLogin.Click += (_, _) => { App.UI.Navigate(typeof(LoginFlow)); };
         
         TextBox TokenBox = new()
         {

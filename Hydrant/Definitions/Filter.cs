@@ -1,10 +1,12 @@
 using HYDRANT.Serializers;
 using System.Text.Json;
-
+//D4RK SIDE
 namespace HYDRANT.Definitions;
+/// <summary>
+/// Used to filter articles, populated from Filters.json
+/// </summary>
 public class Filter
 {
- 
     /// <summary>
     /// Name of the filter
     /// </summary>
@@ -23,7 +25,11 @@ public class Filter
     /// <summary>
     /// Shown to nobody
     /// </summary>
-    public bool Hidden;
+    public bool Hidden { get; set; }
+
+    /// <summary>
+    /// </summary>
+    public bool Selected { get; set; }
 
     public static List<Filter> LoadFilters(string Path)
     {

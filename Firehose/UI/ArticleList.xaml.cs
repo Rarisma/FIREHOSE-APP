@@ -1,14 +1,14 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI.Controls;
 using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Uno.Extensions;
 
 namespace FirehoseApp.UI;
 
+[ObservableObject]
 public sealed partial class ArticleList : Page
 {
     private ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
@@ -22,7 +22,6 @@ public sealed partial class ArticleList : Page
     {
         ContentDialog CD = new()
         {
-            XamlRoot = this.XamlRoot,
             Title = "Filter by publisher",
             Content = new PublisherFilter(),
             PrimaryButtonText = "Filter by Publisher",
@@ -38,75 +37,40 @@ public sealed partial class ArticleList : Page
         {
             //Set back to Filter button
             ShellVM.PublisherID = -1;
-            SourcesButton.Content = new FontIcon
-            {
-                Glyph = "\xE71C"
-            };
         }
         ShellVM.Offset = 0;
-        UpdateButtons(ShellVM.Filters[0]);
+        UpdateButtons(ShellVM.UIFilters.First());
         ShellVM.LoadArticleDataCommand.Execute(null);
     }
+    
 
     public ArticleList()
     {
-        ShellVM.LoadAllDataCommand.Execute(null);
-        ShellVM.UpdateButtonsDelegate = UpdateButtons;
-        ShellVM.Articles = new();
-        ShellVM.Offset = 0;
-        ShellVM.LoadMoreVisibility = Visibility.Visible;
+        //Init UI if needed
+        if (ShellVM.Filters.Count == 0)
+        {
+            ShellVM.LoadAllDataCommand.Execute(null);
+            ShellVM.LoadMoreVisibility = Visibility.Visible;
+        }
 
-        //Set correct filter
+
         InitializeComponent();
     }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
-        Glob.DoNavi(new Preferences());
+        App.UI.Navigate(typeof(Preferences));
     }
     
     /// <summary>
     /// Updates UI on top row of buttons.
     /// </summary>
     /// <param name="Button">Button to set as selected.</param>
-    public void UpdateButtons(Button Button)
+    public void UpdateButtons(FilterButton Button)
     {
-        //Hide no bookmarks message.
-        ShellVM.LoadMoreVisibility = Visibility.Collapsed;
-
-        //Show load more button
+        //Show messages
+        ShellVM.BoomarksMessageVisibility = Visibility.Collapsed;
         ShellVM.LoadMoreVisibility = Visibility.Visible;
-
-        //Clear filter buttons
-        foreach (var FilterButton in ShellVM.Filters)
-        {
-            FilterButton.Background = new SolidColorBrush(Colors.Transparent);
-            FilterButton.Foreground = Themer.SecondaryBrush;
-        }
-        //Bookmarks button isn't in the filters stack panel so clear them manually.
-        BookmarkButton.Background = Themer.MainBrush;
-        BookmarkButton.Foreground = Themer.SecondaryBrush;
-
-        //Set filter by button.
-        if (ShellVM.PublisherID != -1)
-        {
-            SourcesButton.Background = Themer.SecondaryBrush;
-            SourcesButton.Foreground = Themer.MainBrush;
-            SourcesButton.Content = new Image
-            {
-                Height = 16,
-                Width = 16,
-                Source = new BitmapImage(new Uri(Glob.Publications[ShellVM.PublisherID].Favicon))
-            };
-        }
-        else
-        {
-            SourcesButton.Background = Themer.MainBrush;
-            SourcesButton.Foreground = Themer.SecondaryBrush;
-        }
-        //Set filter button background and foreground.
-        Button.Background = Themer.SecondaryBrush;
-        Button.Foreground = Themer.MainBrush;
     }
 
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;
@@ -118,11 +82,10 @@ public sealed partial class ArticleList : Page
     /// <param name="e"></param>
     private void ShowBookmarks(object sender, RoutedEventArgs e)
     {
-        if (sender is not Button Button) {return;}
-        UpdateButtons(Button);
         ShellVM.Articles.Clear();
         ShellVM.Offset = 0;
         ShellVM.LoadMoreVisibility= Visibility.Collapsed;
+        ShellVM.BoomarksMessageVisibility = Visibility.Visible;
         ShellVM.Articles.AddRange(Pref.BookmarkedArticles);
     }
     
@@ -153,8 +116,21 @@ public sealed partial class ArticleList : Page
     private async void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         ShellVM.Articles.Clear();
-        UpdateButtons(new());
+        UpdateButtons(ShellVM.UIFilters.First());
         var articles = await ShellVM.Hallon.Search(SearchBox.Text);
         ShellVM.Articles.AddRange(articles);
+    }
+    
+    private void ChangeFilter(object sender, RoutedEventArgs e)
+    {
+        var button = sender as FilterButton;
+        ShellVM.CurrentFilter = button.Content.ToString();
+        foreach (var filters in ShellVM.UIFilters)
+        {
+            filters.Unset();
+        }
+
+        button.Set();
+        ShellVM.LoadArticleDataCommand.Execute(null);
     }
 }

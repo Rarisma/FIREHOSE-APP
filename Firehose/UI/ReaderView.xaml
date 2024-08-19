@@ -5,28 +5,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:FirehoseApp.UI.Controls"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid.RowDefinitions>
       <RowDefinition Height="1*"/>
       <RowDefinition Height="14*"/>
     </Grid.RowDefinitions>
-    <controls:CommonNavigationBar ItemSource="{x:Bind Article}"/>
+    <controls:CommonNavigationBar ItemSource="{x:Bind ShellVM.CurrentArticle}"/>
 
     <ScrollViewer Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalScrollBarVisibility="Visible">
       <StackPanel>
         <!-- Title and author -->
-        <TextBlock Text="{x:Bind Article.Title}" TextDecorations="Underline"
+        <TextBlock Text="{x:Bind ShellVM.CurrentArticle.Title}" TextDecorations="Underline"
                    FontSize="20" Margin="0,10" TextWrapping="Wrap"/>
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="By" Margin="0,5,5,0"/>
-          <TextBlock Text="{x:Bind Article.Author}"  Margin="0,5,0,20"/>
+          <TextBlock Text="{x:Bind ShellVM.CurrentArticle.Author}"  Margin="0,5,0,20"/>
         </StackPanel>
 
         <!-- Article Text -->
-        <TextBlock Text="{x:Bind Article.Text}" x:Name="ArticleText"  TextWrapping="WrapWholeWords"
+        <TextBlock Text="{x:Bind ShellVM.CurrentArticle.Text}"  TextWrapping="WrapWholeWords"
                    MaxWidth="500" HorizontalAlignment="Left"/>
       </StackPanel>
     </ScrollViewer>

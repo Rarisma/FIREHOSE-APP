@@ -12,11 +12,7 @@ namespace FirehoseApp.Viewmodels;
 
 class ShellVM : ObservableObject
 {
-    
-    public delegate void UpdateButtons(Button button);
-    public UpdateButtons UpdateButtonsDelegate;
-
-    
+    #region Properties
     private ObservableCollection<Article> _articles;
     
     public ObservableCollection<Article> Articles
@@ -36,7 +32,7 @@ class ShellVM : ObservableObject
     }
     
     private AsyncCommand _loadArticleDataCommand;
-
+    
     public AsyncCommand LoadArticleDataCommand
     {
         get => _loadArticleDataCommand;
@@ -51,47 +47,32 @@ class ShellVM : ObservableObject
         set => SetProperty(ref _loadMoreVisibility, value);
     }
     
-    private ObservableCollection<Filters> filters;
+    private Visibility _BoomarksMessageVisibility;
     
-    public ObservableCollection<Filters> Filters
+    public Visibility BoomarksMessageVisibility
+    {
+        get => _BoomarksMessageVisibility;
+        set => SetProperty(ref _BoomarksMessageVisibility, value);
+    }
+    
+    private ObservableCollection<Filter> filters;
+    
+    public ObservableCollection<Filter> Filters
     {
         get => filters;
         set => SetProperty(ref filters, value);
     }
-
-
-    //Access to the hallon API server
-    public API Hallon = new();
-
-    public ShellVM()
+    
+    private ObservableCollection<FilterButton> _UIFilters;
+    
+    public ObservableCollection<FilterButton> UIFilters
     {
-        CurrentFilter = "Latest";
-        Filters = new();
-        LoadAllDataCommand = new AsyncCommand(LoadAllData);
-        LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
-        Articles = new();
-        LoadMoreVisibility = Visibility.Visible;
-        PublisherID = -1;
-
+        get => _UIFilters;
+        set => SetProperty(ref _UIFilters, value);
     }
     
-    /// <summary>
-    /// Loads filter and publication data.
-    /// </summary>
-    private async Task LoadAllData()
-    {
-        try
-        {
-            Glob.Publications = await LoadPublicationData();
-            await LoadFilterData();
-            await LoadArticleData();
-            UpdateButtonsDelegate.Invoke(Filters[0]);
-        }
-        catch (Exception ex)
-        {
-            ShowServerError(ex.Message);
-        }
-    }
+    //Access to the hallon API server
+    public API Hallon = new();
     
     
     public string CurrentFilter;
@@ -106,19 +87,58 @@ class ShellVM : ObservableObject
     /// </summary>
     public int Offset;
     
+    
+    private Article _CurrentArticle;
+    /// <summary>
+    /// Currently selected article (for webview, reader etc)
+    /// </summary>
+    public Article CurrentArticle
+    {
+        get => _CurrentArticle;
+        set => SetProperty(ref _CurrentArticle, value);
+    }
+    #endregion
+
+    public ShellVM()
+    {
+        CurrentFilter = "Latest";
+        Filters = new();
+        LoadAllDataCommand = new AsyncCommand(LoadAllData);
+        LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
+        Articles = new();
+        LoadMoreVisibility = Visibility.Visible;
+        BoomarksMessageVisibility = Visibility.Visible;
+        PublisherID = -1;
+        Offset = 0;
+        UIFilters = new();
+    }
+
+    /// <summary>
+    /// Loads filter and publication data.
+    /// </summary>
+    private async Task LoadAllData()
+    {
+        try
+        {
+            Glob.Publications = await LoadPublicationData();
+            await LoadFilterData();
+            await LoadArticleData();
+        }
+        catch (Exception ex)
+        {
+            ShowServerError(ex.Message);
+        }
+    }
+    
     /// <summary>
     /// Loads all filter data.
     /// </summary>
-    /// <returns></returns>
     public async Task LoadFilterData()
     {
         PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
-
-        foreach (var filter in await Hallon.GetFilters(Pref.AccountToken))
-        {
-            Ioc.Default.GetRequiredService<ShellVM>().Filters.Add(new(filter));
-        }
+        Filters.AddRange(await Hallon.GetFilters(Pref.AccountToken));
     }
+
     public async Task LoadArticleData()
     {
         PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
@@ -153,17 +173,19 @@ class ShellVM : ObservableObject
     public async void OpenArticle(Article article)
     {
         await Hallon.AddView(article.Url);
+        CurrentArticle = article;
         switch (Ioc.Default.GetRequiredService<PreferencesModel>().OpenInMode)
         {
             case 0: //Open in Article WebView
-                Glob.DoNavi(new ArticleView(article));
+                App.UI.Navigate(typeof(ArticleWebView));
                 break;
             case 1: //Open in reader mode
                 if (string.IsNullOrEmpty(article.Text))
                 {
                     article.Text = await Hallon.GetArticleText(article.Url);
                 }
-                Glob.DoNavi(new ReaderMode(article));
+                App.UI.Navigate(typeof(ReaderMode));
+
                 break;
             case 2: //Open in Web Browser
                 Windows.System.Launcher.LaunchUriAsync(new Uri(article.Url));

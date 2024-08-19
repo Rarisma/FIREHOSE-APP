@@ -14,14 +14,19 @@ public partial class App : Application
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
-    public static Window MainWindow { get; private set; } = null!;
+    public static Window MainWindow { get; private set; } = new();
+    public static Frame UI { get; private set; } = new();
     
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        MainWindow = new();
+#if __IOS__ || __ANDROID__
+    Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
+    Uno.UI.FeatureConfiguration.NativeFramePresenter.AndroidUnloadInactivePages = false;
+
+#endif
 
 #if DEBUG
         MainWindow.EnableHotReload();
@@ -35,8 +40,8 @@ public partial class App : Application
             // When the navigation stack isn't restored navigate to the first page,
             // configuring the new page by passing required information as a navigation
             // parameter
-            
-            Glob.DoNavi(new ArticleList());
+            MainWindow.Content = UI;
+            UI.Navigate(typeof(ArticleList));
         }
         
         //Set window info and show it.

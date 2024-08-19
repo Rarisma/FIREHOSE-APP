@@ -92,9 +92,6 @@
     <None Update="UI\Controls\CommonNavigationBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <None Update="UI\Controls\Filters.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
     <None Update="UI\Controls\PublisherFilter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

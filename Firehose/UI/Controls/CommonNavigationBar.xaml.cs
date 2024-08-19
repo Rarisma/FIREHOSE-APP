@@ -61,13 +61,20 @@ public sealed partial class CommonNavigationBar : Grid
             ItemSource.Text = await Ioc.Default.GetRequiredService<ShellVM>()
                 .Hallon.GetArticleText(ItemSource.Url);
         }
-        Glob.DoNavi(new ReaderMode(ItemSource));
-    } 
+        App.UI.Navigate(typeof(ReaderMode), ItemSource);
+    }
     
     /// <summary>
     /// Return to article view.
     /// </summary>
-    private void GoBack(object sender, RoutedEventArgs e) { Glob.GoBack(); }
+    private void GoBack(object sender, RoutedEventArgs e)
+    {
+        if (App.UI.CanGoBack)
+        {
+            App.UI.GoBack();
+        }
+
+    }
     
     /// <summary>
     /// Ran when loaded, checks the users bookmarks for if the Article is bookmarked.

@@ -1,9 +1,6 @@
-using System.Drawing;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Viewmodels;
 using HYDRANT.Definitions;
-using Color = Windows.UI.Color;
-
 //NO MORE FREESTYLE
 namespace FirehoseApp.UI.Controls;
 public sealed partial class PublisherInformation : UserControl

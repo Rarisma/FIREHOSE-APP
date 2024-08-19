@@ -1,7 +1,5 @@
 using HYDRANT.Definitions;
 using MySqlConnector;
-using static System.Net.Mime.MediaTypeNames;
-
 //The voice someone calls (in the labyrinth)
 namespace HYDRANT;
 
@@ -44,15 +42,11 @@ public class SQL
                 Url = reader["URL"].ToString() ?? string.Empty,
                 Title = reader["TITLE"].ToString() ?? "",
                 PublishDate = Convert.ToDateTime(reader["PUBLISH_DATE"]),
-                IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true),
                 Summary = reader["SUMMARY"].ToString()!,
                 ImageURL = reader["ImageURL"].ToString(),
                 Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.",
                 PublisherID = (int)reader["PUBLISHER_ID"],
-                Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]),
-                CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!,
                 Author = reader["AUTHOR"].ToString()!,
-                Sectors = reader["SECTORS"].ToString()!,
                 TimeToRead = Convert.ToInt32(reader["TimeToRead"].ToString()),
                 Impact = Convert.ToInt32(reader["IMPACT"]),
             };
@@ -89,20 +83,8 @@ public class SQL
         else
         {
             query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
-		    PAYWALL, SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID, BUSINESS_RELATED,
-		    COMPANIES_MENTIONED, AUTHOR, SECTORS,TimeToRead";
-        }
-        
-        //Disable UGC (overriden if UGC is mentioned)
-        if (!AllowUserSubmittedArticles && !Filter.Contains("UserGeneratedArticle"))
-        {
-            if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
-            { Filter = "WHERE UserGeneratedArticle = 0 " + Filter; }
-            else if (Filter.Contains("ORDER"))
-            {
-                Filter = Filter.Replace("ORDER", "AND UserGeneratedArticle = 0 ORDER");
-            }
-            else { Filter += " AND UserGeneratedArticle = 0"; }
+		    SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID,
+		    AUTHOR,TimeToRead";
         }
         
         //Filter by publisher if enabled
@@ -115,6 +97,16 @@ public class SQL
                 Filter = Filter.Replace("ORDER", $" AND PUBLISHER_ID = {PublisherID} ORDER");
             }
             else { Filter += $" AND PUBLISHER_ID = {PublisherID}"; }
+        }
+        else //Block Testing Data from showings and UGC articles.
+        {
+            if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
+            { Filter = "WHERE NOT PUBLISHER_ID = 0 " + Filter; }
+            else if (Filter.Contains("ORDER"))
+            {
+                Filter = Filter.Replace("ORDER", $" AND NOT PUBLISHER_ID = 0 ORDER");
+            }
+            else { Filter += $" NOT AND PUBLISHER_ID = 0"; }
         }
 
         //Add common filtering stuff
@@ -165,8 +157,7 @@ public class SQL
     /// Uploads Article to DB
     /// </summary>
     /// <param name="Article">Article to post</param>
-    /// <param name="UserGenerated">Flag article as user submitted</param>
-    public void UploadArticle(Article Article, bool UserGenerated = false)
+    public void UploadArticle(Article Article)
 	{
 		try
 		{
@@ -179,30 +170,20 @@ public class SQL
 					command.CommandText = @"
                 INSERT INTO ARTICLES 
                 (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, SUMMARY, IMPACT,
-				BUSINESS_RELATED, PAYWALL, COMPANIES_MENTIONED, 
-				EXECUTIVES_MENTIONED, ImageURL, PUBLISHER_ID, AUTHOR, SECTORS,
-                UserGeneratedArticle, pubname, TimeToRead) 
+				ImageURL, PUBLISHER_ID, AUTHOR, TimeToRead) 
                 VALUES 
                 (@Title, @Url, @Content, @PublishDate, @Summary, @IMPACT,
-				@BusinessRelated, @Paywall, @CompaniesMentioned, 
-				@ExecutivesMentioned, @ImageURL, @PUBLISHER_ID, @AUTHOR, @SECTORS,
-                @UserGeneratedArticle, @pubname, @TimeToRead)";
+				@ImageURL, @PUBLISHER_ID, @AUTHOR,
+                @TimeToRead)";
 					command.Parameters.AddWithValue("@Title", Article.Title);
 					command.Parameters.AddWithValue("@Url", Article.Url);
 					command.Parameters.AddWithValue("@Content", Article.Text);
 					command.Parameters.AddWithValue("@PublishDate", Article.PublishDate);
 					command.Parameters.AddWithValue("@Summary", Article.Summary);
 					command.Parameters.AddWithValue("@IMPACT", Article.Impact);
-					command.Parameters.AddWithValue("@BusinessRelated", Article.Business);
-					command.Parameters.AddWithValue("@Paywall", Article.IsPaywall);
-					command.Parameters.AddWithValue("@CompaniesMentioned", Article.CompaniesMentioned);
-					command.Parameters.AddWithValue("@ExecutivesMentioned", "");
 					command.Parameters.AddWithValue("@ImageURL", Article.ImageURL);
 					command.Parameters.AddWithValue("@PUBLISHER_ID", Article.PublisherID);
 					command.Parameters.AddWithValue("@AUTHOR", Article.Author);
-					command.Parameters.AddWithValue("@SECTORS", Article.Sectors);
-					command.Parameters.AddWithValue("@UserGeneratedArticle", UserGenerated);
-					command.Parameters.AddWithValue("@pubname", Article.PublicationName ?? "Unknown Publication");
 					command.Parameters.AddWithValue("@TimeToRead", Article.TimeToRead ?? 0);
 					command.ExecuteNonQuery();
 				}
@@ -238,14 +219,9 @@ public class SQL
                 SUMMARY = @Summary, 
                 Impact = @Impact,
                 HEADLINE = @Headline, 
-                BUSINESS_RELATED = @BusinessRelated, 
-                PAYWALL = @Paywall, 
-                COMPANIES_MENTIONED = @Companies, 
-                EXECUTIVES_MENTIONED = @Execs, 
                 ImageURL = @ImageURL, 
                 PUBLISHER_ID = @PUBLISHER_ID, 
                 AUTHOR = @AUTHOR, 
-                SECTORS = @SECTORS,
                 WHERE URL = @Url";
 
                     command.Parameters.AddWithValue("@Title", article.Title);
@@ -254,14 +230,9 @@ public class SQL
                     command.Parameters.AddWithValue("@PublishDate", article.PublishDate);
                     command.Parameters.AddWithValue("@Summary", article.Summary);
                     command.Parameters.AddWithValue("@Weighting", article.Impact);
-                    command.Parameters.AddWithValue("@BusinessRelated", article.Business);
-                    command.Parameters.AddWithValue("@Paywall", article.IsPaywall);
-                    command.Parameters.AddWithValue("@Companies", article.CompaniesMentioned);
-                    command.Parameters.AddWithValue("@Execs", article.ExecsMentioned);
                     command.Parameters.AddWithValue("@ImageURL", article.ImageURL);
                     command.Parameters.AddWithValue("@PUBLISHER_ID", article.PublisherID);
                     command.Parameters.AddWithValue("@AUTHOR", article.Author);
-                    command.Parameters.AddWithValue("@SECTORS", article.Sectors);
 
                     command.ExecuteNonQuery();
                 }
@@ -331,27 +302,28 @@ public class SQL
     /// <summary>
     /// Gets article text for provided URL
     /// </summary>
-    /// <param name="URL">URL for article text</param>
+    /// <param name="url">URL for article text</param>
+    /// <param name="publications"></param>
     /// <returns>Article Text</returns>
-    public string GetArticleText(string URL)
+    public string GetArticleText(string url, List<Publication> publications)
     {
         try
         {
-            using MySqlConnection connection = new(Connection);
-            connection.Open();
+            using MySqlConnection Connection = new(this.Connection);
+            Connection.Open();
             
-            using MySqlCommand cmd = new("SELECT ARTICLE_TEXT, PAYWALL FROM ARTICLES WHERE URL = @url",
-                connection);
-            cmd.Parameters.AddWithValue("@url", URL);
-            var r = cmd.ExecuteReader();
+            using MySqlCommand Cmd = new("SELECT ARTICLE_TEXT, PUBLISHER_ID FROM ARTICLES WHERE URL = @url",
+                Connection);
+            Cmd.Parameters.AddWithValue("@url", url);
+            var R = Cmd.ExecuteReader();
             string ArticleText = "Article Text Unavailable";
-            while (r.Read())
+            while (R.Read())
             {
                 //Can't return paywalled content, or base64 encoded content.
-                if (!bool.Parse(r["PAYWALL"].ToString() ?? "False")&&
-                    !r["ARTICLE_TEXT"].ToString().Contains("base64:"))
+                if (!publications[Convert.ToInt16(R["PUBLISHER_ID"])].Paywall &&
+                    !R["ARTICLE_TEXT"].ToString().Contains("base64:"))
                 {
-                    ArticleText = r["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
+                    ArticleText = R["ARTICLE_TEXT"].ToString() ?? "Article Text Unavailable";
                 }
                 else
                 {
@@ -361,9 +333,9 @@ public class SQL
             
             return ArticleText;
         }
-        catch (Exception e)
+        catch (Exception E)
         {
-            return "Failed to fetch article text\n" + e.Message ;
+            return "Failed to fetch article text\n" + E.Message ;
         }
     }
 
@@ -388,14 +360,9 @@ public class SQL
         };
         
         
-        if (reader.GetSchemaTable().Columns.Contains("PAYWALL"))
+        if (reader.GetSchemaTable().Columns.Contains("ARTICLE_TEXT"))
         {
-            article.IsPaywall = Convert.ToBoolean(reader["PAYWALL"] ?? true);
             article.Text = reader["ARTICLE_TEXT"].ToString() ?? "Article Text unavailable.";
-            article.Business = Convert.ToBoolean(reader["BUSINESS_RELATED"]);
-            article.CompaniesMentioned = reader["COMPANIES_MENTIONED"].ToString()!;
-            article.Sectors = reader["SECTORS"].ToString()!;
-            
         }
         return article;
     }

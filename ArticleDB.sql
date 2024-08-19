@@ -8,24 +8,14 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
 	ImageURL VARCHAR(1024) default '?',				-- A URL to the image that represents the article.
     ARTICLE_TEXT LONGTEXT NOT NULL,         		-- Full content of article
     PUBLISHER_ID INT NOT NULL, 						-- Firehose Publication ID
-    BUSINESS_RELATED BOOLEAN NOT NULL,      		-- Does the article talk about/relate to business
 	AUTHOR VARCHAR(1024),							-- Name of author(s) separated by commas.
     TimesReportedAsClickbait INT default 0, 		-- Does the article have a clickbait headline
     TimesReportedAsSummaryReported INT default 0, 	-- Does the article have a bad summary headline
     Impact INT NOT NULL,                          	-- Importance Score of Article
 	TimeToRead int default 0,						-- How long it takes to read the article.
-	UserGeneratedArticle BOOL default false,		-- Marks articles submitted via discord bot
-	pubname varchar(512) default null,				-- publication name for UGC
-    VIEWSALL int,
-    VIEWSDAY int
+    VIEWSALL int,									-- Views all time
+    VIEWSDAY int									-- Views daily
 );
---    	SECTORS LONGTEXT,								-- List of sectors the article is mentioned in
---		COMPANIES_MENTIONED LONGTEXT,           		-- List of companies mentioned in the article
---		PAYWALL BOOLEAN NOT NULL,              			-- Is the article paywalled?    
---        BREAKING BOOLEAN DEFAULT FALSE,      			-- Is the article major news
---        ClickbaitHeadline VARCHAR(255),					-- Headline with clickbait removed.
- --       EXECUTIVES_MENTIONED LONGTEXT,           		-- List of executives
-
 
 # Clickbait Increment Stored Proc
 DELIMITER //

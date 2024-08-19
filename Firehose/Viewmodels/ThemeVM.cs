@@ -1,4 +1,3 @@
-using Windows.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI;
 

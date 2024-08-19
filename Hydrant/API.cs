@@ -1,7 +1,6 @@
 using HYDRANT.Definitions;
 using System.Text.Json;
 using HYDRANT.Serializers;
-
 //Welcome to the style you haven't seen in a while, It's lavish
 namespace HYDRANT;
 /// <summary>

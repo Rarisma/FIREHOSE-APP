@@ -1,20 +1,18 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
-using HYDRANT.Definitions;
+using FirehoseApp.Viewmodels;
 using Microsoft.UI;
 
 namespace FirehoseApp.UI;
 
-public sealed partial class ArticleView : Page
+public sealed partial class ArticleWebView : Page
 {
     PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
-
-    private Article Article;
-    public ArticleView(Article Data)
+    ShellVM SVM = Ioc.Default.GetRequiredService<ShellVM>();
+    public ArticleWebView()
     {
-        Data.Url = Pref.Proxy + Data.Url;
+        SVM.CurrentArticle.Url = Pref.Proxy + SVM.CurrentArticle.Url;
         InitializeComponent();
-        Article = Data;
 
         if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
         {
