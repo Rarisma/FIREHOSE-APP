@@ -104,6 +104,7 @@
       <utu:CompositeLoadableSource>
         <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand, Mode=TwoWay}" />
         <utu:LoadableSource  Source="{x:Bind ShellVM.LoadAllDataCommand, Mode=TwoWay}" />
+        <utu:LoadableSource  Source="{x:Bind ShellVM.SearchCommand, Mode=TwoWay}" />
       </utu:CompositeLoadableSource>
     </utu:LoadingView.Source>
     <!-- Shown when loading-->
@@ -124,6 +125,7 @@
 
         <AutoSuggestBox Grid.Row="0" HorizontalAlignment="Stretch" QueryIcon="Find" x:Name="SearchBox"
                         PlaceholderText="Search for something..." Visibility="Collapsed"
+                        Text="{x:Bind ShellVM.SearchText, Mode=TwoWay}" 
                         QuerySubmitted="Search" Margin="10,20,10,0"/>
 
         <!-- Top bar UI -->

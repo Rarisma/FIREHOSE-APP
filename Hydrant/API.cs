@@ -31,15 +31,15 @@ public class API
     /// <param name="token">Used to access certain content</param>
     /// <param name="FilterName">Name of the filter</param>
     /// <param name="Minimal">Minimal Mode (less data is returned)</param>
-    /// <param name="PublisherID">Only return filters from these publisher IDs</param>
+    /// <param name="Publishers">Only return filters from these publisher IDs</param>
     /// <returns>List of articles if successful.</returns>
     public async Task<List<Article>?> GetArticles(int limit = 20, int Offset = 0, 
         string? token = null, string FilterName = "Latest", bool Minimal = false,
-        int PublisherID = -1)
+        string Publishers = "")
 	{
 		var endpoint = $"/Articles/GetArticles?limit={limit}&offset={Offset}&" +
                        $"FilterName={FilterName}&minimal={Minimal}" +
-                       $"&token={token}&publisherid={PublisherID}";
+                       $"&token={token}&publishers={Publishers}";
 		using HttpClient client = new();
 
 		//Make request and check it was successful

@@ -6,11 +6,11 @@ using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
+using Microsoft.VisualBasic;
 using Uno.Extensions;
 //WORLDS APART
 namespace FirehoseApp.Viewmodels;
-
-class ShellVM : ObservableObject
+public class ShellVM : ObservableObject
 {
     #region Properties
     private ObservableCollection<Article> _articles;
@@ -39,6 +39,13 @@ class ShellVM : ObservableObject
         set => SetProperty(ref _loadArticleDataCommand, value);
     }
     
+    private AsyncCommand _SearchCommand;
+    
+    public AsyncCommand SearchCommand
+    {
+        get => _SearchCommand;
+        set => SetProperty(ref _SearchCommand, value);
+    }
     private Visibility _loadMoreVisibility;
     
     public Visibility LoadMoreVisibility
@@ -70,24 +77,36 @@ class ShellVM : ObservableObject
         get => _UIFilters;
         set => SetProperty(ref _UIFilters, value);
     }
-    
-    //Access to the hallon API server
+
+    //Access to the Hydrant API server
     public API Hallon = new();
     
     
     public string CurrentFilter;
     
+
+    private ObservableCollection<Publication> _PublisherIDs;
     /// <summary>
     /// ID of publisher filter to filter for
     /// </summary>
-    public int PublisherID;
-    
+    public ObservableCollection<Publication> PublisherIDs
+    {
+        get => _PublisherIDs;
+        set => SetProperty(ref _PublisherIDs, value);
+    }
     /// <summary>
     /// How far we are into the category
     /// </summary>
     public int Offset;
+
+    private string _searchText;
     
-    
+    public string SearchText
+    {
+        get => _searchText;
+        set => SetProperty(ref _searchText, value);
+    }
+
     private Article _CurrentArticle;
     /// <summary>
     /// Currently selected article (for webview, reader etc)
@@ -107,8 +126,9 @@ class ShellVM : ObservableObject
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
         Articles = new();
         LoadMoreVisibility = Visibility.Visible;
+        SearchCommand = new AsyncCommand(Search);
         BoomarksMessageVisibility = Visibility.Visible;
-        PublisherID = -1;
+        PublisherIDs = new();
         Offset = 0;
         UIFilters = new();
     }
@@ -130,6 +150,12 @@ class ShellVM : ObservableObject
         }
     }
     
+    private async Task Search()
+    {
+        Articles.Clear();
+        Articles.AddRange(await Hallon.Search(SearchText));
+    }
+
     /// <summary>
     /// Loads all filter data.
     /// </summary>
@@ -148,9 +174,13 @@ class ShellVM : ObservableObject
             Articles.Clear(); //Reset collection
             
             bool MinimalMode = Pref.BlockedKeywords.Count == 0;
+
+            //Handle filters
+            string Pubs = string.Join(",", PublisherIDs.Select(publication => publication.ID.ToString()));
+            
             //Load articles
             List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit,
-                Offset, Pref.AccountToken, CurrentFilter, MinimalMode, PublisherID);
+                Offset, Pref.AccountToken, CurrentFilter, MinimalMode, Pubs);
 
             //filter articles from the future
             //We do this because sometimes an article is published weeks in advanced (Economist worlds apart)

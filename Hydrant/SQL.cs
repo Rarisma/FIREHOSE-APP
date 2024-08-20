@@ -2,7 +2,6 @@ using HYDRANT.Definitions;
 using MySqlConnector;
 //The voice someone calls (in the labyrinth)
 namespace HYDRANT;
-
 /// <summary>
 /// Access API via MySQL
 /// </summary>
@@ -66,37 +65,30 @@ public class SQL
     /// <param name="Filter">SQL filter</param>
     /// <param name="Minimal">Only returns required stuff</param>
     /// <param name="AllowUserSubmittedArticles">Disables user submitted articles
-    /// (overriden if UGC is mentioned)</param>
-    /// <param name="PublisherID">Filter by PublisherID</param>
+    /// <param name="Publishers">Filter by PublisherID</param>
     /// <returns>JSON Formatted list of articles.</returns>
 	public List<Article> GetArticles(int Limit = 0, int Offset = 0,
 	string Filter = "ORDER BY PUBLISH_DATE DESC", bool Minimal = true,
-    bool AllowUserSubmittedArticles = false, int PublisherID = -1)
+    bool AllowUserSubmittedArticles = false, int[]? Publishers = null)
      {
         string query;
         //Select queries, minimal mode is much quicker for large queries.
-        if (Minimal)
-        {
-            query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
-		    SUMMARY, ImageURL, PUBLISHER_ID, AUTHOR,TimeToRead";
-        }
-        else
-        {
-            query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
-		    SUMMARY, ImageURL,ARTICLE_TEXT, PUBLISHER_ID,
-		    AUTHOR,TimeToRead";
-        }
+        query = @"SELECT URL, TITLE, PUBLISH_DATE, Impact,
+		    SUMMARY, ImageURL, PUBLISHER_ID, AUTHOR, TimeToRead";
+
+        if (!Minimal) { query += ", ARTICLE_TEXT"; }
         
         //Filter by publisher if enabled
-        if (PublisherID != -1)
+        if (Publishers == null || Publishers.Length != 0)
         {
+            var pub_filter = $"PUBLISHER_ID IN ({string.Join(",", Publishers)})";
             if (string.IsNullOrWhiteSpace(Filter) || Filter.Split(" ")[0] == "ORDER")
-            { Filter = "WHERE PUBLISHER_ID = 0 " + Filter; }
+            { Filter = $"WHERE {pub_filter} {Filter}"; }
             else if (Filter.Contains("ORDER"))
             {
-                Filter = Filter.Replace("ORDER", $" AND PUBLISHER_ID = {PublisherID} ORDER");
+                Filter = Filter.Replace("ORDER", $" AND {pub_filter} ORDER");
             }
-            else { Filter += $" AND PUBLISHER_ID = {PublisherID}"; }
+            else { Filter += $" AND {pub_filter}"; }
         }
         else //Block Testing Data from showings and UGC articles.
         {
@@ -104,9 +96,9 @@ public class SQL
             { Filter = "WHERE NOT PUBLISHER_ID = 0 " + Filter; }
             else if (Filter.Contains("ORDER"))
             {
-                Filter = Filter.Replace("ORDER", $" AND NOT PUBLISHER_ID = 0 ORDER");
+                Filter = Filter.Replace("ORDER", " AND NOT PUBLISHER_ID = 0 ORDER");
             }
-            else { Filter += $" NOT AND PUBLISHER_ID = 0"; }
+            else { Filter += " NOT AND PUBLISHER_ID = 0"; }
         }
 
         //Add common filtering stuff

@@ -30,16 +30,20 @@ public sealed partial class ArticleList : Page
         
         if (await Glob.OpenContentDialog(CD) == ContentDialogResult.Primary)
         {
-            ShellVM.PublisherID = ((CD.Content as PublisherFilter)
-                .Content as ListView)!.SelectedIndex + 1;
+            ShellVM.PublisherIDs.Clear();
+            foreach (Publication pub in ((CD.Content as PublisherFilter)
+                         .Content as ListView)!.SelectedItems)
+            {
+                ShellVM.PublisherIDs.Add(pub);
+            }
         }
         else
         {
             //Set back to Filter button
-            ShellVM.PublisherID = -1;
+            ShellVM.PublisherIDs = new();
         }
         ShellVM.Offset = 0;
-        UpdateButtons(ShellVM.UIFilters.First());
+        UpdateButtons();
         ShellVM.LoadArticleDataCommand.Execute(null);
     }
     
@@ -52,8 +56,8 @@ public sealed partial class ArticleList : Page
             ShellVM.LoadAllDataCommand.Execute(null);
             ShellVM.LoadMoreVisibility = Visibility.Visible;
         }
-
-
+        
+        UpdateButtons();
         InitializeComponent();
     }
 
@@ -65,8 +69,7 @@ public sealed partial class ArticleList : Page
     /// <summary>
     /// Updates UI on top row of buttons.
     /// </summary>
-    /// <param name="Button">Button to set as selected.</param>
-    public void UpdateButtons(FilterButton Button)
+    public void UpdateButtons()
     {
         //Show messages
         ShellVM.BoomarksMessageVisibility = Visibility.Collapsed;
@@ -113,12 +116,9 @@ public sealed partial class ArticleList : Page
         }
     }
     
-    private async void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    private void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
-        ShellVM.Articles.Clear();
-        UpdateButtons(ShellVM.UIFilters.First());
-        var articles = await ShellVM.Hallon.Search(SearchBox.Text);
-        ShellVM.Articles.AddRange(articles);
+        ShellVM.SearchCommand.Execute(null);
     }
     
     private void ChangeFilter(object sender, RoutedEventArgs e)
@@ -132,5 +132,6 @@ public sealed partial class ArticleList : Page
 
         button.Set();
         ShellVM.LoadArticleDataCommand.Execute(null);
+        UpdateButtons();
     }
 }
