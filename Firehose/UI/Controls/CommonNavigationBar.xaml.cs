@@ -7,7 +7,7 @@ using HYDRANT.Definitions;
 using WinRT.Interop;
 
 namespace FirehoseApp.UI.Controls;
-public sealed partial class CommonNavigationBar : CommandBar
+public sealed partial class CommonNavigationBar : Grid
 {
     PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
 
@@ -112,7 +112,7 @@ public sealed partial class CommonNavigationBar : CommandBar
         Ioc.Default.GetRequiredService<ShellVM>().Hallon.VoteClickbait(ItemSource);
 
         //Show visual feedback
-        ClickbaitButton.Content = "Already reported";
+        ClickbaitButton.Text = "Already reported";
         ClickbaitButton.IsEnabled = false; //Prevent multiple reports.
     }
     
