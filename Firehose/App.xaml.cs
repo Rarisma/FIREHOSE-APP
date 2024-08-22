@@ -21,6 +21,11 @@ public partial class App : Application
     public static Frame UI { get; private set; }
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+#if __IOS__ || __ANDROID__
+    Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
+    Uno.UI.FeatureConfiguration.NativeFramePresenter.AndroidUnloadInactivePages = false;
+        
+#endif
         MainWindow = new();
         UI = new();
 #if DEBUG

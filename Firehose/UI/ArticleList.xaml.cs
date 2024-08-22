@@ -103,8 +103,8 @@ public sealed partial class ArticleList : Page
         ShellVM.Offset = 0;
         ShellVM.LoadMoreVisibility= Visibility.Collapsed;
         ShellVM.BoomarksMessageVisibility = Visibility.Visible; 
-        BookmarksButton.Background = Themer.SecondaryBrush;
-        BookmarksButton.Foreground = Themer.MainBrush;
+        BookmarksButton.Background = Themer.MainBrush;
+        BookmarksButton.Foreground = Themer.SecondaryBrush;
         ShellVM.Articles.AddRange(Pref.BookmarkedArticles);
     }
     

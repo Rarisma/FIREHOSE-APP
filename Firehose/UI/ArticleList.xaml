@@ -117,7 +117,7 @@
     <!-- Shown when loading-->
     <utu:LoadingView.LoadingContent>
       <StackPanel Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ProgressRing IsActive="True"/>
+        <ProgressRing IsActive="True" Foreground="{x:Bind Themer.SecondaryBrush}"/>
         <TextBlock Text="Loading more articles..."/>
       </StackPanel>
     </utu:LoadingView.LoadingContent>
@@ -143,7 +143,9 @@
 
           <StackPanel Orientation="Horizontal" MinHeight="40" Margin="0,0,0,10">
             <!-- Setting button -->
-            <AppBarButton Icon="Setting" Click="OpenSettings" Style="{StaticResource IconButton}"/>
+            <AppBarButton Click="OpenSettings" Style="{StaticResource IconButton}">
+              <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE713;"/>
+            </AppBarButton>
 
             <!-- Bookmarks button -->
             <AppBarButton Click="ShowBookmarks" Style="{StaticResource IconButton}" Name="BookmarksButton">
