@@ -19,8 +19,4 @@ namespace FirehoseApp.Droid;
 )]
 public class MainActivity : Microsoft.UI.Xaml.ApplicationActivity
 {
-    public override void OnBackPressed()
-    {
-        App.UI.GoBack();
-    }
 }

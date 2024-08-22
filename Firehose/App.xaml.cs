@@ -14,20 +14,15 @@ public partial class App : Application
     /// </summary>
     public App()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
-    public static Window MainWindow { get; private set; } = new();
-    public static Frame UI { get; private set; } = new();
-    
+    public static Window MainWindow { get; private set; }
+    public static Frame UI { get; private set; }
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-#if __IOS__ || __ANDROID__
-    Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
-    Uno.UI.FeatureConfiguration.NativeFramePresenter.AndroidUnloadInactivePages = false;
-
-#endif
-
+        MainWindow = new();
+        UI = new();
 #if DEBUG
         MainWindow.EnableHotReload();
 #endif

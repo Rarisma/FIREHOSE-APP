@@ -57,8 +57,8 @@ public sealed partial class ArticleList : Page
             ShellVM.LoadMoreVisibility = Visibility.Visible;
         }
         
-        UpdateButtons();
         InitializeComponent();
+        UpdateButtons();
     }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
@@ -74,6 +74,20 @@ public sealed partial class ArticleList : Page
         //Show messages
         ShellVM.BoomarksMessageVisibility = Visibility.Collapsed;
         ShellVM.LoadMoreVisibility = Visibility.Visible;
+        
+        BookmarksButton.Background = Themer.MainBrush;
+        BookmarksButton.Foreground = Themer.SecondaryBrush;
+
+        if (ShellVM.PublisherIDs.Count > 0)
+        {
+            FilterButton.Background = Themer.SecondaryBrush;
+            FilterButton.Foreground = Themer.MainBrush;
+        }
+        else
+        {
+            FilterButton.Background = Themer.MainBrush;
+            FilterButton.Foreground = Themer.SecondaryBrush;
+        }
     }
 
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;
@@ -88,7 +102,9 @@ public sealed partial class ArticleList : Page
         ShellVM.Articles.Clear();
         ShellVM.Offset = 0;
         ShellVM.LoadMoreVisibility= Visibility.Collapsed;
-        ShellVM.BoomarksMessageVisibility = Visibility.Visible;
+        ShellVM.BoomarksMessageVisibility = Visibility.Visible; 
+        BookmarksButton.Background = Themer.SecondaryBrush;
+        BookmarksButton.Foreground = Themer.MainBrush;
         ShellVM.Articles.AddRange(Pref.BookmarkedArticles);
     }
     

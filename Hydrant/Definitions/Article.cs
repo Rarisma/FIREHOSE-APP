@@ -71,6 +71,12 @@ public class Article
     /// Article already summarised.
     /// </summary>
     public int? TimeToRead { get; set; }
+
+    /// <summary>
+    /// Article Tags/categories such as Tech etc.
+    /// (May become more detailed in the future)
+    /// </summary>
+    public string? Tags { get; set; }
     
 
     /// <summary>

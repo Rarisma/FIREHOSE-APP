@@ -162,11 +162,10 @@ public class SQL
 					command.CommandText = @"
                 INSERT INTO ARTICLES 
                 (TITLE, URL, ARTICLE_TEXT, PUBLISH_DATE, SUMMARY, IMPACT,
-				ImageURL, PUBLISHER_ID, AUTHOR, TimeToRead) 
+				ImageURL, PUBLISHER_ID, AUTHOR, TimeToRead, Tags) 
                 VALUES 
                 (@Title, @Url, @Content, @PublishDate, @Summary, @IMPACT,
-				@ImageURL, @PUBLISHER_ID, @AUTHOR,
-                @TimeToRead)";
+				@ImageURL, @PUBLISHER_ID, @AUTHOR, @TimeToRead, @Tags)";
 					command.Parameters.AddWithValue("@Title", Article.Title);
 					command.Parameters.AddWithValue("@Url", Article.Url);
 					command.Parameters.AddWithValue("@Content", Article.Text);
@@ -177,6 +176,7 @@ public class SQL
 					command.Parameters.AddWithValue("@PUBLISHER_ID", Article.PublisherID);
 					command.Parameters.AddWithValue("@AUTHOR", Article.Author);
 					command.Parameters.AddWithValue("@TimeToRead", Article.TimeToRead ?? 0);
+					command.Parameters.AddWithValue("@Tags", Article.Tags ?? "");
 					command.ExecuteNonQuery();
 				}
 				connection.Close();

@@ -139,12 +139,12 @@
             <AppBarButton Icon="Setting" Click="OpenSettings" Style="{StaticResource IconButton}"/>
 
             <!-- Bookmarks button -->
-            <AppBarButton Click="ShowBookmarks" Style="{StaticResource IconButton}">
+            <AppBarButton Click="ShowBookmarks" Style="{StaticResource IconButton}" Name="BookmarksButton">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE735;"/>
             </AppBarButton>
 
             <!-- Filter by publication -->
-            <AppBarButton Click="FilterSource" Style="{StaticResource IconButton}">
+          <AppBarButton Click="FilterSource" Style="{StaticResource IconButton}" Name="FilterButton">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE71C;"/>
             </AppBarButton>
 
