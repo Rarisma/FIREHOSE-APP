@@ -78,20 +78,27 @@
         <Expander Background="Transparent" HorizontalAlignment="Stretch"
                   ContentTemplate="{StaticResource ExpanderContent}">
           <Expander.Header>
-            <StackPanel>
-              <controls1:PublisherInformation ItemSource="{x:Bind}"/>
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="3*"/>
-                  <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Title}" Style="{StaticResource TitleText}"/>
-                <Border CornerRadius="4" HorizontalAlignment="Right" MaxHeight="100"
-                        BorderThickness="0" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2">
-                  <Image Source="{x:Bind ImageURL}"/>
-                </Border>
-              </Grid>
-            </StackPanel>
+            <Grid HorizontalAlignment="Stretch" MaxHeight="120">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+              </Grid.RowDefinitions>
+
+              <controls1:PublisherInformation ItemSource="{x:Bind}" Grid.Row="0" Grid.Column="0"/>
+
+
+              <TextBlock Text="{x:Bind Title}" Style="{StaticResource TitleText}" 
+                         MaxWidth="600" Grid.Row="1" Grid.Column="0"/>
+
+              <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" CornerRadius="4" HorizontalAlignment="Stretch"
+                       Margin="10,0,0,0" BorderThickness="0" VerticalAlignment="Center" MaxHeight="100">
+                <Image Source="{x:Bind ImageURL}" MaxHeight="100"/>
+              </Border>
+            </Grid>
           </Expander.Header>
         </Expander>
       </StackPanel>
