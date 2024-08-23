@@ -17,22 +17,21 @@
     </TextBlock>
 
       <ScrollViewer MaxHeight="300">
-      <ListBox ItemsSource="{x:Bind Pref.BlockedKeywords, Mode=TwoWay}">
-          <ListBox.ItemTemplate>
-            <!-- The x:String datatype is allowed, IDK why VS is complaining -->
+        <ItemsRepeater ItemsSource="{x:Bind Pref.BlockedKeywords, Mode=TwoWay}">
+          <ItemsRepeater.ItemTemplate>
             <DataTemplate x:DataType="x:String">
               <StackPanel Orientation="Horizontal" CornerRadius="4" HorizontalAlignment="Stretch">
-              <Button Click="RemoveKeyword" HorizontalAlignment="Right" Margin="0,0,10,0">
-                <Button.Content>
-                  <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE74D;"/>
-                </Button.Content>
-              </Button>
+                <Button Click="RemoveKeyword" HorizontalAlignment="Right" Margin="5">
+                  <Button.Content>
+                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE74D;"/>
+                  </Button.Content>
+                </Button>
                 <TextBlock Text="{x:Bind}" VerticalAlignment="Center"/>
 
-            </StackPanel>
+              </StackPanel>
             </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
+        </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
       </ScrollViewer>
 
       <AutoSuggestBox PlaceholderText="Add a keyword here, like Elon Musk"

@@ -24,15 +24,17 @@
       <Setter Property="Margin" Value="10,10"/>
     </Style>
 
-    <Style x:Key="IconButton" TargetType="AppBarButton">
-      <Setter Property="LabelPosition" Value="Collapsed"/>
+    <Style x:Key="IconButton" TargetType="ToggleButton">
       <Setter Property="VerticalContentAlignment" Value="Center"/>
       <Setter Property="MaxHeight" Value="200"/>
       <Setter Property="HorizontalAlignment" Value="Center"/>
       <Setter Property="Width" Value="50"/>
-      <Setter Property="Margin" Value="0,10,0,0"/>
+      <Setter Property="Margin" Value="0,10,5,0"/>
       <Setter Property="Height" Value="50"/>
       <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="IsChecked" Value="false"/>
+      <Setter Property="Background" Value="Transparent"/>
     </Style>
 
     <DataTemplate x:Key="ExpanderContent">
@@ -110,8 +112,8 @@
     <utu:LoadingView.Source>
       <utu:CompositeLoadableSource>
         <utu:LoadableSource Source="{x:Bind ShellVM.LoadArticleDataCommand, Mode=TwoWay}" />
-        <utu:LoadableSource  Source="{x:Bind ShellVM.LoadAllDataCommand, Mode=TwoWay}" />
-        <utu:LoadableSource  Source="{x:Bind ShellVM.SearchCommand, Mode=TwoWay}" />
+        <utu:LoadableSource Source="{x:Bind ShellVM.LoadAllDataCommand, Mode=TwoWay}" />
+        <utu:LoadableSource Source="{x:Bind ShellVM.SearchCommand, Mode=TwoWay}" />
       </utu:CompositeLoadableSource>
     </utu:LoadingView.Source>
     <!-- Shown when loading-->
@@ -143,24 +145,24 @@
 
           <StackPanel Orientation="Horizontal" MinHeight="40" Margin="0,0,0,10">
             <!-- Setting button -->
-            <AppBarButton Click="OpenSettings" Style="{StaticResource IconButton}">
+            <ToggleButton Click="OpenSettings" Style="{StaticResource IconButton}" Name="Settings">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE713;"/>
-            </AppBarButton>
+            </ToggleButton>
 
             <!-- Bookmarks button -->
-            <AppBarButton Click="ShowBookmarks" Style="{StaticResource IconButton}" Name="BookmarksButton">
+          <ToggleButton Click="ShowBookmarks" Style="{StaticResource IconButton}" Name="BookmarksButton">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE735;"/>
-            </AppBarButton>
+            </ToggleButton>
 
             <!-- Filter by publication -->
-          <AppBarButton Click="FilterSource" Style="{StaticResource IconButton}" Name="FilterButton">
+          <ToggleButton Click="FilterSource" Style="{StaticResource IconButton}" Name="FilterButton">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE71C;"/>
-            </AppBarButton>
+            </ToggleButton>
 
             <!-- Search -->
-            <AppBarButton Click="OpenSearch" Name="SearchButton" Style="{StaticResource IconButton}">
+          <ToggleButton Click="OpenSearch" Name="SearchButton" Style="{StaticResource IconButton}">
               <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE721;"/>
-            </AppBarButton>
+            </ToggleButton>
 
 
           <Border Style="{StaticResource CommonBorderStyle}"/>

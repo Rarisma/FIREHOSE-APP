@@ -35,12 +35,14 @@ public sealed partial class ArticleList : Page
                          .Content as ListView)!.SelectedItems)
             {
                 ShellVM.PublisherIDs.Add(pub);
+                FilterButton.IsChecked = true;
             }
         }
         else
         {
             //Set back to Filter button
             ShellVM.PublisherIDs = new();
+            FilterButton.IsChecked = false;
         }
         ShellVM.Offset = 0;
         UpdateButtons();
@@ -63,6 +65,7 @@ public sealed partial class ArticleList : Page
 
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
+        Settings.IsChecked = false;
         App.UI.Navigate(typeof(Preferences));
     }
     
@@ -75,19 +78,7 @@ public sealed partial class ArticleList : Page
         ShellVM.BoomarksMessageVisibility = Visibility.Collapsed;
         ShellVM.LoadMoreVisibility = Visibility.Visible;
         
-        BookmarksButton.Background = Themer.MainBrush;
-        BookmarksButton.Foreground = Themer.SecondaryBrush;
-
-        if (ShellVM.PublisherIDs.Count > 0)
-        {
-            FilterButton.Background = Themer.SecondaryBrush;
-            FilterButton.Foreground = Themer.MainBrush;
-        }
-        else
-        {
-            FilterButton.Background = Themer.MainBrush;
-            FilterButton.Foreground = Themer.SecondaryBrush;
-        }
+        BookmarksButton.IsChecked = false;
     }
 
     private void ArticleList_OnLoaded(object sender, RoutedEventArgs e) => Glob.XamlRoot = XamlRoot;
