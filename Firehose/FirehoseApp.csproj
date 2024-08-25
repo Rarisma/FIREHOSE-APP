@@ -6,6 +6,7 @@
       net8.0-maccatalyst;
       net8.0-windows10.0.19041;
       net8.0-desktop;
+      net8.0-browserwasm
     </TargetFrameworks>
 
     <OutputType>Exe</OutputType>
@@ -16,8 +17,8 @@
     <!-- App Identifier -->
     <ApplicationId>net.rarisma.REMNANT</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
-    <ApplicationVersion>4</ApplicationVersion>
+    <ApplicationDisplayVersion>1.2.1</ApplicationDisplayVersion>
+    <ApplicationVersion>5</ApplicationVersion>
     <!--
       If you encounter this error message:
 

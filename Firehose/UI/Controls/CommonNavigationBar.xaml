@@ -55,10 +55,12 @@
       </Button>
 
       <!-- Share button -->
-      <Button Grid.Column="4" Click="Share" Style="{StaticResource AppButton}">
+      <Button Grid.Column="4" Click="Share" Style="{StaticResource AppButton}" Name="ShareButton">
         <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
       </Button>
 
+      <TeachingTip x:Name="ShareMessage" Target="{x:Bind ShareButton}"
+                   Title="Copied to clipboard!" IsLightDismissEnabled="True"/>
       <Button Grid.Row="0"  Content="· · ·" Grid.Column="5" Style="{StaticResource AppButton}">
         <Button.Flyout>
           <MenuFlyout>

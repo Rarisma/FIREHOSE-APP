@@ -131,7 +131,14 @@ public sealed partial class ArticleList : Page
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
         var button = sender as FilterButton;
-        ShellVM.CurrentFilter = button.Content.ToString();
+
+        //If filter changed reset offset
+        if (button.Content.ToString() != ShellVM.CurrentFilter)
+        {
+            ShellVM.CurrentFilter = button.Content.ToString();
+            ShellVM.Offset = 0;
+        }
+
         foreach (var filters in ShellVM.UIFilters)
         {
             filters.Unset();
@@ -140,5 +147,14 @@ public sealed partial class ArticleList : Page
         button.Set();
         ShellVM.LoadArticleDataCommand.Execute(null);
         UpdateButtons();
+    }
+    
+    /// <summary>
+    /// Refreshes new articles
+    /// </summary>
+    private void Refresh(RefreshContainer sender, RefreshRequestedEventArgs args)
+    {
+        ShellVM.Offset = 0;
+        ShellVM.LoadArticleDataCommand.Execute(null);
     }
 }

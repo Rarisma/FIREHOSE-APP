@@ -19,6 +19,7 @@ public class PreferencesModel : ObservableObject
     public PreferencesModel()
     {
         BlockedKeywords = new();
+        blockedSources = new();
         Proxy = string.Empty;
         ArticleFetchLimit = 50;
         BookmarkedArticles = new();
@@ -38,6 +39,14 @@ public class PreferencesModel : ObservableObject
     /// 2 - Default Web Browser
     /// </summary>
     public int OpenInMode { get; set; }
+    
+    /// <summary>
+    /// Controls what happens when share is clicked
+    /// 0 - Default Share Menu
+    /// 1 - Copy link to Clipboard
+    /// 2 - Copy Link and summary
+    /// </summary>
+    public int ShareMode { get; set; }
 
     /// <summary>
     /// Article fetch limit
@@ -67,6 +76,16 @@ public class PreferencesModel : ObservableObject
     {
         get => blockedKeywords;
         set => SetProperty(ref blockedKeywords, value);
+    }
+    
+    /// <summary>
+    /// Articles from these sources will be blocked
+    /// </summary>
+    private ObservableCollection<int> blockedSources;
+    public ObservableCollection<int> BlockedSources
+    {
+        get => blockedSources;
+        set => SetProperty(ref blockedSources, value);
     }
 
     /// <summary>
@@ -106,7 +125,7 @@ public class PreferencesModel : ObservableObject
 
             var content = File.ReadAllText(SavePath);
             Pref = (PreferencesModel)JsonSerializer.Deserialize(content, typeof(PreferencesModel))!;
-
+            Pref.blockedSources = new();
             if (Pref.ArticleFetchLimit <= 5)
             {
                 Pref.ArticleFetchLimit = 20;

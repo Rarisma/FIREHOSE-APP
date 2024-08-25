@@ -121,6 +121,28 @@ public sealed partial class CommonNavigationBar : Grid
     /// </summary>
     private async void Share(object sender, RoutedEventArgs e)
     {
+        if (Pref.ShareMode > 0)
+        {
+            DataPackage dataPackage = new();
+            if (Pref.ShareMode == 1) //Share link only
+            {
+#if __ANDROID__
+                dataPackage.SetUri(new Uri(ItemSource.Url));
+#else
+                dataPackage.SetText(ItemSource.Url);
+#endif
+            }
+            else // Share link and UI
+            {
+                dataPackage.SetText(ItemSource.Url + "\n" + ItemSource.Summary);
+            }
+
+            //Set clipboard content
+            Clipboard.SetContent(dataPackage);
+            ShareMessage.IsOpen = true;
+            return;
+        }
+
         if (DataTransferManager.IsSupported())
         {
 #if WINDOWS //Sharing workarounds

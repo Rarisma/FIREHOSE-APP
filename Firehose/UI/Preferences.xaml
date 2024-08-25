@@ -28,16 +28,27 @@
 
     <!-- Open article settings -->
       <ComboBox Header="Open articles in" SelectedIndex="{x:Bind Pref.OpenInMode, Mode=TwoWay}"
-              MaxWidth="200" Margin="10" HorizontalAlignment="Center">
+              MaxWidth="200" Margin="10" HorizontalAlignment="Center" MinWidth="200">
         <ComboBoxItem>Article WebView</ComboBoxItem>
         <ComboBoxItem>Reader mode</ComboBoxItem>
         <ComboBoxItem>Default Browser</ComboBoxItem>
     </ComboBox>
 
-    <Button Content="Edit blocked keywords" Click="BlockKeywords" Margin="10" HorizontalAlignment="Center"/>
+    <!-- Open article settings -->
+      <ComboBox Header="Share articles blocked button action"
+                SelectedIndex="{x:Bind Pref.ShareMode, Mode=TwoWay}"
+                MaxWidth="200" Margin="10" HorizontalAlignment="Center" MinWidth="200">
+        <ComboBoxItem>Opens Share Dialog</ComboBoxItem>
+        <ComboBoxItem>Copies Link</ComboBoxItem>
+        <ComboBoxItem>Copies Link and Summary</ComboBoxItem>
+    </ComboBox>
 
-    <!-- Blocked sources isn't implemented yet -->
-    <Button Content="Edit blocked sources"  Click="BlockSources" HorizontalAlignment="Center" Visibility="Collapsed"/>
+      <Button Content="Edit blocked keywords" Width="200"
+              Click="BlockKeywords" Margin="10" HorizontalAlignment="Center"/>
+
+    <!-- Blocked sources -->
+    <Button Content="Edit blocked sources" Width="200"
+            Click="BlockSources" HorizontalAlignment="Center"/>
 
 </StackPanel>
 
@@ -47,7 +58,7 @@
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock Text="{x:Bind AppVer}" HorizontalAlignment="Center" Foreground="Gray"/>
       <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center" Foreground="Gray"/>
-      <HyperlinkButton Content="EYES CLOSED" Click="DevMenu"
+      <HyperlinkButton Content="COLD GET COLDER" Click="DevMenu"
                  Foreground="Gray" HorizontalAlignment="Center"/>
   </StackPanel>
   </Grid>

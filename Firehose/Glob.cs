@@ -1,5 +1,4 @@
 using HYDRANT.Definitions;
-
 //I'VE GOT A RECKLESS TONGUE
 namespace FirehoseApp;
 public static class Glob
@@ -22,40 +21,6 @@ public static class Glob
     /// List of publications from firehose
     /// </summary>
     public static List<Publication> Publications = new();
-
-/*
-    /// <summary>
-    /// The built-in navigation within Frames doesn't work
-    /// like I want it to work, so we persist the page items properly.
-    /// </summary>
-    private static void DoNavi()
-    {
-        App.MainWindow.Content = (UIElement)NaviStack.First();
-    }
-    
-    public static void DoNavi(object PageSource)
-    {
-        NaviStack.Push(PageSource);
-        App.MainWindow.Content = (UIElement)NaviStack.First();
-    }
-
-    /// <summary>
-    /// Get rid of the top item, then go back.
-    /// </summary>
-    public static void GoBack()
-    {
-        if (NaviStack.Count > 1)
-        {
-            NaviStack.Pop();
-            DoNavi();
-        }
-
-    }
-
-    public static void OnBackRequested(object? sender, BackRequestedEventArgs e)
-    {
-        if (NaviStack.Count > 1) { GoBack(); }
-    }*/
 
     public static void Log(LogLevel Level, String Message)
     {

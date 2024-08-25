@@ -52,6 +52,12 @@ public class Publication
     /// meaning they are hard to see in either light/dark mode.
     /// </summary>
     public string? BackgroundOverride { get; set; }
+
+    /// <summary>
+    /// Is this source disabled
+    /// (Clientside)
+    /// </summary>
+    public bool Enabled { get; set; }
     #endregion
 
     /// <summary>

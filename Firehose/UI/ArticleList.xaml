@@ -182,24 +182,26 @@
         </ScrollViewer>
 
         <!-- Article Content -->
-        <ScrollViewer Grid.Row="2" HorizontalAlignment="Stretch">
+        <RefreshContainer Grid.Row="2" RefreshRequested="Refresh">
+          <ScrollViewer  HorizontalAlignment="Stretch">
 
-          <StackPanel Orientation="Vertical">
-            <StackPanel>
-              <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
-                            ItemTemplateSelector="{StaticResource ArticleSelector}"/>
+            <StackPanel Orientation="Vertical">
+              <StackPanel>
+                <ItemsControl ItemsSource="{x:Bind ShellVM.Articles}"
+                              ItemTemplateSelector="{StaticResource ArticleSelector}"/>
 
-              <TextBlock Text="You have no more bookmarked stories..."
-                         Visibility="{x:Bind ShellVM.BoomarksMessageVisibility, Mode=OneWay}"
-                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+                <TextBlock Text="You have no more bookmarked stories..."
+                           Visibility="{x:Bind ShellVM.BoomarksMessageVisibility, Mode=OneWay}"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
 
-              <HyperlinkButton Content="Click to load more Articles"
-                               Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=OneWay}"
-                               Command="{x:Bind ShellVM.LoadArticleDataCommand}"
-                               HorizontalAlignment="Center" Margin="10"/>
+                <HyperlinkButton Content="Click to load more Articles"
+                                 Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=OneWay}"
+                                 Command="{x:Bind ShellVM.LoadArticleDataCommand}"
+                                 HorizontalAlignment="Center" Margin="10"/>
+              </StackPanel>
             </StackPanel>
-          </StackPanel>
-        </ScrollViewer>
+          </ScrollViewer>
+        </RefreshContainer>
       </Grid>
   </utu:LoadingView>
 </Page>

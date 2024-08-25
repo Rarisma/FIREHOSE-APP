@@ -1,4 +1,4 @@
-namespace FirehoseApp.
+namespace FirehoseApp;
 
 public class Program
 {

@@ -6,7 +6,6 @@ using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
-using Microsoft.VisualBasic;
 using Uno.Extensions;
 //WORLDS APART
 namespace FirehoseApp.Viewmodels;
@@ -184,12 +183,16 @@ public class ShellVM : ObservableObject
 
             //filter articles from the future
             //We do this because sometimes an article is published weeks in advanced (Economist worlds apart)
-            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.PublishDate);
-            Articles.AddRange(CurrentArticles.Where(article =>
-                    !Pref.BlockedKeywords.Any(keyword =>
-                        article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                        (article.Text ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)))
-                .ToList());
+            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.PublishDate)
+                //Filter by keywords
+                .Where(article => !Pref.BlockedKeywords.Any(keyword =>
+                    article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+                    (article.Text ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+
+            //Filter by publisher
+            CurrentArticles = CurrentArticles.Where(article => !Pref.BlockedSources.Contains(article.PublisherID));    
+
+            Articles.AddRange(CurrentArticles);
             Offset += Articles.Count;
         }
         catch (Exception ex)

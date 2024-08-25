@@ -5,25 +5,40 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:definitions="using:HYDRANT.Definitions"
-    mc:Ignorable="d" Width="300">
+    xmlns:controls="using:FirehoseApp.UI.Controls"
+    mc:Ignorable="d">
+  <UserControl.Resources>
+    <controls:FHNColorConverter x:Key="ColorConverter"/>
+  </UserControl.Resources>
 
-  <StackPanel>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
     <!-- Block limitation warning -->
     <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
       Articles from these sources will be hidden.
     </TextBlock>
 
-    <!--Show [Favicon] - Publisher name for each publication-->
-    <ComboBox Padding="10,10" ItemsSource="{x:Bind publications}">
-      <DataTemplate x:DataType="definitions:Publication">
-        <ComboBoxItem>
-          <StackPanel Orientation="Horizontal">
-            <Image Height="32" Width="32" Source="{x:Bind Favicon}"/>
-            <TextBlock Text="{x:Bind  Name}" Margin="10"/>
-          </StackPanel>
-        </ComboBoxItem>
-      </DataTemplate>
-    </ComboBox>
+    <!-- List Articles -->
+    <ListView ItemsSource="{x:Bind publications}" SelectionMode="Multiple"
+              Grid.Row="1" SelectionChanged="UpdateBlockedSources">
+      <ListView.ItemTemplate>
+        <DataTemplate x:DataType="definitions:Publication">
 
-  </StackPanel>
+          <!--Show [Favicon] - Publisher name for each publication-->
+          <ListViewItem Padding="10,10" IsSelected="{x:Bind Enabled, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal">
+              <Border BorderThickness="1" CornerRadius="4"
+                      Background="{x:Bind Background, Converter={StaticResource ColorConverter}}">
+                <Image Height="32" Width="32" Source="{x:Bind Favicon}" Margin="2"/>
+              </Border>
+              <TextBlock Text="{x:Bind  Name}" Margin="10"/>
+            </StackPanel>
+          </ListViewItem>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </Grid>
 </Page>

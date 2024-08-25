@@ -37,6 +37,16 @@ public sealed partial class Preferences : Page
         };
         BetaLogin.Click += (_, _) => { App.UI.Navigate(typeof(LoginFlow)); };
         
+        Button WipeConfigs = new()
+        {
+            Content = "beam configs"
+        };
+        WipeConfigs.Click += (_, _) =>
+        {
+            Pref = new();
+            PreferencesModel.Save();
+        };
+
         TextBox TokenBox = new()
         {
             Header = "Account Token",
@@ -44,6 +54,7 @@ public sealed partial class Preferences : Page
             
         };
         TokenBox.TextChanged += (_, _) => { Pref.AccountToken = TokenBox.Text; };
+
 
 
         Glob.OpenContentDialog(new()
@@ -55,6 +66,7 @@ public sealed partial class Preferences : Page
                 {
                     BetaLogin,
                     TokenBox,
+                    WipeConfigs,
 
                     new TextBlock
                     {
