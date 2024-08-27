@@ -183,7 +183,7 @@
 
         <!-- Article Content -->
         <RefreshContainer Grid.Row="2" RefreshRequested="Refresh">
-          <ScrollViewer  HorizontalAlignment="Stretch">
+          <ScrollViewer  HorizontalAlignment="Stretch" ViewChanged="InfScrollCheck" Name="ArticleContainer">
 
             <StackPanel Orientation="Vertical">
               <StackPanel>

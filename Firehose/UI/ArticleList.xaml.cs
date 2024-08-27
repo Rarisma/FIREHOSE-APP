@@ -154,7 +154,20 @@ public sealed partial class ArticleList : Page
     /// </summary>
     private void Refresh(RefreshContainer sender, RefreshRequestedEventArgs args)
     {
+        //Fetch latest articles, then refresh
         ShellVM.Offset = 0;
         ShellVM.LoadArticleDataCommand.Execute(null);
+    }
+    
+    private async void InfScrollCheck(object sender, ScrollViewerViewChangedEventArgs e)
+    {
+        var verticalOffset = ArticleContainer.VerticalOffset;
+        var maxVerticalOffset = ArticleContainer.ScrollableHeight; 
+        
+        if (maxVerticalOffset >= 0 && verticalOffset >= maxVerticalOffset - 100) // Adjust threshold as needed
+        {
+            // Trigger loading more items
+            ShellVM.LoadArticleDataCommand.Execute(null);
+        }
     }
 }

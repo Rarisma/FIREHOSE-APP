@@ -2,6 +2,7 @@ using Windows.UI.Text;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI.Dialogs;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using FirehoseApp.Viewmodels;
 
 namespace FirehoseApp.UI;
 /// <summary>
@@ -10,6 +11,7 @@ namespace FirehoseApp.UI;
 public sealed partial class Preferences : Page
 {
     PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+    ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
 
 
     public string AppVer

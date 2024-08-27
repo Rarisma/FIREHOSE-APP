@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{x:Bind Themer.MainBrush}"
     mc:Ignorable="d">
 
 <Grid>
@@ -35,7 +35,7 @@
     </ComboBox>
 
     <!-- Open article settings -->
-      <ComboBox Header="Share articles blocked button action"
+      <ComboBox Header="Share articles action"
                 SelectedIndex="{x:Bind Pref.ShareMode, Mode=TwoWay}"
                 MaxWidth="200" Margin="10" HorizontalAlignment="Center" MinWidth="200">
         <ComboBoxItem>Opens Share Dialog</ComboBoxItem>
@@ -47,7 +47,7 @@
               Click="BlockKeywords" Margin="10" HorizontalAlignment="Center"/>
 
     <!-- Blocked sources -->
-    <Button Content="Edit blocked sources" Width="200"
+    <Button Content="Edit blocked sources" Width="200" Visibility="Collapsed"
             Click="BlockSources" HorizontalAlignment="Center"/>
 
 </StackPanel>
