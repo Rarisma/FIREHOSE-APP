@@ -35,8 +35,11 @@
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
     -->
+
     <UnoFeatures>
+      Svg;
     </UnoFeatures>
+    <UnoFeatures Condition="'$(TargetFramework)'=='$(DotNetVersion)-browserwasm'">$(UnoFeatures.Replace('Svg;', ''))</UnoFeatures>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
     <JavaMaximumHeapSize>3G</JavaMaximumHeapSize>
@@ -78,7 +81,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Condition="$(TargetFramework.Contains('windows10'))" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Condition="$(TargetFramework.Contains('windows10'))" />
-    <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hydrant\HYDRANT.csproj" />
