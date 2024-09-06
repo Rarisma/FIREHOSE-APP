@@ -80,8 +80,8 @@ public class API
     {
         using HttpClient client = new();
         //client.DefaultRequestHeaders.Add("ApiKey", API_KEY);
-        string url = $"{Endpoint}/Articles/ReportAsClickbait?URL={Uri.EscapeDataString(Article.Url)}";
-        await client.GetAsync(url);
+        string URL = $"{Endpoint}/Articles/ReportAsClickbait.URL={Uri.EscapeDataString(Article.URL)}";
+        await client.GetAsync(URL);
     }
 
     /// <summary>
@@ -91,19 +91,19 @@ public class API
     public async Task ReportArticle(Article Article)
     {
         using HttpClient client = new();
-        string url = $"{Endpoint}/Articles/ReportArticleSummary?ArticleURL={Uri.EscapeDataString(Article.Url)}";
-        await client.GetAsync(url);
+        string URL = $"{Endpoint}/Articles/ReportArticleSummary?Articl.URL={Uri.EscapeDataString(Article.URL)}";
+        await client.GetAsync(URL);
     }
     
     /// <summary>
     /// Gets article text
     /// </summary>
-    /// <param name="URL">Article to report</param>
+    /// <param name=.URL">Article to report</param>
     public async Task<string> GetArticleText(string URL)
     {
         using HttpClient client = new();
-        string url = $"{Endpoint}/Articles/GetArticleText?URL={Uri.EscapeDataString(URL)}";
-        HttpResponseMessage Response = await client.GetAsync(url);
+        URL = $"{Endpoint}/Articles/GetArticleText&URL={Uri.EscapeDataString(URL)}";
+        HttpResponseMessage Response = await client.GetAsync(URL);
         return await Response.Content.ReadAsStringAsync();
     }
     
@@ -114,12 +114,12 @@ public class API
     /// <returns></returns>
     public async Task<List<Filter>> GetFilters(string token = null)
     {
-        string url = Endpoint + "/Filter/GetFilters";
+        string URL = Endpoint + "/Filter/GetFilters";
         using (HttpClient client = new HttpClient())
         {
-            var requestUrl = string.IsNullOrEmpty(token) ? url : $"{url}?Token={token}";
+            var requestURL = string.IsNullOrEmpty(token) ? URL : $"{URL}?Token={token}";
             
-            HttpResponseMessage response = await client.GetAsync(requestUrl);
+            HttpResponseMessage response = await client.GetAsync(requestURL);
             
             if (response.IsSuccessStatusCode)
             {
@@ -142,11 +142,11 @@ public class API
     /// <returns>List of articles.</returns>
     public async Task<List<Article>> Search(string SearchString)
     {
-        string url = Endpoint + $"/Articles/Search?SearchString={SearchString}";
+        string URL = Endpoint + $"/Articles/Search?SearchString={SearchString}";
         using (HttpClient client = new())
         {
             
-            HttpResponseMessage response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync(URL);
             
             if (response.IsSuccessStatusCode)
             {
@@ -161,16 +161,16 @@ public class API
     }
 
     /// <summary>
-    /// Bumps the URL by one.
+    /// Bumps the.URL by one.
     /// </summary>
-    /// <param name="URL">Text to search for</param>
+    /// <param name=.URL">Text to search for</param>
     /// <returns>List of articles.</returns>
     public async Task AddView(string URL)
     {
-        string url = Endpoint + $"/Articles/AddView?URL={URL}";
+        URL = Endpoint + $"/Articles/AddView.URL={URL}";
         using (HttpClient client = new())
         {
-            await client.GetAsync(url);
+            await client.GetAsync(URL);
         }
     }
 

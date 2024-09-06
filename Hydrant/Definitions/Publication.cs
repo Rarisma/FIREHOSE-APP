@@ -37,7 +37,7 @@ public class Publication
     public string Information { get; set; }
 
     /// <summary>
-    /// RSS feed URLs related to the publication
+    /// RSS feed.URLs related to the publication
     /// </summary>
     public string[] Feeds { get; set; }
 

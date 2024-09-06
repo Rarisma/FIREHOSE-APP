@@ -1,100 +1,121 @@
-using System.Runtime.CompilerServices;
-//Battle for everyone's source code.
-[assembly: InternalsVisibleTo("FirehoseServer")]
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace HYDRANT.Definitions;
 
 /// <summary>
-/// Article object, contains lots of information about articles.
+/// News Article Object definition
+/// (All fields are matched to the DB if you capitalize them and split words with _)
 /// </summary>
+[Table("ARTICLES_NEW")]
 public class Article
 {
-    #region Fields
     /// <summary>
-    /// URL of article
+    /// Article.URL
     /// </summary>
-    public string Url { get; set; }
-
-    /// <summary>
-    /// Title of article
-    /// </summary>
-    public string? Title { get; set; }
+    [Key]
+    [Column("URL", TypeName = "VARCHAR(512)")]
+    public string URL { get; set; }
     
     /// <summary>
-    /// DateTime object of the article was made public
+    /// Article Title
     /// </summary>
-    public DateTime PublishDate { get; set; }
+    [Column("TITLE", TypeName = "VARCHAR(512)")]
+    public string Title { get; set; }
     
     /// <summary>
-    /// AI-Generated summary of the article
+    /// Date Time of when Article was Published
     /// </summary>
+    [Column("PUBLISHED", TypeName = "DATETIME")]
+    public DateTime Published { get; set; }
+    
+    /// <summary>
+    /// Summary of Article.
+    /// </summary>
+    [Column("SUMMARY", TypeName = "LONGTEXT")]
     public string Summary { get; set; }
-
-    /// <summary>
-    /// Image associated with URL
-    /// </summary>
-    public string? ImageURL { get; set; }
     
     /// <summary>
-    /// Content of the article.
+    /// Image.URL
     /// </summary>
-    public string Text { get; set; }
+    [Column("IMAGE", TypeName = "VARCHAR(1024)")]
+    public string Image { get; set; }
     
     /// <summary>
-    /// Firehose Publication ID
+    /// Article Content
     /// </summary>
-    public int PublisherID { get; set; }
-
+    [Column("CONTENT", TypeName = "LONGTEXT")]
+    public string Content { get; set; }
+    
     /// <summary>
-    /// Author of the article.
-    /// Will be unknown author if we can't find the author.
-    /// If an article has multiple Authors, they will be separated by commas.
+    /// FHN Publisher ID
     /// </summary>
+    [Column("PUBLISHER")]
+    public int Publisher { get; set; }
+    
+    /// <summary>
+    /// Author Name(s)
+    /// </summary>
+    [Column("AUTHOR", TypeName = "VARCHAR(1024)")]
     public string Author { get; set; }
     
     /// <summary>
-    /// Is the headline clickbait?
+    /// Amount of clickbait reports
     /// </summary>
-    public bool IsClickbaitHeadline { get; set; }
-
-    /// <summary>
-    /// the original headline if the article has been marked as clickbait.
-    /// </summary>
-    public bool OriginalHeadline { get; set; }
+    [Column("CLICKBAIT_COUNTER", TypeName = "INT")]
+    public int ClickbaitCounter { get; set; } = 0;
     
     /// <summary>
-    /// Overall impact of the article on the Country/Economy/World
+    /// Amount of Summary Reports
     /// </summary>
-    public int Impact {get; set;}
-
-    /// <summary>
-    /// Only used in User Submitted Queries if we don't have the
-    /// Article already summarised.
-    /// </summary>
-    public int? TimeToRead { get; set; }
-
-    /// <summary>
-    /// Article Tags/categories such as Tech etc.
-    /// (May become more detailed in the future)
-    /// </summary>
-    public string? Tags { get; set; }
+    [Column("REPORT_COUNTER", TypeName = "INT")]
+    public int ReportCounter { get; set; } = 0;
     
+    /// <summary>
+    /// Impact score
+    /// 0 - irrelevant, 50 - Breaking News
+    /// </summary>
+    [Column("IMPACT", TypeName = "INT")]
+    public int Impact { get; set; }
 
     /// <summary>
-    /// Types of articles.
+    /// Impact score
+    /// 0 - irrelevant, 50 - Breaking News
     /// </summary>
+    [Column("CATEGORY", TypeName = "VARCHAR(128)")]
+    public string Category { get; set; }
+
+    /// <summary>
+    /// Time to read in minutes
+    /// </summary>
+    [Column("READ_TIME", TypeName = "INT")]
+    public int ReadTime { get; set; } = 0;
+    
+    /// <summary>
+    /// Amount of views all time
+    /// </summary>
+    [Column("VIEWSALL", TypeName = "INT")]
+    public int ViewsAll { get; set; } = 0;
+    
+    /// <summary>
+    /// Amount of views within the last 24hrs approximate.
+    /// </summary>
+    [Column("VIEWSDAY", TypeName = "INT")]
+    public int ViewsDay { get; set; } = 0;
+    
     public ArticleType Type
     {
         get
         {
-            if (Url.Contains(".youtube.") || Url.Contains(".youtu.be"))
+            if (URL.Contains(".youtube.") || URL.Contains(".youtu.be"))
             {
                 return ArticleType.Video;
             }
-            else if (Url.Contains("http"))
+            else if (URL.Contains("http"))
             {
                 return ArticleType.Article;
             }
-            else if (Url.Contains(@"C:\"))
+            else if (URL.Contains(@"C:\"))
             {
                 return ArticleType.File;
             }
@@ -114,21 +135,20 @@ public class Article
         /// Article is a web article
         /// </summary>
         Article,
-
+        
         /// <summary>
         /// Article is a video
         /// </summary>
         Video,
-
+        
         /// <summary>
         /// Article is a PDF/DOCX/DOC file
         /// </summary>
         File,
-
+        
         /// <summary>
         /// Type is unknown
         /// </summary>
         Unknown
     }
-    #endregion
 }
