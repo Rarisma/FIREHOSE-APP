@@ -58,19 +58,19 @@ public class Article
     /// </summary>
     [Column("AUTHOR", TypeName = "VARCHAR(1024)")]
     public string Author { get; set; }
-    
+
     /// <summary>
     /// Amount of clickbait reports
     /// </summary>
     [Column("CLICKBAIT_COUNTER", TypeName = "INT")]
     public int ClickbaitCounter { get; set; } = 0;
-    
+
     /// <summary>
     /// Amount of Summary Reports
     /// </summary>
     [Column("REPORT_COUNTER", TypeName = "INT")]
     public int ReportCounter { get; set; } = 0;
-    
+
     /// <summary>
     /// Impact score
     /// 0 - irrelevant, 50 - Breaking News
@@ -79,11 +79,11 @@ public class Article
     public int Impact { get; set; }
 
     /// <summary>
-    /// Impact score
-    /// 0 - irrelevant, 50 - Breaking News
+    /// Category 
+    /// i.e. tech, politics etc.
     /// </summary>
     [Column("CATEGORY", TypeName = "VARCHAR(128)")]
-    public string Category { get; set; }
+    public string? Category { get; set; }
 
     /// <summary>
     /// Time to read in minutes
