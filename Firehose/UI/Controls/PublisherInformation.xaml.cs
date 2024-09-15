@@ -32,7 +32,7 @@ public sealed partial class PublisherInformation : UserControl
     public Publication PublicationData
     {
         //Gets article's publication ID and finds publication info Publications list
-        get { return Glob.Publications[ItemSource.PublisherID]; }
+        get { return Glob.Publications[ItemSource.Publisher]; }
         set { SetValue(ItemSourceProperty, value); }
     }
 
@@ -60,7 +60,7 @@ public sealed partial class PublisherInformation : UserControl
             try
             {
                 //Calculate how long it's been since the article was published.
-                TimeSpan Diff = DateTime.Now - ItemSource.PublishDate;
+                TimeSpan Diff = DateTime.Now - ItemSource.Published;
 
                 if (Diff.TotalMinutes < 5) //Less than 5min show now
                 {

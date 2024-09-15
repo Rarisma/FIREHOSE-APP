@@ -13,7 +13,7 @@ public class ArticleSelector : DataTemplateSelector
     {
         if (item is Article Article)
         {
-            if (Article.Impact >= 70 && Article.ImageURL != "?")
+            if (Article.Impact >= 70 && Article.Image != "?")
             {
                 return HeadlineTemplate!;
             }

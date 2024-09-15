@@ -18,8 +18,6 @@ public sealed partial class AIFeedbackDialog : Page
     /// <summary>
     /// Spawns a dialog showing this page
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     public static async void ReportSummary(Article Item)
     {
         ContentDialog d = new()
@@ -33,7 +31,7 @@ public sealed partial class AIFeedbackDialog : Page
         
         if (Res == ContentDialogResult.Primary) //Send feedback clicked
         {
-            Ioc.Default.GetRequiredService<ShellVM>().Hallon.ReportArticle(Item);
+            await Ioc.Default.GetRequiredService<ShellVM>().Hallon.ReportArticle(Item.URL);
             
         }
     }

@@ -31,8 +31,8 @@ public sealed partial class ArticleList : Page
         if (await Glob.OpenContentDialog(CD) == ContentDialogResult.Primary)
         {
             ShellVM.PublisherIDs.Clear();
-            foreach (Publication pub in ((CD.Content as PublisherFilter)
-                         .Content as ListView)!.SelectedItems)
+            foreach (Publication pub in (((CD.Content as PublisherFilter)
+                         .Content as Grid).Children[1] as ListView)!.SelectedItems)
             {
                 ShellVM.PublisherIDs.Add(pub);
                 FilterButton.IsChecked = true;

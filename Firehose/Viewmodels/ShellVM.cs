@@ -7,6 +7,7 @@ using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
 using Uno.Extensions;
+
 //WORLDS APART
 namespace FirehoseApp.Viewmodels;
 public class ShellVM : ObservableObject
@@ -179,18 +180,18 @@ public class ShellVM : ObservableObject
             
             //Load articles
             List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit,
-                Offset, Pref.AccountToken, CurrentFilter, MinimalMode, Pubs);
+                Offset, Pref.AccountToken, CurrentFilter, Pubs);
 
             //filter articles from the future
             //We do this because sometimes an article is published weeks in advanced (Economist worlds apart)
-            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.PublishDate)
+            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.Published)
                 //Filter by keywords
                 .Where(article => !Pref.BlockedKeywords.Any(keyword =>
                     article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                    (article.Text ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+                    (article.Content ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)));
 
             //Filter by publisher
-            CurrentArticles = CurrentArticles.Where(article => !Pref.BlockedSources.Contains(article.PublisherID));    
+            CurrentArticles = CurrentArticles.Where(article => !Pref.BlockedSources.Contains(article.Publisher));    
 
             Articles.AddRange(CurrentArticles);
             Offset += Articles.Count;
@@ -205,7 +206,7 @@ public class ShellVM : ObservableObject
 
     public async void OpenArticle(Article article)
     {
-        await Hallon.AddView(article.Url);
+        await Hallon.AddView(article.URL);
         CurrentArticle = article;
         switch (Ioc.Default.GetRequiredService<PreferencesModel>().OpenInMode)
         {
@@ -213,15 +214,15 @@ public class ShellVM : ObservableObject
                 App.UI.Navigate(typeof(ArticleWebView));
                 break;
             case 1: //Open in reader mode
-                if (string.IsNullOrEmpty(article.Text))
+                if (string.IsNullOrEmpty(article.Content))
                 {
-                    article.Text = await Hallon.GetArticleText(article.Url);
+                    article.Content = await Hallon.GetArticleText(article.Content);
                 }
                 App.UI.Navigate(typeof(ReaderMode));
 
                 break;
             case 2: //Open in Web Browser
-                Windows.System.Launcher.LaunchUriAsync(new Uri(article.Url));
+                Windows.System.Launcher.LaunchUriAsync(new Uri(article.URL));
                 break;
         }
     }

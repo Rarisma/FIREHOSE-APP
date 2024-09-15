@@ -15,7 +15,7 @@
 
     <controls1:CommonNavigationBar ItemSource="{x:Bind SVM.CurrentArticle}"/>
 
-    <WebView2 Source="{x:Bind SVM.CurrentArticle.Url}" HorizontalAlignment="Stretch"
+    <WebView2 Source="{x:Bind SVM.CurrentArticle.URL}" HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch" Grid.Row="1" />
   </Grid>
 </Page>

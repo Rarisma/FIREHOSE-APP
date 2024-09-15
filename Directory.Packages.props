@@ -73,6 +73,6 @@
     <PackageVersion Include="System.ServiceModel.Syndication" Version="8.0.0" />
     <PackageVersion Include="YahooFinanceApi" Version="2.3.3" />
     <PackageVersion Include="Xamarin.GooglePlayServices.Ads.Lite" Version="122.3.0.5" />
-    <PackageVersion Include="Plugin.MauiMTAdmob" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.4.5"/>
   </ItemGroup>
 </Project>

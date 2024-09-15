@@ -13,9 +13,9 @@ public class Filter
     public string Name { get; set; }
 
     /// <summary>
-    /// SQL that will be executed for filter
+    /// LINQ that will be executed for filter
     /// </summary>
-    public string SQL { get; set; }
+    public string LINQ { get; set; }
 
     /// <summary>
     /// Only returned to TestGroup users

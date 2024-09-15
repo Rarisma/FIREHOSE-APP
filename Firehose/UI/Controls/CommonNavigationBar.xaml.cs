@@ -46,7 +46,7 @@ public sealed partial class CommonNavigationBar : Grid
     /// </summary>
     private async void OpenBrowser(object sender, RoutedEventArgs e)
     {
-        await Windows.System.Launcher.LaunchUriAsync(new Uri(ItemSource.Url));
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(ItemSource.URL));
     }
     
     
@@ -56,10 +56,10 @@ public sealed partial class CommonNavigationBar : Grid
     /// </summary>
     private async void OpenReader(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrEmpty(ItemSource.Text))
+        if (string.IsNullOrEmpty(ItemSource.Content))
         {
-            ItemSource.Text = await Ioc.Default.GetRequiredService<ShellVM>()
-                .Hallon.GetArticleText(ItemSource.Url);
+            ItemSource.Content = await Ioc.Default.GetRequiredService<ShellVM>()
+                .Hallon.GetArticleText(ItemSource.URL);
         }
         App.UI.Navigate(typeof(ReaderMode), ItemSource);
     }
@@ -82,7 +82,7 @@ public sealed partial class CommonNavigationBar : Grid
     public void SetBookmarkIcon(object? sender = null, RoutedEventArgs? e = null)
     {
         //Handle bookmarked status
-        if (Pref.BookmarkedArticles.Count(article => article.Url == ItemSource.Url) != 0)
+        if (Pref.BookmarkedArticles.Count(article => article.URL == ItemSource.URL) != 0)
         {
             Glyphy.Glyph = "\xE735"; // Filled Star
         }
@@ -107,9 +107,9 @@ public sealed partial class CommonNavigationBar : Grid
         PreferencesModel.Save();
     }
     
-    private void ReportClickbait(object sender, RoutedEventArgs e)
+    private async void ReportClickbait(object sender, RoutedEventArgs e)
     {
-        Ioc.Default.GetRequiredService<ShellVM>().Hallon.VoteClickbait(ItemSource);
+        await Ioc.Default.GetRequiredService<ShellVM>().Hallon.VoteClickbait(ItemSource.URL);
 
         //Show visual feedback
         ClickbaitButton.Text = "Already reported";
@@ -127,14 +127,14 @@ public sealed partial class CommonNavigationBar : Grid
             if (Pref.ShareMode == 1) //Share link only
             {
 #if __ANDROID__
-                dataPackage.SetUri(new Uri(ItemSource.Url));
+                dataPackage.SetUri(new Uri(ItemSource.URL));
 #else
-                dataPackage.SetText(ItemSource.Url);
+                dataPackage.SetText(ItemSource.URL);
 #endif
             }
             else // Share link and UI
             {
-                dataPackage.SetText(ItemSource.Url + "\n" + ItemSource.Summary);
+                dataPackage.SetText(ItemSource.URL + "\n" + ItemSource.Summary);
             }
 
             //Set clipboard content
@@ -184,7 +184,7 @@ public sealed partial class CommonNavigationBar : Grid
         args.Request.Data.Properties.Title = $"Sharing {ItemSource.Title}";
         args.Request.Data.Properties.Description = "Summary Text";
         args.Request.Data.SetText(ItemSource.Summary);
-        args.Request.Data.SetWebLink(new Uri(ItemSource.Url));
+        args.Request.Data.SetWebLink(new Uri(ItemSource.URL));
     }
     
     //Required windows workarounds.
@@ -212,9 +212,9 @@ public sealed partial class CommonNavigationBar : Grid
     {
         await Glob.OpenContentDialog(new ContentDialog
         {
-            Title = "About " + Glob.Publications[ItemSource.PublisherID].Name,
+            Title = "About " + Glob.Publications[ItemSource.Publisher].Name,
             PrimaryButtonText = "Close",
-            Content = new AboutSource(ItemSource.PublisherID)
+            Content = new AboutSource(ItemSource.Publisher)
         });
     }
 }

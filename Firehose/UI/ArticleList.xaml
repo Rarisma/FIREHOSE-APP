@@ -63,7 +63,7 @@
             <StackPanel Background="Transparent" HorizontalAlignment="Stretch">
               <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="400"
                       BorderThickness="0" VerticalAlignment="Stretch" Margin="5">
-                <Image Source="{x:Bind ImageURL}"/>
+                <Image Source="{x:Bind Image}"/>
               </Border>
               <controls1:PublisherInformation ItemSource="{x:Bind}" Margin="0,10,0,0"/>
               <TextBlock Text="{x:Bind Title}" Style="{StaticResource TitleText}"/>
@@ -98,7 +98,7 @@
 
               <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" CornerRadius="4" HorizontalAlignment="Stretch"
                        Margin="10,0,0,0" BorderThickness="0" VerticalAlignment="Center" MaxHeight="100">
-                <Image Source="{x:Bind ImageURL}" MaxHeight="100"/>
+                <Image Source="{x:Bind Image}" MaxHeight="100"/>
               </Border>
             </Grid>
           </Expander.Header>

@@ -11,7 +11,7 @@ public sealed partial class ArticleWebView : Page
     ShellVM SVM = Ioc.Default.GetRequiredService<ShellVM>();
     public ArticleWebView()
     {
-        SVM.CurrentArticle.Url = Pref.Proxy + SVM.CurrentArticle.Url;
+        SVM.CurrentArticle.URL = Pref.Proxy + SVM.CurrentArticle.URL;
         InitializeComponent();
 
         if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
