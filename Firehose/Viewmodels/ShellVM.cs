@@ -6,8 +6,8 @@ using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
+using NLog;
 using Uno.Extensions;
-
 //WORLDS APART
 namespace FirehoseApp.Viewmodels;
 public class ShellVM : ObservableObject
@@ -126,7 +126,6 @@ public class ShellVM : ObservableObject
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
         Articles = new();
         LoadMoreVisibility = Visibility.Visible;
-        SearchCommand = new AsyncCommand(Search);
         BoomarksMessageVisibility = Visibility.Visible;
         PublisherIDs = new();
         Offset = 0;
@@ -140,29 +139,26 @@ public class ShellVM : ObservableObject
     {
         try
         {
-            Glob.Publications = await LoadPublicationData();
-            await LoadFilterData();
+            Data Data = await Hallon.GetData();
+
+            if (Data.MinimumVersion > Data.ApiVersion)
+            {
+                ShowServerError(
+                    new Exception("This version of Firehose is outdated. Please update to the latest version."));
+                return;
+            }
+
+            //Load Filters and Publications
+            Glob.Publications = Data.Publications;
+            Filters = new();
+            filters.AddRange(Data.Filters);
+
             await LoadArticleData();
         }
         catch (Exception ex)
         {
-            ShowServerError(ex.Message);
+            ShowServerError(ex," (/Data endpoint Exception)");
         }
-    }
-    
-    private async Task Search()
-    {
-        Articles.Clear();
-        Articles.AddRange(await Hallon.Search(SearchText));
-    }
-
-    /// <summary>
-    /// Loads all filter data.
-    /// </summary>
-    public async Task LoadFilterData()
-    {
-        PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
-        Filters.AddRange(await Hallon.GetFilters(Pref.AccountToken));
     }
 
     public async Task LoadArticleData()
@@ -173,56 +169,55 @@ public class ShellVM : ObservableObject
         {
             Articles.Clear(); //Reset collection
             
-            bool MinimalMode = Pref.BlockedKeywords.Count == 0;
 
             //Handle filters
-            string Pubs = string.Join(",", PublisherIDs.Select(publication => publication.ID.ToString()));
+            string Pubs = string.Join(",", PublisherIDs.Select(Publication => Publication.ID.ToString()));
             
             //Load articles
             List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit,
-                Offset, Pref.AccountToken, CurrentFilter, Pubs);
+                Offset, CurrentFilter, SearchText,Pubs);
 
-            //filter articles from the future
-            //We do this because sometimes an article is published weeks in advanced (Economist worlds apart)
-            var CurrentArticles = a.Where(x => DateTime.Now.AddHours(3) > x.Published)
-                //Filter by keywords
+            //Filter by keywords
+            var CurrentArticles = a
                 .Where(article => !Pref.BlockedKeywords.Any(keyword =>
                     article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
                     (article.Content ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)));
 
             //Filter by publisher
-            CurrentArticles = CurrentArticles.Where(article => !Pref.BlockedSources.Contains(article.Publisher));    
+            CurrentArticles = CurrentArticles.Where(Article => !Pref.BlockedSources.Contains(Article.Publisher));    
 
             Articles.AddRange(CurrentArticles);
             Offset += Articles.Count;
         }
         catch (Exception ex)
         {
-            ShowServerError(ex.Message);
+            ShowServerError(ex);
         }
     }
 
-    public async Task<List<Publication>> LoadPublicationData() => await Hallon.GetPublications();
-
-    public async void OpenArticle(Article article)
+    /// <summary>
+    /// Opens an article.
+    /// </summary>
+    /// <param name="Article">Hydrant Article object</param>
+    public async void OpenArticle(Article Article)
     {
-        await Hallon.AddView(article.URL);
-        CurrentArticle = article;
+        //Update user stats
+        var Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+        Pref.ArticlesOpened++;
+        Pref.TimeSaved -= Article.ReadTime;
+
+        await Hallon.AddView(Article.URL);
+        CurrentArticle = Article;
         switch (Ioc.Default.GetRequiredService<PreferencesModel>().OpenInMode)
         {
             case 0: //Open in Article WebView
                 App.UI.Navigate(typeof(ArticleWebView));
                 break;
             case 1: //Open in reader mode
-                if (string.IsNullOrEmpty(article.Content))
-                {
-                    article.Content = await Hallon.GetArticleText(article.Content);
-                }
                 App.UI.Navigate(typeof(ReaderMode));
-
                 break;
             case 2: //Open in Web Browser
-                Windows.System.Launcher.LaunchUriAsync(new Uri(article.URL));
+                Windows.System.Launcher.LaunchUriAsync(new Uri(Article.URL));
                 break;
         }
     }
@@ -231,19 +226,20 @@ public class ShellVM : ObservableObject
     /// Shows that there's an issue with the server and gracefully closes FHN
     /// </summary>
     /// <param name="Error"></param>
-    public async void ShowServerError(string Error)
+    public async void ShowServerError(Exception Error, string ex = "")
     {
         App.MainWindow.Content = new StackPanel();
         await Glob.OpenContentDialog(new ContentDialog
         {
-            Title = "Firehose is unavailable",
+            Title = "Firehose Server Error" + ex,
+            Width = 2000,
+            Height = 2000,
             Content = $"""
-                       Failed to connect to the firehose server.
-                       This might be due to a network issue or the server being down.
-                       
+                       Failed to connect to the server, this might be due  a network issue or the server is down.
                        Check your network connection and try again.
                        
-                       Error: {Error}
+                       Error: {Error.Message}
+                       Stack Trace: {Error.StackTrace}
                        """,
             PrimaryButtonText = "Close Firehose",
         });

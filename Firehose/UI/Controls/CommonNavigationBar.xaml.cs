@@ -56,11 +56,6 @@ public sealed partial class CommonNavigationBar : Grid
     /// </summary>
     private async void OpenReader(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrEmpty(ItemSource.Content))
-        {
-            ItemSource.Content = await Ioc.Default.GetRequiredService<ShellVM>()
-                .Hallon.GetArticleText(ItemSource.URL);
-        }
         App.UI.Navigate(typeof(ReaderMode), ItemSource);
     }
     

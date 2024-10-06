@@ -11,6 +11,7 @@ namespace FirehoseApp.UI;
 public sealed partial class Preferences : Page
 {
     PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+    ShellVM ShellVM = Ioc.Default.GetRequiredService<ShellVM>();
     ThemeVM Themer = Ioc.Default.GetRequiredService<ThemeVM>();
 
 
@@ -30,7 +31,7 @@ public sealed partial class Preferences : Page
         App.UI.GoBack();
     }
     
-    private void DevMenu(object sender, RoutedEventArgs e)
+    private async void DevMenu(object sender, RoutedEventArgs e)
     {
         
         Button BetaLogin = new()
@@ -59,7 +60,7 @@ public sealed partial class Preferences : Page
 
 
 
-        Glob.OpenContentDialog(new()
+        await Glob.OpenContentDialog(new()
         {
             Title = "DEVELOPER MENU",
             Content = new StackPanel
@@ -114,5 +115,15 @@ public sealed partial class Preferences : Page
         },true);
         
         PreferencesModel.Save();
+    }
+    
+    /// <summary>
+    /// Opens about us in web browser
+    /// (Required by google play)
+    /// </summary>
+    private async void OpenContactPage(object Sender, RoutedEventArgs E)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(
+            new Uri("https://rarisma.github.io/Rarisma/FHN/Contact.html"));
     }
 }

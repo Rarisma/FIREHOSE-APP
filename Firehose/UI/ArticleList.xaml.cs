@@ -170,4 +170,13 @@ public sealed partial class ArticleList : Page
             ShellVM.LoadArticleDataCommand.Execute(null);
         }
     }
+    
+    private void ShowSummary(Expander Sender, ExpanderExpandingEventArgs Args)
+    {
+        var Article = Sender.DataContext as Article;
+        
+        
+        // Add or Remove time saved depending on if expander is opening or closing
+        Pref.TimeSaved += Sender.IsExpanded ? Article.ReadTime : Article.ReadTime*-1;
+    }
 }

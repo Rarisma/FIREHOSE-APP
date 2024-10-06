@@ -3,11 +3,19 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FirehoseApp.Preferences;
 using FirehoseApp.UI;
 using FirehoseApp.Viewmodels;
+using NLog;
 using Uno.Resizetizer;
+using LogLevel = NLog.LogLevel;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
 
 namespace FirehoseApp;
 public partial class App : Application
 {
+    Logger logger = LogManager.GetCurrentClassLogger();
     /// <summary>
     /// Initializes the singleton application object. This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -15,6 +23,7 @@ public partial class App : Application
     public App()
     {
         this.InitializeComponent();
+        logger.Log(LogLevel.Info, "FHN Initalised");
     }
 
     public static Window MainWindow { get; private set; }
@@ -22,12 +31,14 @@ public partial class App : Application
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
 #if __ANDROID__
+    logger.Log(LogLevel.Info, "Running on android.");
     Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
     Uno.UI.FeatureConfiguration.NativeFramePresenter.AndroidUnloadInactivePages = false;
 #endif
         MainWindow = new();
         UI = new();
 #if DEBUG
+        logger.Log(LogLevel.Info, "Running as Debug.");
         MainWindow.EnableHotReload();
 #endif
         configureIOC();
@@ -63,94 +74,31 @@ public partial class App : Application
     
     void configureIOC()
     {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(System.IO.Directory.GetCurrentDirectory()) //From NuGet Package Microsoft.Extensions.Configuration.Json
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+
+
         var Services = new ServiceCollection()
             .AddSingleton<ShellVM>()
             .AddSingleton<ThemeVM>()
             .AddSingleton(PreferencesModel.Load())
+            .AddLogging(loggingBuilder =>
+            {
+                // configure Logging with NLog
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                loggingBuilder.AddNLog(config);
+            })
             .BuildServiceProvider();
         
         Ioc.Default.ConfigureServices(Services);
+        logger.Log(LogLevel.Info, "IOC initalised");
     }
     
     private void Current_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        Console.WriteLine(e.Message);
-    }
-    
-    /// <summary>
-    /// Invoked when Navigation to a page fails
-    /// </summary>
-    /// <param name="sender">The Frame which failed navigation</param>
-    /// <param name="e">Details about the navigation failure</param>
-    void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-    {
-        throw new InvalidOperationException($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
-    }
-
-    /// <summary>
-    /// Configures global Uno Platform logging
-    /// </summary>
-    public static void InitializeLogging()
-    {
-#if DEBUG
-        // Logging is disabled by default for release builds, as it incurs a significant
-        // initialization cost from Microsoft.Extensions.Logging setup. If startup performance
-        // is a concern for your application, keep this disabled. If you're running on the web or
-        // desktop targets, you can use URL or command line parameters to enable it.
-        //
-        // For more performance documentation: https://platform.uno/docs/articles/Uno-UI-Performance.html
-
-        var factory = LoggerFactory.Create(builder =>
-        {
-#if __WASM__
-            builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
-#elif __IOS__ || __MACCATALYST__
-            builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#else
-            builder.AddConsole();
-#endif
-
-            // Exclude logs below this level
-            //builder.SetMinimumLevel(Glob.LogLevel.Information);
-
-            //// Default filters for Uno Platform namespaces
-            //builder.AddFilter("Uno", Glob.LogLevel.Warning);
-            //builder.AddFilter("Windows", Glob.LogLevel.Warning);
-            //builder.AddFilter("Microsoft", Glob.LogLevel.Warning);
-
-            // Generic Xaml events
-            // builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace );
-
-            // Layouter specific messages
-            // builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug );
-
-            // builder.AddFilter("Windows.Storage", LogLevel.Debug );
-
-            // Binding related messages
-            // builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug );
-            // builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug );
-
-            // Binder memory references tracking
-            // builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug );
-
-            // DevServer and HotReload related
-            // builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
-
-            // Debug JS interop
-            // builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug );
-        });
-
-        global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
-
-#if HAS_UNO
-        global::Uno.UI.Adapter.Microsoft.Extensions.Logging.LoggingAdapter.Initialize();
-#endif
-#endif
+        logger.Fatal(e.Exception, $"Unhandled crash: {e.Message}");
     }
 }

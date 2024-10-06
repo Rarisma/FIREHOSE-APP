@@ -25,7 +25,17 @@ public class PreferencesModel : ObservableObject
         BookmarkedArticles = new();
         OpenInMode = 0;
         UserGeneratedContent = false;
+        LastOpened = DateTime.MinValue;
+        DayInstalled = DateTime.Now;
+        TimeSaved = 0;
+        ArticlesOpened = 0;
+        DaysUsed = 0;
     }
+
+    /// <summary>
+    /// Filter to apply to articles by default
+    /// </summary>
+    public string DefaultFilter { get; set; }
 
     /// <summary>
     /// Proxies allow users to bypass geo restrictions
@@ -67,7 +77,34 @@ public class PreferencesModel : ObservableObject
     /// Allows users access to features.
     /// </summary>
     public string AccountToken { get; set; }
+
+    /// <summary>
+    /// Times summary has been tapped without opening the article
+    /// </summary>
+    public int TimeSaved { get; set; }
     
+    /// <summary>
+    /// Articles Opened
+    /// </summary>
+    public int ArticlesOpened { get; set; }
+
+    /// <summary>
+    /// How many days firehose has been used
+    /// </summary>
+    public int DaysUsed { get; set; }
+    
+    /// <summary>
+    /// Day firehose was installed/initalised
+    /// </summary>
+    public DateTime DayInstalled { get; set; }
+
+
+    /// <summary>
+    /// Date firehose was last opened
+    /// (Used to calculate DaysUsed)
+    /// </summary>
+    public DateTime LastOpened { get; set; }
+
     /// <summary>
     /// Sources that contain these keywords will be blocked
     /// </summary>
@@ -96,6 +133,13 @@ public class PreferencesModel : ObservableObject
         try
         {
             PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
+
+            //Update days used count
+            if (DateTime.Now.Date != Pref.LastOpened.Date)
+            {
+                Pref.DaysUsed++;
+                Pref.LastOpened = DateTime.Now;
+            }
 
             //Serialise PreferenceModel 
             string Result = JsonSerializer.Serialize(Pref);

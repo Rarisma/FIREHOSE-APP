@@ -12,6 +12,7 @@
     utu:StatusBar.Background="{x:Bind Themer.MainBrush, Mode=OneWay}"
     Loaded="ArticleList_OnLoaded">
   <Page.Resources>
+    <controls1:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     <controls1:ArticleSelector x:Key="ArticleSelector"
                                MinimalTemplate="{StaticResource MinimalTemplate}"
                                HeadlineTemplate="{StaticResource HeadlineTemplate}"/>
@@ -45,7 +46,7 @@
           <Button.Content>
             <StackPanel Orientation="Horizontal">
               <TextBlock Text="Read full article ("/>
-              <TextBlock Text="{Binding TimeToRead}"/>
+              <TextBlock Text="{Binding ReadTime}"/>
               <TextBlock Text=" Minutes)"/>
             </StackPanel>
           </Button.Content>
@@ -58,7 +59,8 @@
       <StackPanel HorizontalAlignment="Stretch">
         <Border Style="{StaticResource CommonBorderStyle}"/>
         <Expander Background="Transparent" HorizontalAlignment="Stretch"
-                  ContentTemplate="{StaticResource ExpanderContent}">
+                  ContentTemplate="{StaticResource ExpanderContent}"
+                  Expanding="ShowSummary">
           <Expander.Header>
             <StackPanel Background="Transparent" HorizontalAlignment="Stretch">
               <Border CornerRadius="4" HorizontalAlignment="Center" MaxHeight="400"
@@ -92,13 +94,13 @@
 
               <controls1:PublisherInformation ItemSource="{x:Bind}" Grid.Row="0" Grid.Column="0"/>
 
-
               <TextBlock Text="{x:Bind Title}" Style="{StaticResource TitleText}" 
                          MaxWidth="600" Grid.Row="1" Grid.Column="0"/>
 
               <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" CornerRadius="4" HorizontalAlignment="Stretch"
                        Margin="10,0,0,0" BorderThickness="0" VerticalAlignment="Center" MaxHeight="100">
-                <Image Source="{x:Bind Image}" MaxHeight="100"/>
+                <Image Source="{x:Bind Image}" MaxHeight="100"
+                       Visibility="{x:Bind HasImage, Converter={StaticResource BoolToVisConverter}}"/>
               </Border>
             </Grid>
           </Expander.Header>

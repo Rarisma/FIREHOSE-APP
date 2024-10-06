@@ -1,6 +1,7 @@
 using HYDRANT.Definitions;
 using System.Text.Json;
 using System.Net.Http;
+using System.Runtime.Intrinsics.Wasm;
 using System.Threading.Tasks;
 
 namespace HYDRANT
@@ -10,6 +11,7 @@ namespace HYDRANT
     /// </summary>
     public class API : IDisposable
     {
+
         private readonly HttpClient _client;
         public string Endpoint { get; }
 
@@ -42,8 +44,7 @@ namespace HYDRANT
         /// Gets Articles from API
         /// </summary>
         public async Task<List<Article>?> GetArticles(int limit = 200, int Offset = 0,
-            string? token = null, string FilterName = "Latest",
-            string SearchTerm = "", string Publishers = "")
+         string FilterName = "Latest", string SearchTerm = "", string Publishers = "")
         {
             try
             {
@@ -52,14 +53,9 @@ namespace HYDRANT
                     $"limit={limit}",
                     $"offset={Offset}",
                     $"FilterName={Uri.EscapeDataString(FilterName)}",
-                    $"SearchTerm={Uri.EscapeDataString(SearchTerm)}",
+                    $"SearchTerm={Uri.EscapeDataString(SearchTerm ?? "")}",
                     $"publishers={Uri.EscapeDataString(Publishers)}"
                 };
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    queryParams.Add($"token={Uri.EscapeDataString(token)}");
-                }
 
                 var endpoint = $"/Articles/GetArticles?{string.Join("&", queryParams)}";
                 var response = await _client.GetAsync(endpoint).ConfigureAwait(false);
@@ -74,26 +70,21 @@ namespace HYDRANT
                 throw;
             }
         }
-
+        
+        
         /// <summary>
-        /// Loads information about publishers from API
+        /// Gets initialisation data
+        /// (Replaces GetFilters and GetPublications)
         /// </summary>
-        public async Task<List<Publication>?> GetPublications()
+        /// <returns></returns>
+        public async Task<Data> GetData()
         {
-            try
-            {
-                var response = await _client.GetAsync("/Publication/GetPublicationData").ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonSerializer.Deserialize<List<Publication>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            catch (Exception ex)
-            {
-                // Log exception
-                return null;
-            }
+            var endpoint = "/Data/GetData";
+            var response = await _client.GetAsync(endpoint).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<Data>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-
         /// <summary>
         /// Report that an article is clickbait
         /// </summary>
@@ -127,71 +118,6 @@ namespace HYDRANT
             {
                 // Log exception
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// Gets article text
-        /// </summary>
-        public async Task<string?> GetArticleText(string URL)
-        {
-            try
-            {
-                var endpoint = $"/Articles/GetArticleText?URL={Uri.EscapeDataString(URL)}";
-                var response = await _client.GetAsync(endpoint).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                // Log exception
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets all filters available for a user
-        /// </summary>
-        public async Task<List<Filter>?> GetFilters(string? token = null)
-        {
-            try
-            {
-                var endpoint = string.IsNullOrEmpty(token) ?
-                    "/Filter/GetFilters" :
-                    $"/Filter/GetFilters?Token={Uri.EscapeDataString(token)}";
-
-                var response = await _client.GetAsync(endpoint).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonSerializer.Deserialize<List<Filter>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            catch (Exception ex)
-            {
-                // Log exception
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Searches an article for a SearchString
-        /// </summary>
-        /// <remarks>
-        /// Ensure that the server supports this endpoint. If not, consider using GetArticles with SearchTerm.
-        /// </remarks>
-        public async Task<List<Article>?> Search(string SearchString)
-        {
-            try
-            {
-                var endpoint = $"/Articles/Search?SearchString={Uri.EscapeDataString(SearchString)}";
-                var response = await _client.GetAsync(endpoint).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonSerializer.Deserialize<List<Article>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            catch (Exception ex)
-            {
-                // Log exception
-                return new List<Article>();
             }
         }
 

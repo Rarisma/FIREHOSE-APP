@@ -50,6 +50,33 @@
     <Button Content="Edit blocked sources" Width="200" Visibility="Collapsed"
             Click="BlockSources" HorizontalAlignment="Center"/>
 
+    <Button Width="200" Content="Contact us" Click="OpenContactPage"/>
+
+    <ComboBox Width="200" Header="Default Feed" SelectedValue="{x:Bind Pref.DefaultFilter}"
+              ItemsSource="{x:Bind ShellVM.Filters}" SelectedValuePath="Name"/>
+
+    <!-- Stats -->
+    <Border CornerRadius="4" Width="400">
+      <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Days used"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind Pref.DaysUsed}"/>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Minutes saved"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Pref.TimeSaved}"/>
+
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="Articles Opened"/>
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind Pref.ArticlesOpened}"/>
+        </Grid>
+    </Border>
 </StackPanel>
 
 
@@ -58,7 +85,7 @@
     <Border BorderBrush="Gray" BorderThickness="1" Margin="20,50,20,20"/>
     <TextBlock Text="{x:Bind AppVer}" HorizontalAlignment="Center" Foreground="Gray"/>
       <TextBlock Text="Rarisma 2024" HorizontalAlignment="Center" Foreground="Gray"/>
-      <HyperlinkButton Content="COLD GET COLDER" Click="DevMenu"
+      <HyperlinkButton Content="Mr Magpie" Click="DevMenu"
                  Foreground="Gray" HorizontalAlignment="Center"/>
   </StackPanel>
   </Grid>

@@ -17,8 +17,8 @@
     <!-- App Identifier -->
     <ApplicationId>net.rarisma.REMNANT</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.2.1</ApplicationDisplayVersion>
-    <ApplicationVersion>5</ApplicationVersion>
+    <ApplicationDisplayVersion>1.2.2</ApplicationDisplayVersion>
+    <ApplicationVersion>6</ApplicationVersion>
     <!--
       If you encounter this error message:
 
@@ -65,6 +65,10 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="NLog" />
+    <PackageReference Include="NLog.Extensions.Logging" />
     <PackageReference Include="OpenGraph-Net" />
     <PackageReference Include="SkiaSharp.Skottie" />
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" />
@@ -89,6 +93,10 @@
     <UnoSplashScreen Include="Assets\splash.svg" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="nlog.config">
+      <Generator></Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="UI\ArticleList.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

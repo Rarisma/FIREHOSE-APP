@@ -126,6 +126,11 @@ public class Article
         }
     }
     
+    public bool HasImage
+    {
+        get => !string.IsNullOrEmpty(Image);
+    }
+
     /// <summary>
     /// Used for different kinds of articles
     /// </summary>

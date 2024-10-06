@@ -25,7 +25,7 @@ public class Filter
     /// <summary>
     /// Shown to nobody
     /// </summary>
-    public bool Hidden { get; set; }
+    public bool Hidden { get; set; } 
 
     /// <summary>
     /// </summary>
