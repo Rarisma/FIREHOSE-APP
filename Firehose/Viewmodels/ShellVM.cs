@@ -6,7 +6,6 @@ using FirehoseApp.UI;
 using FirehoseApp.UI.Controls;
 using HYDRANT;
 using HYDRANT.Definitions;
-using NLog;
 using Uno.Extensions;
 //WORLDS APART
 namespace FirehoseApp.Viewmodels;
@@ -109,7 +108,7 @@ public class ShellVM : ObservableObject
 
     private Article _CurrentArticle;
     /// <summary>
-    /// Currently selected article (for webview, reader etc)
+    /// Currently selected article (for webview, reader etc.)
     /// </summary>
     public Article CurrentArticle
     {
@@ -120,7 +119,7 @@ public class ShellVM : ObservableObject
 
     public ShellVM()
     {
-        CurrentFilter = "Latest";
+        CurrentFilter = Ioc.Default.GetRequiredService<PreferencesModel>().DefaultFilter;
         Filters = new();
         LoadAllDataCommand = new AsyncCommand(LoadAllData);
         LoadArticleDataCommand = new AsyncCommand(LoadArticleData);
@@ -160,28 +159,24 @@ public class ShellVM : ObservableObject
             ShowServerError(ex," (/Data endpoint Exception)");
         }
     }
-
+    
     public async Task LoadArticleData()
     {
         PreferencesModel Pref = Ioc.Default.GetRequiredService<PreferencesModel>();
 
         try
         {
-            Articles.Clear(); //Reset collection
-            
-
             //Handle filters
             string Pubs = string.Join(",", PublisherIDs.Select(Publication => Publication.ID.ToString()));
             
             //Load articles
-            List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit,
-                Offset, CurrentFilter, SearchText,Pubs);
+            List<Article> a = await Hallon.GetArticles(Pref.ArticleFetchLimit, Offset, CurrentFilter, SearchText,Pubs);
 
             //Filter by keywords
             var CurrentArticles = a
                 .Where(article => !Pref.BlockedKeywords.Any(keyword =>
                     article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                    (article.Content ?? "").Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+                    (article.Content).Contains(keyword, StringComparison.OrdinalIgnoreCase)));
 
             //Filter by publisher
             CurrentArticles = CurrentArticles.Where(Article => !Pref.BlockedSources.Contains(Article.Publisher));    

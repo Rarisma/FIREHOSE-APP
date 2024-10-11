@@ -98,7 +98,6 @@ public class PreferencesModel : ObservableObject
     /// </summary>
     public DateTime DayInstalled { get; set; }
 
-
     /// <summary>
     /// Date firehose was last opened
     /// (Used to calculate DaysUsed)

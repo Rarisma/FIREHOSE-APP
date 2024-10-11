@@ -50,13 +50,14 @@
     <Button Content="Edit blocked sources" Width="200" Visibility="Collapsed"
             Click="BlockSources" HorizontalAlignment="Center"/>
 
-    <Button Width="200" Content="Contact us" Click="OpenContactPage"/>
+    <Button Width="200" Content="Contact us" Click="OpenContactPage" HorizontalAlignment="Center"/>
 
-    <ComboBox Width="200" Header="Default Feed" SelectedValue="{x:Bind Pref.DefaultFilter}"
-              ItemsSource="{x:Bind ShellVM.Filters}" SelectedValuePath="Name"/>
+    <ComboBox Width="200" Header="Default Feed" SelectedValue="{x:Bind Pref.DefaultFilter, Mode=TwoWay}"
+              ItemsSource="{x:Bind ShellVM.Filters}" SelectedValuePath="Name"
+              HorizontalAlignment="Center" DisplayMemberPath="Name"/>
 
     <!-- Stats -->
-    <Border CornerRadius="4" Width="400">
+    <Border CornerRadius="4" Width="400" HorizontalAlignment="Center" Margin="0,20,0,0">
       <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -67,14 +68,14 @@
           <RowDefinition Height="Auto"/>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Days used"/>
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind Pref.DaysUsed}"/>
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="Days used" Margin="10,0"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind Pref.DaysUsed}" Margin="10,0"/>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Minutes saved"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Pref.TimeSaved}"/>
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="Minutes saved" Margin="10,0"/>
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Pref.TimeSaved}" Margin="10,0"/>
 
-        <TextBlock Grid.Row="0" Grid.Column="2" Text="Articles Opened"/>
-        <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind Pref.ArticlesOpened}"/>
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="Articles Opened" Margin="10,0"/>
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind Pref.ArticlesOpened}" Margin="10,0"/>
         </Grid>
     </Border>
 </StackPanel>

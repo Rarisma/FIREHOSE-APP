@@ -131,7 +131,7 @@ public sealed partial class ArticleList : Page
     private void ChangeFilter(object sender, RoutedEventArgs e)
     {
         var button = sender as FilterButton;
-
+        ShellVM.Articles.Clear();
         //If filter changed reset offset
         if (button.Content.ToString() != ShellVM.CurrentFilter)
         {
@@ -158,23 +158,35 @@ public sealed partial class ArticleList : Page
         ShellVM.Offset = 0;
         ShellVM.LoadArticleDataCommand.Execute(null);
     }
-    
+
+    /// <summary>
+    /// Stops infinite scroll from being spammed
+    /// </summary>
+    public bool InfLimit = false;
+
     private async void InfScrollCheck(object sender, ScrollViewerViewChangedEventArgs e)
     {
         var verticalOffset = ArticleContainer.VerticalOffset;
         var maxVerticalOffset = ArticleContainer.ScrollableHeight; 
         
-        if (maxVerticalOffset >= 0 && verticalOffset >= maxVerticalOffset - 100) // Adjust threshold as needed
+        if (maxVerticalOffset >= 0 && verticalOffset >= maxVerticalOffset - 500) // Adjust threshold as needed
         {
-            // Trigger loading more items
-            ShellVM.LoadArticleDataCommand.Execute(null);
+            if (!InfLimit)
+            {
+                
+                InfLimit = true;
+                // Trigger loading more items
+                await ShellVM.LoadArticleData();
+                Thread.Sleep(1000);
+                InfLimit = false;
+            }
+
         }
     }
     
     private void ShowSummary(Expander Sender, ExpanderExpandingEventArgs Args)
     {
         var Article = Sender.DataContext as Article;
-        
         
         // Add or Remove time saved depending on if expander is opening or closing
         Pref.TimeSaved += Sender.IsExpanded ? Article.ReadTime : Article.ReadTime*-1;

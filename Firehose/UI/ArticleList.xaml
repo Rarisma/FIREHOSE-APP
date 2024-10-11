@@ -196,10 +196,9 @@
                            Visibility="{x:Bind ShellVM.BoomarksMessageVisibility, Mode=OneWay}"
                            VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
 
-                <HyperlinkButton Content="Click to load more Articles"
-                                 Visibility="{x:Bind ShellVM.LoadMoreVisibility, Mode=OneWay}"
-                                 Command="{x:Bind ShellVM.LoadArticleDataCommand}"
-                                 HorizontalAlignment="Center" Margin="10"/>
+                <ProgressRing IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                              Margin="0,0,0,10"/>
+
               </StackPanel>
             </StackPanel>
           </ScrollViewer>
